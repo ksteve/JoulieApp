@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Build;
@@ -18,10 +19,41 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.amazonaws.auth.AWSSessionCredentials;
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.regions.Regions;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity{
+
+    //// TODO: 2016-12-03 put these values in better place
+    private static final String CUSTOMER_SPECIFIC_ENDPOINT = "a25zcl5ezj00nu.iot.us-west-2.amazonaws.com";
+    // Cognito pool ID. For this app, pool needs to be unauthenticated pool with
+    // AWS IoT permissions.
+    private static final String COGNITO_POOL_ID = "us-west-2:c258b633-9752-4ae3-8e7e-6612a4159327";
+    // Name of the AWS IoT policy to attach to a newly created certificate
+    private static final String AWS_IOT_POLICY_NAME = "testpolicy";
+
+    // Region of AWS IoT
+    private static final Regions MY_REGION = Regions.US_WEST_2;
+    // Filename of KeyStore file on the filesystem
+    private static final String KEYSTORE_NAME = "iot_keystore";
+    // Password for the private key in the KeyStore
+    private static final String KEYSTORE_PASSWORD = "password";
+    // Certificate and key aliases in the KeyStore
+    private static final String CERTIFICATE_ID = "default";
 
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "foo@example.com:hello", "bar@example.com:world"
@@ -32,15 +64,54 @@ public class LoginActivity extends AppCompatActivity{
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private LoginButton loginButton;
+
+    private CallbackManager callbackManager;
+    private CognitoCachingCredentialsProvider credentialsProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //setup aws login
+        // Initialize the Amazon Cognito credentials provider
+        credentialsProvider = new CognitoCachingCredentialsProvider(
+                getApplicationContext(),
+                COGNITO_POOL_ID, // Identity Pool ID
+                Regions.US_WEST_2 // Region
+        );
+
+        //setup facebook login
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+        loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton.setReadPermissions("email");
+
+        // Callback registration
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                // get credentials from AWS
+                AwsLogin(loginResult.getAccessToken().getToken());
+            }
+
+            @Override
+            public void onCancel() {
+                // App code
+                //// TODO: 2016-12-03 handle cancel
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+                //// TODO: 2016-12-03 handle errors 
+            }
+        });
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mEmailView.setText(DUMMY_CREDENTIALS[0].split(":")[0]);
-
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setText(DUMMY_CREDENTIALS[0].split(":")[1]);
@@ -68,6 +139,44 @@ public class LoginActivity extends AppCompatActivity{
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void AwsLogin(String token){
+        Map<String, String> logins = new HashMap<>();
+        logins.put("graph.facebook.com",token);
+        credentialsProvider.setLogins(logins);
+        
+        //start new thread to get credentials from AWS server
+        new GetAWSCredentials().execute(null, null, null);
+    }
+
+    private class GetAWSCredentials extends AsyncTask<Object, Integer, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Object[] objects) {
+            AWSSessionCredentials credentials = credentialsProvider.getCredentials();
+           return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if(aBoolean) {
+                openMainActivity();
+            }
+        }
+    }
+
+    private void openMainActivity(){
+        showProgress(true);
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        showProgress(false);        
+    }
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -112,10 +221,7 @@ public class LoginActivity extends AppCompatActivity{
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            showProgress(false);
+            openMainActivity();
         }
     }
 

@@ -31,4 +31,20 @@
     <string name="no_usage">No Usage to Display.</string>
     <string name="no_devices">No Devices.</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- string related to prefernces -->
+    <string name="pref_title_power_usage">power</string>
+
+    <string-array name="power_usage">
+        <item>light</item>
+        <item>heavy</item>
+    </string-array>
+
+
+    <!-- apis -->
+    <string name="facebook_app_id">1923164431244563</string>
+    <string name="fb_login_protocol_scheme">fb1923164431244563</string>
+
 </resources>

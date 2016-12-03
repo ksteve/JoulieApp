@@ -112,6 +112,11 @@ public class MainActivity extends AppCompatActivity
         tabLayout.getTabAt(2).setText("");
     }
 
+    private void openSettingsActivity(){
+        Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+        startActivity(settingsIntent);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -164,7 +169,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_rules) {
             vpPager.setCurrentItem(MYRULES_FRAGMENT, true);
         } else if (id == R.id.nav_settings) {
-
+            openSettingsActivity();
         } else if (id == R.id.nav_logout) {
             onNavigateUp();
         }
