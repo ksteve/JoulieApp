@@ -20,17 +20,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 import java.util.List;
 
+import com.amazonaws.services.iot.AWSIotClient;
+import com.amazonaws.services.iot.model.AttributePayload;
+import com.amazonaws.services.iot.model.CreateThingRequest;
+import com.amazonaws.services.iot.model.ListThingsRequest;
+import com.amazonaws.services.iot.model.ListThingsResult;
+import com.amazonaws.services.iot.model.ThingAttribute;
+import com.amazonaws.services.iotdata.AWSIotDataClient;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.Usage;
 import com.example.kyle.joulieapp.Models.Rule;
 import com.example.kyle.joulieapp.Models.DummyContent;
+import com.facebook.AccessToken;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ViewPager.OnPageChangeListener,
         DeviceFragment.OnListFragmentInteractionListener,
         UsageFragment.OnListFragmentInteractionListener,
-        RuleFragment.OnListFragmentInteractionListener {
+        RuleFragment.OnListFragmentInteractionListener,
+        IoTApi.onResultListener{
 
     private FragmentPagerAdapter adapterViewPager;
     private ViewPager vpPager;
@@ -59,7 +68,7 @@ public class MainActivity extends AppCompatActivity
 
                     case MYDEVICES_FRAGMENT:
                         Intent newDeviceIntent = new Intent(MainActivity.this, NewDeviceActivity.class);
-                        startActivity(newDeviceIntent);
+                        startActivityForResult(newDeviceIntent, 1);
                         break;
                     case MYUSAGE_FRAGMENT:
 
@@ -90,6 +99,7 @@ public class MainActivity extends AppCompatActivity
         setupTabIcons();
 
         if (savedInstanceState == null) {
+            IoTApi.getInstance().callListThings(this);
             DummyContent.populate(this);
         }
     }
@@ -150,6 +160,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            openSettingsActivity();
             return true;
         }
 
@@ -171,6 +182,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             openSettingsActivity();
         } else if (id == R.id.nav_logout) {
+            AccessToken.setCurrentAccessToken(null);
             onNavigateUp();
         }
 
@@ -246,6 +258,11 @@ public class MainActivity extends AppCompatActivity
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         vpPager.setCurrentItem(savedInstanceState.getInt("currentPage"));
+    }
+
+    @Override
+    public void onResult(ListThingsResult result) {
+        List<ThingAttribute> test = result.getThings();
     }
 
     public static class MyPagerAdapter extends FragmentPagerAdapter {

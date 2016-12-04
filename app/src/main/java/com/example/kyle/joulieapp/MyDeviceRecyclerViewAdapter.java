@@ -1,5 +1,7 @@
 package com.example.kyle.joulieapp;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -103,8 +105,18 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
 
         @Override
         public void onClick(View view) {
-            DummyContent.removeDevice(mValues.get(getAdapterPosition()));
-            notifyItemRemoved(getAdapterPosition());
+            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+
+            builder.setMessage("Delete this device?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    DummyContent.removeDevice(mValues.get(getAdapterPosition()));
+                    notifyItemRemoved(getAdapterPosition());
+                }
+            });
+            builder.setNegativeButton("No", null);
+            builder.create().show();
         }
     }
 }

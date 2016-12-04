@@ -45,16 +45,28 @@ public class NewDeviceActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Device device = new Device(idView.getText().toString(), deviceNameView.getText().toString());
-                if(device != null) {
-                    device.image = deviceImageView.getDrawable();
-                    DummyContent.addDevice(device);
+
+                if(idView.getText().toString().trim().isEmpty()){
+                    idView.setError("Device ID is Required");
                 }
 
-                Intent intent=new Intent();
-                intent.putExtra("MESSAGE","");
-                setResult(1,intent);
-                finish();
+                if(deviceNameView.getText().toString().trim().isEmpty()){
+                    deviceNameView.setError("Device Name is Required");
+                }
+
+                if(!idView.getText().toString().trim().isEmpty() && !deviceNameView.getText().toString().trim().isEmpty()){
+
+                    Device device = new Device(idView.getText().toString(), deviceNameView.getText().toString());
+                    if (device != null) {
+                        device.image = deviceImageView.getDrawable();
+                        DummyContent.addDevice(device);
+                    }
+
+                    Intent intent = new Intent();
+                    intent.putExtra("MESSAGE", "");
+                    setResult(1, intent);
+                    finish();
+                }
             }
         });
 

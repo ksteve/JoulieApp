@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,22 +22,38 @@ import android.widget.TextView;
 
 import com.amazonaws.auth.AWSSessionCredentials;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.iot.AWSIotKeystoreHelper;
+import com.amazonaws.mobileconnectors.iot.AWSIotMqttClientStatusCallback;
+import com.amazonaws.mobileconnectors.iot.AWSIotMqttLastWillAndTestament;
+import com.amazonaws.mobileconnectors.iot.AWSIotMqttManager;
+import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos;
+import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.iot.AWSIotClient;
+import com.amazonaws.services.iot.model.AttachPrincipalPolicyRequest;
+import com.amazonaws.services.iot.model.CreateKeysAndCertificateRequest;
+import com.amazonaws.services.iot.model.CreateKeysAndCertificateResult;
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
 import java.net.URL;
+import java.security.KeyStore;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity{
+
+    static final String LOG_TAG = LoginActivity.class.getCanonicalName();
 
     //// TODO: 2016-12-03 put these values in better place
     private static final String CUSTOMER_SPECIFIC_ENDPOINT = "a25zcl5ezj00nu.iot.us-west-2.amazonaws.com";
@@ -45,7 +62,6 @@ public class LoginActivity extends AppCompatActivity{
     private static final String COGNITO_POOL_ID = "us-west-2:c258b633-9752-4ae3-8e7e-6612a4159327";
     // Name of the AWS IoT policy to attach to a newly created certificate
     private static final String AWS_IOT_POLICY_NAME = "testpolicy";
-
     // Region of AWS IoT
     private static final Regions MY_REGION = Regions.US_WEST_2;
     // Filename of KeyStore file on the filesystem
@@ -67,7 +83,18 @@ public class LoginActivity extends AppCompatActivity{
     private LoginButton loginButton;
 
     private CallbackManager callbackManager;
+
     private CognitoCachingCredentialsProvider credentialsProvider;
+    public static AWSIotClient androidIoTClient; // TODO: 2016-12-03 probably should'nt be public, move somewhere better
+    public static AWSIotMqttManager mqttManager; // TODO: 2016-12-03 probably should'nt be public, move somewhere better
+    private String clientId;
+    private String keystorePath;
+    private String keystoreName;
+    private String keystorePassword;
+
+    private KeyStore clientKeyStore = null;
+    private String certificateId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +114,6 @@ public class LoginActivity extends AppCompatActivity{
         callbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions("email");
-
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -136,8 +162,70 @@ public class LoginActivity extends AppCompatActivity{
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        if(AccessToken.getCurrentAccessToken() != null && !AccessToken.getCurrentAccessToken().isExpired()){
+            AwsLogin(AccessToken.getCurrentAccessToken().getToken());
+        }
+
     }
 
+    private void setupAWSClient(){
+
+        clientId = UUID.randomUUID().toString();
+
+        Region region = Region.getRegion(MY_REGION);
+
+        // MQTT Client
+        mqttManager = new AWSIotMqttManager(clientId, CUSTOMER_SPECIFIC_ENDPOINT);
+
+        // Set keepalive to 10 seconds.  Will recognize disconnects more quickly but will also send
+        // MQTT pings every 10 seconds.
+        mqttManager.setKeepAlive(10);
+
+        //// TODO: 2016-12-03 implement lastWillAndTestament
+        // Set Last Will and Testament for MQTT.  On an unclean disconnect (loss of connection)
+        // AWS IoT will publish this message to alert other clients.
+        AWSIotMqttLastWillAndTestament lwt = new AWSIotMqttLastWillAndTestament("my/lwt/topic",
+                "Android client lost connection", AWSIotMqttQos.QOS0);
+        mqttManager.setMqttLastWillAndTestament(lwt);
+
+
+        // IoT Client (for creation of certificate if needed)
+        androidIoTClient = new AWSIotClient(credentialsProvider);
+        androidIoTClient.setRegion(region);
+
+        keystorePath = getFilesDir().getPath();
+        keystoreName = KEYSTORE_NAME;
+        keystorePassword = KEYSTORE_PASSWORD;
+        certificateId = CERTIFICATE_ID;
+
+        // To load cert/key from keystore on filesystem
+        try {
+            if (AWSIotKeystoreHelper.isKeystorePresent(keystorePath, keystoreName)) {
+                if (AWSIotKeystoreHelper.keystoreContainsAlias(certificateId, keystorePath,
+                        keystoreName, keystorePassword)) {
+                    Log.i(LOG_TAG, "Certificate " + certificateId
+                            + " found in keystore - using for MQTT.");
+                    // load keystore from file into memory to pass on connection
+                    clientKeyStore = AWSIotKeystoreHelper.getIotKeystore(certificateId,
+                            keystorePath, keystoreName, keystorePassword);
+                    //btnConnect.setEnabled(true);
+                    IotConnect();
+                } else {
+                    Log.i(LOG_TAG, "Key/cert " + certificateId + " not found in keystore.");
+                }
+            } else {
+                Log.i(LOG_TAG, "Keystore " + keystorePath + "/" + keystoreName + " not found.");
+            }
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "An error occurred retrieving cert/key from keystore.", e);
+        }
+
+        if(clientKeyStore == null){
+            //start new thread to create new certificate and key
+            new CreateNewCert().execute(null,null,null);
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -154,21 +242,17 @@ public class LoginActivity extends AppCompatActivity{
         new GetAWSCredentials().execute(null, null, null);
     }
 
-    private class GetAWSCredentials extends AsyncTask<Object, Integer, Boolean> {
+    private void IotConnect(){
+        mqttManager.connect(clientKeyStore, new AWSIotMqttClientStatusCallback() {
+            @Override
+            public void onStatusChanged(AWSIotMqttClientStatus status, Throwable throwable) {
+                Log.i(LOG_TAG, status.name());
+                if(status == AWSIotMqttClientStatus.Connected) {
 
-        @Override
-        protected Boolean doInBackground(Object[] objects) {
-            AWSSessionCredentials credentials = credentialsProvider.getCredentials();
-           return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            if(aBoolean) {
-                openMainActivity();
+                }
             }
-        }
+        });
+        openMainActivity();
     }
 
     private void openMainActivity(){
@@ -270,5 +354,88 @@ public class LoginActivity extends AppCompatActivity{
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
+
+    private class GetAWSCredentials extends AsyncTask<Object, Integer, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Object[] objects) {
+            AWSSessionCredentials credentials = credentialsProvider.getCredentials();
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if(aBoolean) {
+                setupAWSClient();
+                //openMainActivity();
+            }
+        }
+    }
+
+    private class CreateNewCert extends AsyncTask<Object, Integer, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Object[] objects) {
+            try {
+                // Create a new private key and certificate. This call
+                // creates both on the server and returns them to the
+                // device.
+                CreateKeysAndCertificateRequest createKeysAndCertificateRequest =
+                        new CreateKeysAndCertificateRequest();
+                createKeysAndCertificateRequest.setSetAsActive(true);
+                final CreateKeysAndCertificateResult createKeysAndCertificateResult;
+                createKeysAndCertificateResult =
+                        androidIoTClient.createKeysAndCertificate(createKeysAndCertificateRequest);
+                Log.i(LOG_TAG,
+                        "Cert ID: " +
+                                createKeysAndCertificateResult.getCertificateId() +
+                                " created.");
+
+                // store in keystore for use in MQTT client
+                // saved as alias "default" so a new certificate isn't
+                // generated each run of this application
+                AWSIotKeystoreHelper.saveCertificateAndPrivateKey(certificateId,
+                        createKeysAndCertificateResult.getCertificatePem(),
+                        createKeysAndCertificateResult.getKeyPair().getPrivateKey(),
+                        keystorePath, keystoreName, keystorePassword);
+
+                // load keystore from file into memory to pass on
+                // connection
+                clientKeyStore = AWSIotKeystoreHelper.getIotKeystore(certificateId,
+                        keystorePath, keystoreName, keystorePassword);
+
+                // Attach a policy to the newly created certificate.
+                // This flow assumes the policy was already created in
+                // AWS IoT and we are now just attaching it to the
+                // certificate.
+                AttachPrincipalPolicyRequest policyAttachRequest =
+                        new AttachPrincipalPolicyRequest();
+                policyAttachRequest.setPolicyName(AWS_IOT_POLICY_NAME);
+                policyAttachRequest.setPrincipal(createKeysAndCertificateResult
+                        .getCertificateArn());
+                androidIoTClient.attachPrincipalPolicy(policyAttachRequest);
+
+            } catch (Exception e) {
+                Log.e(LOG_TAG,
+                        "Exception occurred when generating new private key and certificate.",
+                        e);
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if(aBoolean) {
+            // TODO: 2016-12-03 allow signin
+                IotConnect();
+            }
+        }
+    }
+
+
 }
 
