@@ -1,6 +1,7 @@
 package com.example.kyle.joulieapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity
         ViewPager.OnPageChangeListener,
         DeviceFragment.OnListFragmentInteractionListener,
         UsageFragment.OnListFragmentInteractionListener,
+        UsageOverviewFragment.OnFragmentInteractionListener,
         RuleFragment.OnListFragmentInteractionListener,
         IoTApi.onResultListener{
 
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity
     private ViewPager vpPager;
     private Toolbar toolbar;
     private TabLayout tabLayout;
+    private FloatingActionButton fab;
 
     private static final int MYDEVICES_FRAGMENT = 0;
     private static final int MYUSAGE_FRAGMENT = 1;
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,6 +123,14 @@ public class MainActivity extends AppCompatActivity
         tabLayout.getTabAt(1).setText("");
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_access_alarm_24dp);
         tabLayout.getTabAt(2).setText("");
+    }
+
+    public void toggleFab(boolean show){
+        if(show){
+            fab.show();
+        } else {
+            fab.hide();
+        }
     }
 
     private void openSettingsActivity(){
@@ -229,6 +240,21 @@ public class MainActivity extends AppCompatActivity
     public void onPageSelected(int position) {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(adapterViewPager.getPageTitle(position));
+
+        switch (position){
+            case MYDEVICES_FRAGMENT:
+                toggleFab(true);
+                break;
+            case MYUSAGE_FRAGMENT:
+                toggleFab(false);
+                break;
+            case MYRULES_FRAGMENT:
+                toggleFab(true);
+                break;
+            default:
+                toggleFab(true);
+                break;
+        }
     }
 
     @Override
@@ -265,6 +291,11 @@ public class MainActivity extends AppCompatActivity
         List<ThingAttribute> test = result.getThings();
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
     public static class MyPagerAdapter extends FragmentPagerAdapter {
         private static int NUM_ITEMS = 3;
 
@@ -285,7 +316,7 @@ public class MainActivity extends AppCompatActivity
                 case MYDEVICES_FRAGMENT: // Fragment # 0 - This will show FirstFragment
                     return DeviceFragment.newInstance(1);
                 case MYUSAGE_FRAGMENT: // Fragment # 0 - This will show FirstFragment different title
-                    return UsageFragment.newInstance(1);
+                    return UsageOverviewFragment.newInstance("","");
                 case MYRULES_FRAGMENT: // Fragment # 1 - This will show SecondFragment
                     return RuleFragment.newInstance(1);
                 default:

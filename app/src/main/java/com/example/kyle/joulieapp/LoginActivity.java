@@ -84,9 +84,9 @@ public class LoginActivity extends AppCompatActivity{
 
     private CallbackManager callbackManager;
 
-    private CognitoCachingCredentialsProvider credentialsProvider;
-    public static AWSIotClient androidIoTClient; // TODO: 2016-12-03 probably should'nt be public, move somewhere better
-    public static AWSIotMqttManager mqttManager; // TODO: 2016-12-03 probably should'nt be public, move somewhere better
+    public static CognitoCachingCredentialsProvider credentialsProvider;
+    public static AWSIotClient androidIoTClient; // TODO: 2016-12-03 probably should'nt be public static, move somewhere better
+    public static AWSIotMqttManager mqttManager; // TODO: 2016-12-03 probably should'nt be public static, move somewhere better
     private String clientId;
     private String keystorePath;
     private String keystoreName;
