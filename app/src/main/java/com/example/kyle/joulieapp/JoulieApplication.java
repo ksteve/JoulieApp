@@ -2,6 +2,7 @@ package com.example.kyle.joulieapp;
 
 import android.app.Application;
 
+import com.example.kyle.joulieapp.Models.DummyContent;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 
@@ -16,6 +17,7 @@ public class JoulieApplication extends Application {
         super.onCreate();
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
+        DummyContent.setContext(getApplicationContext());
     }
 
 }

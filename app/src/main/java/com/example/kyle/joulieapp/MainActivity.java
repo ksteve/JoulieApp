@@ -2,14 +2,18 @@ package com.example.kyle.joulieapp;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,8 +23,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
+import com.amazonaws.mobileconnectors.cognito.Dataset;
+import com.amazonaws.mobileconnectors.cognito.DefaultSyncCallback;
+import com.amazonaws.mobileconnectors.cognito.Record;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedQueryList;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanList;
+import com.amazonaws.mobileconnectors.iot.AWSIotMqttNewMessageCallback;
+import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.iot.AWSIotClient;
 import com.amazonaws.services.iot.model.AttributePayload;
 import com.amazonaws.services.iot.model.CreateThingRequest;
@@ -32,7 +47,13 @@ import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.Usage;
 import com.example.kyle.joulieapp.Models.Rule;
 import com.example.kyle.joulieapp.Models.DummyContent;
+import com.example.kyle.joulieapp.Models.UserDevice;
 import com.facebook.AccessToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import static com.example.kyle.joulieapp.LoginActivity.LOG_TAG;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -41,13 +62,16 @@ public class MainActivity extends AppCompatActivity
         UsageFragment.OnListFragmentInteractionListener,
         UsageOverviewFragment.OnFragmentInteractionListener,
         RuleFragment.OnListFragmentInteractionListener,
-        IoTApi.onResultListener{
+        DynamoDBManager.DynamoDBTaskListener{
 
     private FragmentPagerAdapter adapterViewPager;
     private ViewPager vpPager;
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private FloatingActionButton fab;
+    public static CognitoSyncManager syncClient;
+    public static Dataset dataset;
+    private View coordinator;
 
     private static final int MYDEVICES_FRAGMENT = 0;
     private static final int MYUSAGE_FRAGMENT = 1;
@@ -58,6 +82,14 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if(LoginActivity.credentialsProvider != null) {
+            DynamoDBManager.getInstance();
+        }
+
+        // TODO: 2016-12-04 check if authenticated
+       String id = LoginActivity.credentialsProvider.getIdentityId();
+
+        coordinator = findViewById(R.id.coordinator);
         //setup toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -74,7 +106,7 @@ public class MainActivity extends AppCompatActivity
                         startActivityForResult(newDeviceIntent, 1);
                         break;
                     case MYUSAGE_FRAGMENT:
-
+                        updateUsageData();
                         break;
                     case MYRULES_FRAGMENT:
                         Intent newRuleIntent = new Intent(MainActivity.this, NewRuleActivity.class);
@@ -102,13 +134,18 @@ public class MainActivity extends AppCompatActivity
         setupTabIcons();
 
         if (savedInstanceState == null) {
-            IoTApi.getInstance().callListThings(this);
-            DummyContent.populate(this);
+            //get user devices
+            new DynamoDBManager.DynamoDBManagerTask(this).execute(new Object[]{
+                    DynamoDBManager.DynamoDBManagerType.GET_USER_DEVICES,
+                    null
+            });
         }
+
     }
 
     private void setupViewPager(){
         vpPager = (ViewPager) findViewById(R.id.main_viewpager);
+        vpPager.setPageMargin(50);
         adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
         vpPager.setAdapter(adapterViewPager);
         vpPager.addOnPageChangeListener(MainActivity.this);
@@ -140,7 +177,15 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(data.getStringExtra("Added") == "Success"){
+            Snackbar snackbar = Snackbar.make(coordinator, "Device Added", Snackbar.LENGTH_SHORT);
+            snackbar.show();
 
+        } else {
+            Snackbar snackbar = Snackbar.make(coordinator, "Error Adding Device to server", Snackbar.LENGTH_SHORT);
+            snackbar.show();
+
+        }
         notifyFragment();
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -194,6 +239,8 @@ public class MainActivity extends AppCompatActivity
             openSettingsActivity();
         } else if (id == R.id.nav_logout) {
             AccessToken.setCurrentAccessToken(null);
+            LoginActivity.credentialsProvider.clearCredentials();
+            LoginActivity.credentialsProvider.clear();
             onNavigateUp();
         }
 
@@ -215,6 +262,15 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void updateUsageData(){
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        for (Fragment x: fragments) {
+            if (x instanceof UsageOverviewFragment){
+                ((UsageOverviewFragment) x).updateUsageData();
+            }
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -226,7 +282,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(Device item) {
+        Intent deviceDetailIntent = new Intent(MainActivity.this, DeviceDetailActivity.class);
+        deviceDetailIntent.putExtra("index",DummyContent.MY_DEVICES.indexOf(item));
+        startActivity(deviceDetailIntent);
 
+       // publishSwitch(3, item.isPowerOn);
     }
 
     // Page Change Listener Methods
@@ -243,16 +303,16 @@ public class MainActivity extends AppCompatActivity
 
         switch (position){
             case MYDEVICES_FRAGMENT:
-                toggleFab(true);
+                fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_add_black_24dp));
                 break;
             case MYUSAGE_FRAGMENT:
-                toggleFab(false);
+                fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_refresh_black_24dp));
                 break;
             case MYRULES_FRAGMENT:
-                toggleFab(true);
+                fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_add_black_24dp));
                 break;
             default:
-                toggleFab(true);
+                fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_add_black_24dp));
                 break;
         }
     }
@@ -287,13 +347,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onResult(ListThingsResult result) {
-        List<ThingAttribute> test = result.getThings();
+    public void onFragmentInteraction(Uri uri) {
+
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public void onResult(Object result) {
+        //populate user Data
+        PaginatedQueryList<UserDevice> devices = (PaginatedQueryList<UserDevice>)result;
+        DummyContent.populate(devices);
+        notifyFragment();
     }
 
     public static class MyPagerAdapter extends FragmentPagerAdapter {

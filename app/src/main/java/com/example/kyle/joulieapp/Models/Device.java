@@ -12,17 +12,20 @@ public class Device {
     public Drawable image;
     public String deviceName;
     public Usage usage;
+    public boolean isPowerOn;
     public boolean isActive = false;
 
-    public Device(String id, String streamName) {
+    public Device(String id, String streamName, Drawable image) {
         this.id = id;
         this.deviceName = streamName;
         this.usage = new Usage(this.id);
+        this.image = image;
     }
 
     public Device(){
 
     }
+
 
 
 

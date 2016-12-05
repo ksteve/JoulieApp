@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSSessionCredentials;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.iot.AWSIotKeystoreHelper;
@@ -61,7 +62,8 @@ public class LoginActivity extends AppCompatActivity{
     // AWS IoT permissions.
     private static final String COGNITO_POOL_ID = "us-west-2:c258b633-9752-4ae3-8e7e-6612a4159327";
     // Name of the AWS IoT policy to attach to a newly created certificate
-    private static final String AWS_IOT_POLICY_NAME = "testpolicy";
+    private static final String AWS_MANAGER_IOT_POLICY_NAME = "manager_policy";
+    //private static final String AWS_OBSERVER_IOT_POLICY_NAME = "observer_policy";
     // Region of AWS IoT
     private static final Regions MY_REGION = Regions.US_WEST_2;
     // Filename of KeyStore file on the filesystem
@@ -79,11 +81,13 @@ public class LoginActivity extends AppCompatActivity{
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private View mProgressView;
+    private View mProgressContainer;
     private View mLoginFormView;
     private LoginButton loginButton;
 
     private CallbackManager callbackManager;
 
+    private AWSCredentials awsCredentials;
     public static CognitoCachingCredentialsProvider credentialsProvider;
     public static AWSIotClient androidIoTClient; // TODO: 2016-12-03 probably should'nt be public static, move somewhere better
     public static AWSIotMqttManager mqttManager; // TODO: 2016-12-03 probably should'nt be public static, move somewhere better
@@ -94,6 +98,8 @@ public class LoginActivity extends AppCompatActivity{
 
     private KeyStore clientKeyStore = null;
     private String certificateId;
+
+    private boolean activityStarted = false;
 
 
     @Override
@@ -114,11 +120,11 @@ public class LoginActivity extends AppCompatActivity{
         callbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions("email");
-        // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // get credentials from AWS
+                showProgress(true);
                 AwsLogin(loginResult.getAccessToken().getToken());
             }
 
@@ -162,17 +168,56 @@ public class LoginActivity extends AppCompatActivity{
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        mProgressContainer = findViewById(R.id.progress_container);
 
+        //if user has already logged in with facebook
         if(AccessToken.getCurrentAccessToken() != null && !AccessToken.getCurrentAccessToken().isExpired()){
+            showProgress(true);
             AwsLogin(AccessToken.getCurrentAccessToken().getToken());
         }
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void AwsLogin(String token){
+        Map<String, String> logins = new HashMap<>();
+        logins.put("graph.facebook.com",token);
+        credentialsProvider.setLogins(logins);
+
+        //start new thread to get credentials from AWS server
+        new GetAWSCredentials().execute(null, null, null);
+    }
+
+    private class GetAWSCredentials extends AsyncTask<Object, Integer, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Object[] objects) {
+            try {
+               // awsCredentials = credentialsProvider.getCredentials();
+                credentialsProvider.refresh();
+            }catch (Exception e) {
+                Log.i(LOG_TAG, "Error getting credentials for AWS");
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if(aBoolean) {
+                setupAWSClient();
+                //openMainActivity();
+            }
+        }
     }
 
     private void setupAWSClient(){
 
         clientId = UUID.randomUUID().toString();
-
         Region region = Region.getRegion(MY_REGION);
 
         // MQTT Client
@@ -183,12 +228,11 @@ public class LoginActivity extends AppCompatActivity{
         mqttManager.setKeepAlive(10);
 
         //// TODO: 2016-12-03 implement lastWillAndTestament
-        // Set Last Will and Testament for MQTT.  On an unclean disconnect (loss of connection)
-        // AWS IoT will publish this message to alert other clients.
+         //Set Last Will and Testament for MQTT.  On an unclean disconnect (loss of connection)
+         //AWS IoT will publish this message to alert other clients.
         AWSIotMqttLastWillAndTestament lwt = new AWSIotMqttLastWillAndTestament("my/lwt/topic",
                 "Android client lost connection", AWSIotMqttQos.QOS0);
         mqttManager.setMqttLastWillAndTestament(lwt);
-
 
         // IoT Client (for creation of certificate if needed)
         androidIoTClient = new AWSIotClient(credentialsProvider);
@@ -225,21 +269,70 @@ public class LoginActivity extends AppCompatActivity{
             //start new thread to create new certificate and key
             new CreateNewCert().execute(null,null,null);
         }
+
+       // IotConnect();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
+    private class CreateNewCert extends AsyncTask<Object, Integer, Boolean> {
 
-    private void AwsLogin(String token){
-        Map<String, String> logins = new HashMap<>();
-        logins.put("graph.facebook.com",token);
-        credentialsProvider.setLogins(logins);
-        
-        //start new thread to get credentials from AWS server
-        new GetAWSCredentials().execute(null, null, null);
+        @Override
+        protected Boolean doInBackground(Object[] objects) {
+            try {
+                // Create a new private key and certificate. This call
+                // creates both on the server and returns them to the
+                // device.
+                CreateKeysAndCertificateRequest createKeysAndCertificateRequest =
+                        new CreateKeysAndCertificateRequest();
+                createKeysAndCertificateRequest.setSetAsActive(true);
+                final CreateKeysAndCertificateResult createKeysAndCertificateResult;
+                createKeysAndCertificateResult =
+                        androidIoTClient.createKeysAndCertificate(createKeysAndCertificateRequest);
+                Log.i(LOG_TAG,
+                        "Cert ID: " +
+                                createKeysAndCertificateResult.getCertificateId() +
+                                " created.");
+
+                // store in keystore for use in MQTT client
+                // saved as alias "default" so a new certificate isn't
+                // generated each run of this application
+                AWSIotKeystoreHelper.saveCertificateAndPrivateKey(certificateId,
+                        createKeysAndCertificateResult.getCertificatePem(),
+                        createKeysAndCertificateResult.getKeyPair().getPrivateKey(),
+                        keystorePath, keystoreName, keystorePassword);
+
+                // load keystore from file into memory to pass on
+                // connection
+                clientKeyStore = AWSIotKeystoreHelper.getIotKeystore(certificateId,
+                        keystorePath, keystoreName, keystorePassword);
+
+                // Attach a policy to the newly created certificate.
+                // This flow assumes the policy was already created in
+                // AWS IoT and we are now just attaching it to the
+                // certificate.
+                AttachPrincipalPolicyRequest policyAttachRequest =
+                        new AttachPrincipalPolicyRequest();
+                policyAttachRequest.setPolicyName(AWS_MANAGER_IOT_POLICY_NAME);
+                policyAttachRequest.setPrincipal(createKeysAndCertificateResult
+                        .getCertificateArn());
+                androidIoTClient.attachPrincipalPolicy(policyAttachRequest);
+
+            } catch (Exception e) {
+                Log.e(LOG_TAG,
+                        "Exception occurred when generating new private key and certificate.",
+                        e);
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if(aBoolean) {
+                // TODO: 2016-12-03 allow signin
+                IotConnect();
+            }
+        }
     }
 
     private void IotConnect(){
@@ -248,25 +341,23 @@ public class LoginActivity extends AppCompatActivity{
             public void onStatusChanged(AWSIotMqttClientStatus status, Throwable throwable) {
                 Log.i(LOG_TAG, status.name());
                 if(status == AWSIotMqttClientStatus.Connected) {
-
+                    openMainActivity();
                 }
             }
         });
-        openMainActivity();
+
     }
 
     private void openMainActivity(){
-        showProgress(true);
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-        showProgress(false);        
+        if(!activityStarted) {
+            showProgress(true);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            activityStarted = true;
+        }
+        //showProgress(false);
     }
 
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
     private void attemptLogin() {
 
         // Reset errors.
@@ -339,103 +430,24 @@ public class LoginActivity extends AppCompatActivity{
                 }
             });
 
+            mProgressContainer.setVisibility(show ? View.VISIBLE : View.GONE);
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mProgressView.animate().setDuration(shortAnimTime).alpha(
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
+                    mProgressContainer.setVisibility(show ? View.VISIBLE : View.GONE);
                     mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             });
         } else {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
+            mProgressContainer.setVisibility(show ? View.VISIBLE : View.GONE);
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
-
-    private class GetAWSCredentials extends AsyncTask<Object, Integer, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Object[] objects) {
-            AWSSessionCredentials credentials = credentialsProvider.getCredentials();
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            if(aBoolean) {
-                setupAWSClient();
-                //openMainActivity();
-            }
-        }
-    }
-
-    private class CreateNewCert extends AsyncTask<Object, Integer, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Object[] objects) {
-            try {
-                // Create a new private key and certificate. This call
-                // creates both on the server and returns them to the
-                // device.
-                CreateKeysAndCertificateRequest createKeysAndCertificateRequest =
-                        new CreateKeysAndCertificateRequest();
-                createKeysAndCertificateRequest.setSetAsActive(true);
-                final CreateKeysAndCertificateResult createKeysAndCertificateResult;
-                createKeysAndCertificateResult =
-                        androidIoTClient.createKeysAndCertificate(createKeysAndCertificateRequest);
-                Log.i(LOG_TAG,
-                        "Cert ID: " +
-                                createKeysAndCertificateResult.getCertificateId() +
-                                " created.");
-
-                // store in keystore for use in MQTT client
-                // saved as alias "default" so a new certificate isn't
-                // generated each run of this application
-                AWSIotKeystoreHelper.saveCertificateAndPrivateKey(certificateId,
-                        createKeysAndCertificateResult.getCertificatePem(),
-                        createKeysAndCertificateResult.getKeyPair().getPrivateKey(),
-                        keystorePath, keystoreName, keystorePassword);
-
-                // load keystore from file into memory to pass on
-                // connection
-                clientKeyStore = AWSIotKeystoreHelper.getIotKeystore(certificateId,
-                        keystorePath, keystoreName, keystorePassword);
-
-                // Attach a policy to the newly created certificate.
-                // This flow assumes the policy was already created in
-                // AWS IoT and we are now just attaching it to the
-                // certificate.
-                AttachPrincipalPolicyRequest policyAttachRequest =
-                        new AttachPrincipalPolicyRequest();
-                policyAttachRequest.setPolicyName(AWS_IOT_POLICY_NAME);
-                policyAttachRequest.setPrincipal(createKeysAndCertificateResult
-                        .getCertificateArn());
-                androidIoTClient.attachPrincipalPolicy(policyAttachRequest);
-
-            } catch (Exception e) {
-                Log.e(LOG_TAG,
-                        "Exception occurred when generating new private key and certificate.",
-                        e);
-            }
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-            if(aBoolean) {
-            // TODO: 2016-12-03 allow signin
-                IotConnect();
-            }
-        }
-    }
-
 
 }
 

@@ -14,10 +14,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.amazonaws.mobileconnectors.cognito.Dataset;
+import com.amazonaws.mobileconnectors.cognito.DefaultSyncCallback;
+import com.amazonaws.mobileconnectors.cognito.exceptions.DataStorageException;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
 
-public class NewDeviceActivity extends AppCompatActivity {
+import java.util.List;
+
+public class NewDeviceActivity extends AppCompatActivity implements DynamoDBManager.DynamoDBTaskListener {
 
     //controls
     private EditText idView;
@@ -56,16 +61,15 @@ public class NewDeviceActivity extends AppCompatActivity {
 
                 if(!idView.getText().toString().trim().isEmpty() && !deviceNameView.getText().toString().trim().isEmpty()){
 
-                    Device device = new Device(idView.getText().toString(), deviceNameView.getText().toString());
+                    final Device device = new Device(idView.getText().toString(), deviceNameView.getText().toString(), defaultDeviceImage);
                     if (device != null) {
-                        device.image = deviceImageView.getDrawable();
-                        DummyContent.addDevice(device);
-                    }
 
-                    Intent intent = new Intent();
-                    intent.putExtra("MESSAGE", "");
-                    setResult(1, intent);
-                    finish();
+                        //insert device into database
+                        //DynamoDBManager.getInstance().insertUserDevice(device);
+                        DynamoDBManager dbManager = DynamoDBManager.getInstance();
+                        Object[] arguments = new Object[]{DynamoDBManager.DynamoDBManagerType.INSERT_USER_DEVICE, device};
+                        new DynamoDBManager.DynamoDBManagerTask(NewDeviceActivity.this).execute(arguments);
+                    }
                 }
             }
         });
@@ -88,4 +92,11 @@ public class NewDeviceActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onResult(Object result) {
+        Intent intent = new Intent();
+        intent.putExtra("Added", "success");
+        setResult(1, intent);
+        finish();
+    }
 }

@@ -61,6 +61,9 @@ public class DeviceFragment extends Fragment {
 
         // Set the adapter
         Context context = view.getContext();
+
+
+
         recyclerView = (RecyclerView) view.findViewById(R.id.list);
         emptyView = (TextView) view.findViewById(R.id.empty_view);
         if (mColumnCount <= 1) {
@@ -111,7 +114,6 @@ public class DeviceFragment extends Fragment {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
         }
-
     }
 
     /**

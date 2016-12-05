@@ -19,6 +19,7 @@ import com.amazonaws.services.dynamodbv2.*;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*;
 import com.amazonaws.services.dynamodbv2.model.*;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.Models.PiElectricity;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
@@ -123,6 +124,7 @@ public class UsageOverviewFragment extends Fragment {
 
         totalUsageView = (TextView) view.findViewById(R.id.total_usage);
 
+
         new getUsageData().execute();
 
         return  view;
@@ -167,6 +169,10 @@ public class UsageOverviewFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    public void updateUsageData(){
+        new getUsageData().execute();
+    }
+
     private class getUsageData extends AsyncTask<Void, String, Integer> {
 
         private int[] colours = new int[]{Color.GREEN, Color.RED, Color.BLUE, Color.BLACK};
@@ -176,8 +182,9 @@ public class UsageOverviewFragment extends Fragment {
 
         @Override
         protected Integer doInBackground(Void... voids) {
-            DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-            PaginatedScanList<PiElectricity> result = mapper.scan(PiElectricity.class, scanExpression);
+
+
+            PaginatedScanList<PiElectricity> result = DynamoDBManager.getInstance().getUsageData();
 
             for (PiElectricity x:result) {
                 try {
@@ -201,10 +208,8 @@ public class UsageOverviewFragment extends Fragment {
                         data.add(new DataPoint(data.size(), value));
                         deviceData.put(deviceID, data);
                     }
-
                     totalUsage += value;
                     numDataPoints++;
-
                 }
                 catch (JSONException e){
                     Log.e(LOG_TAG,
@@ -212,8 +217,6 @@ public class UsageOverviewFragment extends Fragment {
                             e);
                 }
             }
-
-
             return null;
         }
 
@@ -221,6 +224,7 @@ public class UsageOverviewFragment extends Fragment {
         protected void onPostExecute(Integer value) {
             super.onPostExecute(value);
             int i = 0;
+            graph.removeAllSeries();
 
             for(Map.Entry<String, ArrayList<DataPoint>> entry: deviceData.entrySet()){
                 Collections.sort(entry.getValue(), new TimeStampComparator());

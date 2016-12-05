@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.Models.Device;
@@ -58,7 +59,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
             }
         });
 
-
+        holder.mTogglePower.setSelected(holder.mItem.isPowerOn);
     }
 
     @Override
@@ -70,17 +71,32 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
         public final View mView;
         public final ImageView mStreamImage;
         public final TextView mContentView;
-        public final ImageButton mRemoveStream;
+        //public final ImageButton mRemoveStream;
+        public final ToggleButton mTogglePower;
         public Device mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
+            mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mListener.onListFragmentInteraction(mItem);
+                }
+            });
             mView.setOnLongClickListener(this);
             mStreamImage = (ImageView) view.findViewById(R.id.streamImage);
             mContentView = (TextView) view.findViewById(R.id.content);
-            mRemoveStream = (ImageButton) view.findViewById(R.id.remove_btn);
-            mRemoveStream.setOnClickListener(this);
+            //mRemoveStream = (ImageButton) view.findViewById(R.id.remove_btn);
+            //mRemoveStream.setOnClickListener(this);
+
+            mTogglePower = (ToggleButton) view.findViewById(R.id.toggle_power);
+            mTogglePower.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mListener.onListFragmentInteraction(mItem);
+                }
+            });
         }
 
         @Override

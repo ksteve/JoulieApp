@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/activity_device_detail"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="com.example.kyle.joulieapp.DeviceDetailActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Device ID: "/>
+
+        <TextView
+        android:id="@+id/deviceID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Avg Usage: "/>
+
+        <TextView
+            android:id="@+id/avg_usage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+
+    <com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_weight="0.1"
+        android:layout_height="200dip"
+        android:layout_marginTop="10dp"
+        android:id="@+id/graph" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ToggleButton
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="80dp"
+            android:layout_marginEnd="5dp"
+            android:id="@+id/toggle_power1"
+            android:layout_gravity="center_vertical|end"/>
+
+        <ToggleButton
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="80dp"
+            android:layout_marginEnd="5dp"
+            android:id="@+id/toggle_power2"
+            android:layout_gravity="center_vertical|end"/>
+
+        <ToggleButton
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="80dp"
+            android:layout_marginEnd="5dp"
+            android:id="@+id/toggle_power3"
+            android:layout_gravity="center_vertical|end"/>
+    </LinearLayout>
+
+</LinearLayout>
