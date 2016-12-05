@@ -267,7 +267,7 @@ public class LoginActivity extends AppCompatActivity{
 
     private void setupAWSClient(){
 
-        clientId = "4c534b19baf24c9786df92a060a2ed94";
+        clientId = "2kdrl4ai3tbegmnt5ui8qgrnf9";
 
         Region region = Region.getRegion(MY_REGION);
 
