@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity
         setupTabIcons();
 
         if (savedInstanceState == null) {
-            IoTApi.getInstance().callListThings(this);
+            //IoTApi.getInstance().callListThings(this);
             DummyContent.populate(this);
         }
     }
