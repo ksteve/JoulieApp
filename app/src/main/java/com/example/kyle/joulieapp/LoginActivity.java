@@ -171,6 +171,14 @@ public class LoginActivity extends AppCompatActivity{
             }
         });
 
+        Button mRegisterButton = (Button) findViewById(R.id.register_button);
+        mRegisterButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signUpNewUser();
+            }
+        });
+
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
@@ -259,7 +267,7 @@ public class LoginActivity extends AppCompatActivity{
 
     private void setupAWSClient(){
 
-        clientId = UUID.randomUUID().toString();
+        clientId = "4c534b19baf24c9786df92a060a2ed94";
 
         Region region = Region.getRegion(MY_REGION);
 
@@ -349,6 +357,12 @@ public class LoginActivity extends AppCompatActivity{
         startActivity(intent);
         showProgress(false);        
     }
+
+    private void signUpNewUser() {
+        Intent registerActivity = new Intent(this, RegisterUser.class);
+        startActivityForResult(registerActivity, 1);
+    }
+
 
     /**
      * Attempts to sign in or register the account specified by the login form.

@@ -83,7 +83,7 @@ public class AppHelper {
     /**
      * Add you app id
      */
-    private static final String clientId = UUID.randomUUID().toString();
+    private static final String clientId = "4c534b19baf24c9786df92a060a2ed94";
 
     /**
      * App secret associated with your app id - if the App id does not have an associated App secret,
