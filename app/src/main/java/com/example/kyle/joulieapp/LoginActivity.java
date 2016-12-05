@@ -23,6 +23,12 @@ import android.widget.TextView;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSSessionCredentials;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationDetails;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.mobileconnectors.iot.AWSIotKeystoreHelper;
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttClientStatusCallback;
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttLastWillAndTestament;
@@ -42,6 +48,9 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.ChallengeContinuation;
+
 
 import java.net.URL;
 import java.security.KeyStore;
@@ -101,6 +110,8 @@ public class LoginActivity extends AppCompatActivity{
 
     private boolean activityStarted = false;
 
+    private String email;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +177,14 @@ public class LoginActivity extends AppCompatActivity{
             }
         });
 
+        Button mRegisterButton = (Button) findViewById(R.id.register_button);
+        mRegisterButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signUpNewUser();
+            }
+        });
+
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         mProgressContainer = findViewById(R.id.progress_container);
@@ -176,6 +195,10 @@ public class LoginActivity extends AppCompatActivity{
             AwsLogin(AccessToken.getCurrentAccessToken().getToken());
         }
     }
+
+        // Initialize application
+        AppHelper.init(getApplicationContext());
+        findCurrent();
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -215,9 +238,83 @@ public class LoginActivity extends AppCompatActivity{
         }
     }
 
+    private void findCurrent() {
+        CognitoUser user = AppHelper.getPool().getCurrentUser();
+        email = user.getUserId();
+        if(email != null) {
+            AppHelper.setUser(email);
+            mEmailView.setText(user.getUserId());
+            user.getSessionInBackground(authenticationHandler);
+        }
+    }
+
+    // Implement authentication handler,
+    AuthenticationHandler authenticationHandler = new AuthenticationHandler() {
+        @Override
+        public void onSuccess(CognitoUserSession userSession, CognitoDevice device) {
+            // Authentication was successful, the "userSession" will have the current valid tokens
+            // Time to do awesome stuff
+
+            AppHelper.setCurrSession(userSession);
+            AppHelper.newDevice(device);
+
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+            openMainActivity();
+        }
+
+        @Override
+        public void getAuthenticationDetails(final AuthenticationContinuation continuation, final String userID) {
+            // User authentication details, userId and password are required to continue.
+            // Use the "continuation" object to pass the user authentication details
+
+            // After the user authentication details are available, wrap them in an AuthenticationDetails class
+            // Along with userId and password, parameters for user pools for Lambda can be passed here
+            // The validation parameters "validationParameters" are passed in as a Map<String, String>
+            AuthenticationDetails authDetails = new AuthenticationDetails(email, password, null);
+
+
+            // Now allow the authentication to continue
+            continuation.setAuthenticationDetails(authDetails);
+            continuation.continueTask();
+        }
+
+        @Override
+        public void getMFACode(final MultiFactorAuthenticationContinuation continuation) {
+            // Multi-factor authentication is required to authenticate
+            // A code was sent to the user, use the code to continue with the authentication
+
+
+            // Find where the code was sent to
+            String codeSentHere = continuation.getParameters().toString();
+
+            // When the verification code is available, continue to authenticate
+            //continuation.setMfaCode(code);
+            continuation.continueTask();
+        }
+
+        @Override
+        public void authenticationChallenge(final ChallengeContinuation continuation) {
+            // A custom challenge has to be solved to authenticate
+            int i = 0;
+            // Set the challenge responses
+
+            // Call continueTask() method to respond to the challenge and continue with authentication.
+        }
+
+
+
+        @Override
+        public void onFailure(final Exception exception) {
+            // Authentication failed, probe exception for the cause
+            int i = 0;
+        }
+    };
+
     private void setupAWSClient(){
 
-        clientId = UUID.randomUUID().toString();
+        clientId = "2kdrl4ai3tbegmnt5ui8qgrnf9";
+
         Region region = Region.getRegion(MY_REGION);
 
         // MQTT Client
@@ -358,6 +455,17 @@ public class LoginActivity extends AppCompatActivity{
         //showProgress(false);
     }
 
+    private void signUpNewUser() {
+        Intent registerActivity = new Intent(this, RegisterUser.class);
+        startActivityForResult(registerActivity, 1);
+    }
+
+
+    /**
+     * Attempts to sign in or register the account specified by the login form.
+     * If there are form errors (invalid email, missing fields, etc.), the
+     * errors are presented and no actual login attempt is made.
+     */
     private void attemptLogin() {
 
         // Reset errors.
@@ -365,8 +473,8 @@ public class LoginActivity extends AppCompatActivity{
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        email = mEmailView.getText().toString();
+        password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -383,20 +491,21 @@ public class LoginActivity extends AppCompatActivity{
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
-        }
+        } //else if (!isEmailValid(email)) {
+            //mEmailView.setError(getString(R.string.error_invalid_email));
+            //focusView = mEmailView;
+            //cancel = true;
+       // }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            openMainActivity();
+            AppHelper.setUser(email);
+            AppHelper.getPool().getUser(email).getSessionInBackground(authenticationHandler);
+
+
         }
     }
 
