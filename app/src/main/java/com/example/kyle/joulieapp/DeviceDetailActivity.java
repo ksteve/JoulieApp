@@ -63,6 +63,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
         ab.setTitle(currentDevice.deviceName);
         ab.setDisplayHomeAsUpEnabled(true);
 
+        avg_usage = (TextView) findViewById(R.id.avg_usage);
         deviceID = (TextView) findViewById(R.id.deviceID);
         deviceID.setText(currentDevice.id);
         graph = (GraphView) findViewById(R.id.graph);

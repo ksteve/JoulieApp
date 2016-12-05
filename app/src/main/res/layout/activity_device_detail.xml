@@ -19,13 +19,13 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Device ID: "/>
 
         <TextView
         android:id="@+id/deviceID"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     </LinearLayout>
@@ -36,13 +36,13 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Avg Usage: "/>
 
         <TextView
             android:id="@+id/avg_usage"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>

@@ -59,7 +59,6 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
             }
         });
 
-        holder.mTogglePower.setSelected(holder.mItem.isPowerOn);
     }
 
     @Override
@@ -72,7 +71,6 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
         public final ImageView mStreamImage;
         public final TextView mContentView;
         //public final ImageButton mRemoveStream;
-        public final ToggleButton mTogglePower;
         public Device mItem;
 
         public ViewHolder(View view) {
@@ -90,13 +88,6 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
             //mRemoveStream = (ImageButton) view.findViewById(R.id.remove_btn);
             //mRemoveStream.setOnClickListener(this);
 
-            mTogglePower = (ToggleButton) view.findViewById(R.id.toggle_power);
-            mTogglePower.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mListener.onListFragmentInteraction(mItem);
-                }
-            });
         }
 
         @Override

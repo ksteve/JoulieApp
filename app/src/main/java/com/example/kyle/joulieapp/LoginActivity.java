@@ -194,11 +194,13 @@ public class LoginActivity extends AppCompatActivity{
             showProgress(true);
             AwsLogin(AccessToken.getCurrentAccessToken().getToken());
         }
-    }
 
         // Initialize application
         AppHelper.init(getApplicationContext());
         findCurrent();
+    }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
