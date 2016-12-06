@@ -219,7 +219,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
                     String deviceID = jObject.getString("DeviceID");
                     int timestamp = jObject.getInt("timestamp");
-                    int value = jObject.getInt("value");
+                    int value = jObject.getInt("value") / 1000;
 
                     if(deviceID.equals(currentDevice.id)) {
 
@@ -265,7 +265,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
                 i++;
             }
             float avgUsage = (totalUsage/numDataPoints);
-            avg_usage.setText(String.valueOf(avgUsage) + " Watts");
+            avg_usage.setText(String.valueOf(avgUsage) + " kWatts");
         }
     }
 
