@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity{
             public void onSuccess(LoginResult loginResult) {
                 // get credentials from AWS
                 showProgress(true);
-                AwsLogin(loginResult.getAccessToken().getToken());
+                AwsLogin(loginResult.getAccessToken().getToken(), "facebook");
             }
 
             @Override
@@ -192,7 +192,7 @@ public class LoginActivity extends AppCompatActivity{
         //if user has already logged in with facebook
         if(AccessToken.getCurrentAccessToken() != null && !AccessToken.getCurrentAccessToken().isExpired()){
             showProgress(true);
-            AwsLogin(AccessToken.getCurrentAccessToken().getToken());
+            AwsLogin(AccessToken.getCurrentAccessToken().getToken(), "facebook");
         }
 
         // Initialize application
@@ -208,9 +208,13 @@ public class LoginActivity extends AppCompatActivity{
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void AwsLogin(String token){
+    private void AwsLogin(String token, String whichProvider){
         Map<String, String> logins = new HashMap<>();
-        logins.put("graph.facebook.com",token);
+        if(whichProvider.equals("facebook")) {
+            logins.put("graph.facebook.com", token);
+        }else {
+            logins.put("aws:cognito-idp:us-west-2/us-west-2_RtNAbuGJi", token);
+        }
         credentialsProvider.setLogins(logins);
 
         //start new thread to get credentials from AWS server
@@ -259,10 +263,10 @@ public class LoginActivity extends AppCompatActivity{
 
             AppHelper.setCurrSession(userSession);
             AppHelper.newDevice(device);
-
+            //AwsLogin(userSession.getIdToken().getJWTToken(), "");
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            openMainActivity();
+            //openMainActivity();
         }
 
         @Override
