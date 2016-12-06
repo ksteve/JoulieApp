@@ -88,6 +88,13 @@
                 android:text="@string/action_sign_in"
                 android:textStyle="bold"/>
 
+            <Button
+                android:text="@string/action_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/register_button"/>
+
 
             <com.facebook.login.widget.LoginButton
                 android:id="@+id/login_button"
@@ -97,12 +104,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="30dp" />
 
-            <Button
-                android:text="@string/action_register"
-                android:layout_width="143dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/register_button"
-                android:layout_marginLeft="100dp" />
+
 
         </LinearLayout>
     </ScrollView>
