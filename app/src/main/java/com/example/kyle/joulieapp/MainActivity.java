@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         // TODO: 2016-12-04 check if authenticated
-       String id = LoginActivity.credentialsProvider.getIdentityId();
+       //String id = LoginActivity.credentialsProvider.getIdentityId();
 
         coordinator = findViewById(R.id.coordinator);
         //setup toolbar
