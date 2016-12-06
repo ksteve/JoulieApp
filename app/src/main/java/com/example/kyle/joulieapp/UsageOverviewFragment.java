@@ -19,6 +19,7 @@ import com.amazonaws.services.dynamodbv2.*;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*;
 import com.amazonaws.services.dynamodbv2.model.*;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.Models.PiElectricity;
 import com.jjoe64.graphview.GraphView;
@@ -200,16 +201,17 @@ public class UsageOverviewFragment extends Fragment {
                     Date date = cal.getTime();
                     //String date = DateFormat.format("dd-MM-yyyy", cal).toString();
                    // return date;
-
-                    if(deviceData.containsKey(deviceID)){
-                        deviceData.get(deviceID).add(new DataPoint(deviceData.get(deviceID).size(), value));
-                    } else {
-                        ArrayList<DataPoint> data = new ArrayList<>();
-                        data.add(new DataPoint(data.size(), value));
-                        deviceData.put(deviceID, data);
+                    if(checkifuserdevice(deviceID)) {
+                        if (deviceData.containsKey(deviceID)) {
+                            deviceData.get(deviceID).add(new DataPoint(deviceData.get(deviceID).size(), value));
+                        } else {
+                            ArrayList<DataPoint> data = new ArrayList<>();
+                            data.add(new DataPoint(data.size(), value));
+                            deviceData.put(deviceID, data);
+                        }
+                        totalUsage += value;
+                        numDataPoints++;
                     }
-                    totalUsage += value;
-                    numDataPoints++;
                 }
                 catch (JSONException e){
                     Log.e(LOG_TAG,
@@ -237,6 +239,19 @@ public class UsageOverviewFragment extends Fragment {
             float avgUsage = (totalUsage/numDataPoints);
             totalUsageView.setText(String.valueOf(avgUsage) + " Watts");
         }
+    }
+
+    private boolean checkifuserdevice(String deviceID){
+
+        if(DummyContent.MY_DEVICES.size() == 0) return false;
+
+        for(Device x: DummyContent.MY_DEVICES){
+            if(x.id.equals(deviceID)){
+                return true;
+            }
+        }
+        return  false;
+
     }
 
     private class TimeStampComparator implements Comparator<DataPoint> {

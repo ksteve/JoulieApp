@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         // TODO: 2016-12-04 check if authenticated
-       String id = LoginActivity.credentialsProvider.getIdentityId();
+       //String id = LoginActivity.credentialsProvider.getIdentityId();
 
         coordinator = findViewById(R.id.coordinator);
         //setup toolbar
@@ -177,13 +177,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(data.getStringExtra("Added") == "Success"){
+
+        if(data != null && data.getStringExtra("Added") == "Success"){
             Snackbar snackbar = Snackbar.make(coordinator, "Device Added", Snackbar.LENGTH_SHORT);
             snackbar.show();
 
         } else {
-            Snackbar snackbar = Snackbar.make(coordinator, "Error Adding Device to server", Snackbar.LENGTH_SHORT);
-            snackbar.show();
 
         }
         notifyFragment();

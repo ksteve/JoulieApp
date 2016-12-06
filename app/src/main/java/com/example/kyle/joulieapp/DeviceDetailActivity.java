@@ -46,7 +46,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private ToggleButton toggleBtn1;
     private ToggleButton toggleBtn2;
     private ToggleButton toggleBtn3;
-
+    private String guid = "6b5e49b13c5148b7a50c6c29fd1f282f";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +109,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
     //subscribeClick event handler
     //used to subscribe to a topic
     private void subscribe(){
-        final String topic = "pi/sockets_status";
+        final String topic = "pi/sockets_status/" + guid;
 
         Log.d(LOG_TAG, "topic = " + topic);
 
@@ -171,7 +171,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
     View.OnClickListener publishClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            final String guid = currentDevice.id;
+           // final String guid = currentDevice.id;
             final String topic = "pi/sockets";
             String status = toggleBtn1.isChecked() ? "on" : "off";
             final String msg = "{\"deviceID\" : \""+ guid +"\",\"socketNumber\" : 1,\"status\" : \"" + status + "\"}";
@@ -186,8 +186,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
     };
 
     private void publishSwitch(int number, boolean isOn){
-        final String guid = currentDevice.id;
-        final String topic = "pi/sockets";
+       // final String guid = currentDevice.id;
+        final String topic = "pi/sockets/" + guid;
         String status = isOn ? "on" : "off";
         final String msg = "{\"deviceID\" : \""+ guid +"\",\"socketNumber\" : " + number + ",\"status\" : \"" + status + "\"}";
 
@@ -210,7 +210,6 @@ public class DeviceDetailActivity extends AppCompatActivity {
         @Override
         protected Integer doInBackground(Void... voids) {
 
-
             PaginatedScanList<PiElectricity> result = DynamoDBManager.getInstance().getUsageData();
 
             for (PiElectricity x:result) {
@@ -222,7 +221,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     int timestamp = jObject.getInt("timestamp");
                     int value = jObject.getInt("value");
 
-                    if(deviceID == currentDevice.id) {
+                    if(deviceID.equals(currentDevice.id)) {
 
                         Calendar cal = Calendar.getInstance(Locale.ENGLISH);
                         cal.setTimeInMillis(timestamp);

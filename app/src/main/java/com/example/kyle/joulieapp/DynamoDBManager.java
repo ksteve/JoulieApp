@@ -1,6 +1,7 @@
 package com.example.kyle.joulieapp;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBQueryExpression;
@@ -45,9 +46,14 @@ public class DynamoDBManager {
     }
 
     public PaginatedScanList<PiElectricity> getUsageData(){
+        PaginatedScanList<PiElectricity> result = null;
 
-        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-        PaginatedScanList<PiElectricity> result = mapper.scan(PiElectricity.class, scanExpression);
+        try {
+            DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+            result = mapper.scan(PiElectricity.class, scanExpression);
+        }catch (Exception e){
+            Log.i("DynamoDBManager", "Error getting usage data");
+        }
 
         return result;
     }
