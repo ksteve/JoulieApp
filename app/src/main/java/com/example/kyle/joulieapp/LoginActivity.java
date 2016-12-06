@@ -1,3 +1,10 @@
+//Names: Amshar Basheer, Grigory Kozyrev, Kyle Stevenson
+//Project Name: JoulieApp
+//File Name: LoginActivity.java
+//Date: 2016-12-06
+//Description: This is the activity that deals with logging in for the app.
+//Notes: some code snippets were borrowed from https://docs.aws.amazon.com/cognito/latest/developerguide/using-amazon-cognito-user-identity-pools-android-sdk.html
+
 package com.example.kyle.joulieapp;
 
 import android.animation.Animator;
@@ -113,6 +120,11 @@ public class LoginActivity extends AppCompatActivity{
     private String email;
     private String password;
 
+
+    //Method Name: onCreate
+    //Parameters: Bundle savedInstanceState
+    //Return: void
+    //Description: initializes app and sets up login stuff
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -208,6 +220,10 @@ public class LoginActivity extends AppCompatActivity{
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    //Method Name: AwsLogin
+    //Parameters: String token
+    //Return: void
+    //Description: sets up for Aws login
     private void AwsLogin(String token){
         Map<String, String> logins = new HashMap<>();
         logins.put("graph.facebook.com",token);
@@ -217,6 +233,9 @@ public class LoginActivity extends AppCompatActivity{
         new GetAWSCredentials().execute(null, null, null);
     }
 
+
+    //Class Name: GetAWSCredentials
+    //Description: gets AWS credentials and sets up AWS client
     private class GetAWSCredentials extends AsyncTask<Object, Integer, Boolean> {
 
         @Override
@@ -250,7 +269,8 @@ public class LoginActivity extends AppCompatActivity{
         }
     }
 
-    // Implement authentication handler,
+    // Class Name: Authentication Handler
+    // Description: implement authentication handler to do authentication of user credentials
     AuthenticationHandler authenticationHandler = new AuthenticationHandler() {
         @Override
         public void onSuccess(CognitoUserSession userSession, CognitoDevice device) {
@@ -313,6 +333,10 @@ public class LoginActivity extends AppCompatActivity{
         }
     };
 
+    //Method Name: setupAWSClient
+    //Parameters: void
+    //Return: void
+    //Description: sets up AWS client
     private void setupAWSClient(){
 
         clientId = "2kdrl4ai3tbegmnt5ui8qgrnf9";
@@ -372,6 +396,8 @@ public class LoginActivity extends AppCompatActivity{
        // IotConnect();
     }
 
+    //Class Name: CreateNewCert
+    //Description: Create a new private key and certificate
     private class CreateNewCert extends AsyncTask<Object, Integer, Boolean> {
 
         @Override
@@ -447,6 +473,10 @@ public class LoginActivity extends AppCompatActivity{
 
     }
 
+    //Method Name: openMainActivity
+    //Parameters: void
+    //Return: void
+    //Description: opens main activity (called upon successful login)
     private void openMainActivity(){
         if(!activityStarted) {
             showProgress(true);
@@ -457,6 +487,10 @@ public class LoginActivity extends AppCompatActivity{
         //showProgress(false);
     }
 
+    //Method Name: signUpNewUser
+    //Parameters: void
+    //Return: void
+    //Description: opens activity for new user to sign up
     private void signUpNewUser() {
         Intent registerActivity = new Intent(this, RegisterUser.class);
         startActivityForResult(registerActivity, 1);

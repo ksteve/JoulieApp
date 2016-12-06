@@ -1,3 +1,9 @@
+//Names: Amshar Basheer, Grigory Kozyrev, Kyle Stevenson
+//Project Name: JoulieApp
+//File Name: MainActivity.java
+//Date: 2016-12-06
+//Description: This is the main activity for the app. It contains the code for managing the tabs / fragments.
+
 package com.example.kyle.joulieapp;
 
 import android.content.Intent;
@@ -77,6 +83,10 @@ public class MainActivity extends AppCompatActivity
     private static final int MYUSAGE_FRAGMENT = 1;
     private static final int MYRULES_FRAGMENT = 2;
 
+    //Method Name: onCreate
+    //Parameters: Bundle savedInstanceState
+    //Return: void
+    //Description: sets up the layout for the tabs
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,6 +153,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    //Method Name: setupViewPager
+    //Parameters: void
+    //Return: void
+    //Description: sets up the view pager
     private void setupViewPager(){
         vpPager = (ViewPager) findViewById(R.id.main_viewpager);
         vpPager.setPageMargin(50);
@@ -153,6 +167,10 @@ public class MainActivity extends AppCompatActivity
         actionBar.setTitle(adapterViewPager.getPageTitle(vpPager.getCurrentItem()));
     }
 
+    //Method Name: setupTabIcons
+    //Parameters: void
+    //Return: void
+    //Description: sets up the tab icons
     private void setupTabIcons() {
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_power_24dp);
         tabLayout.getTabAt(0).setText("");
@@ -162,6 +180,10 @@ public class MainActivity extends AppCompatActivity
         tabLayout.getTabAt(2).setText("");
     }
 
+    //Method Name: toggleFab
+    //Parameters: boolean show
+    //Return: void
+    //Description: toggles Fab
     public void toggleFab(boolean show){
         if(show){
             fab.show();
@@ -170,11 +192,19 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //Method Name: openSettingsActivity
+    //Parameters: void
+    //Return: void
+    //Description: opens the settings activity
     private void openSettingsActivity(){
         Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
         startActivity(settingsIntent);
     }
 
+    //Method Name: onActivityResult
+    //Parameters: int requestCode, int resultCode, Intent data
+    //Return: void
+    //Description: called upon adding a device
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -189,6 +219,10 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    //Method Name: onBackPressed
+    //Parameters: void
+    //Return: void
+    //Description: called when back pressed
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -206,6 +240,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    //Method Name: onOptionsItemSelected
+    //Parameters: MenuItem item
+    //Return: boolean
+    //Description: Handle action bar item clicks
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -222,6 +260,10 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    //Method Name: onNavigationItemSelected
+    //Parameters: MenuItem item
+    //Return: boolean
+    //Description: changes view fragment
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -248,6 +290,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    //Method Name: notifyFragment
+    //Parameters: void
+    //Return: void
+    //Description: notifies fragment
     public void notifyFragment(){
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         for (Fragment x: fragments) {
@@ -261,6 +307,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //Method Name: updateUsageData
+    //Parameters: void
+    //Return: void
+    //Description: updates usage data
     public void updateUsageData(){
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         for (Fragment x: fragments) {
@@ -270,6 +320,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //Method Name: onResume
+    //Parameters: void
+    //Return: void
+    //Description: called when app resumes
     @Override
     protected void onResume() {
         super.onResume();
