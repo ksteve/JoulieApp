@@ -148,7 +148,7 @@ public class LoginActivity extends AppCompatActivity{
             public void onSuccess(LoginResult loginResult) {
                 // get credentials from AWS
                 showProgress(true);
-                AwsLogin(loginResult.getAccessToken().getToken(), "facebook");
+                AwsLogin(loginResult.getAccessToken().getToken());
             }
 
             @Override
@@ -204,7 +204,7 @@ public class LoginActivity extends AppCompatActivity{
         //if user has already logged in with facebook
         if(AccessToken.getCurrentAccessToken() != null && !AccessToken.getCurrentAccessToken().isExpired()){
             showProgress(true);
-            AwsLogin(AccessToken.getCurrentAccessToken().getToken(), "facebook");
+            AwsLogin(AccessToken.getCurrentAccessToken().getToken());
         }
 
         // Initialize application
@@ -227,11 +227,9 @@ public class LoginActivity extends AppCompatActivity{
     //Description: sets up for Aws login
     private void AwsLogin(String token){
         Map<String, String> logins = new HashMap<>();
-        if(whichProvider.equals("facebook")) {
+
             logins.put("graph.facebook.com", token);
-        }else {
-            logins.put("aws:cognito-idp:us-west-2/us-west-2_RtNAbuGJi", token);
-        }
+
         credentialsProvider.setLogins(logins);
 
         //start new thread to get credentials from AWS server
