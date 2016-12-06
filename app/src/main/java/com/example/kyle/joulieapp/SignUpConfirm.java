@@ -1,3 +1,5 @@
+//this file was borrowed from: https://github.com/awslabs/aws-sdk-android-samples/tree/master/AmazonCognitoYourUserPoolsDemo
+
 /*
  *  Copyright 2013-2016 Amazon.com,
  *  Inc. or its affiliates. All Rights Reserved.
