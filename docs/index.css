@@ -23,8 +23,11 @@ hr {
 }
 
 .subtitle {
-	text-align: center;	
-	padding-top: 5%;
+	text-align: center;		
+}
+
+.row {
+	padding-bottom: 2%;
 }
 
 
