@@ -50,4 +50,7 @@
     <string name="facebook_app_id">1923164431244563</string>
     <string name="fb_login_protocol_scheme">fb1923164431244563</string>
 
+    <string name="auth0_client_id">QFzpBmFU8WtS7LCJiwblg8IEetfmsFNh</string>
+    <string name="auth0_domain">app62367704.auth0.com</string>
+
 </resources>

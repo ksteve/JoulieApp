@@ -8,7 +8,6 @@ package com.example.kyle.joulieapp;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,7 +18,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -29,37 +27,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.io.UnsupportedEncodingException;
 import java.util.List;
-
-import com.amazonaws.mobileconnectors.cognito.CognitoSyncManager;
-import com.amazonaws.mobileconnectors.cognito.Dataset;
-import com.amazonaws.mobileconnectors.cognito.DefaultSyncCallback;
-import com.amazonaws.mobileconnectors.cognito.Record;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedQueryList;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanList;
-import com.amazonaws.mobileconnectors.iot.AWSIotMqttNewMessageCallback;
-import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.iot.AWSIotClient;
-import com.amazonaws.services.iot.model.AttributePayload;
-import com.amazonaws.services.iot.model.CreateThingRequest;
-import com.amazonaws.services.iot.model.ListThingsRequest;
-import com.amazonaws.services.iot.model.ListThingsResult;
-import com.amazonaws.services.iot.model.ThingAttribute;
-import com.amazonaws.services.iotdata.AWSIotDataClient;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.Usage;
 import com.example.kyle.joulieapp.Models.Rule;
 import com.example.kyle.joulieapp.Models.DummyContent;
-import com.example.kyle.joulieapp.Models.UserDevice;
-import com.facebook.AccessToken;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import static com.example.kyle.joulieapp.LoginActivity.LOG_TAG;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -67,16 +39,13 @@ public class MainActivity extends AppCompatActivity
         DeviceFragment.OnListFragmentInteractionListener,
         UsageFragment.OnListFragmentInteractionListener,
         UsageOverviewFragment.OnFragmentInteractionListener,
-        RuleFragment.OnListFragmentInteractionListener,
-        DynamoDBManager.DynamoDBTaskListener{
+        RuleFragment.OnListFragmentInteractionListener{
 
     private FragmentPagerAdapter adapterViewPager;
     private ViewPager vpPager;
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private FloatingActionButton fab;
-    public static CognitoSyncManager syncClient;
-    public static Dataset dataset;
     private View coordinator;
 
     private static final int MYDEVICES_FRAGMENT = 0;
@@ -92,12 +61,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(LoginActivity.credentialsProvider != null) {
-            DynamoDBManager.getInstance();
-        }
-
         // TODO: 2016-12-04 check if authenticated
-       //String id = LoginActivity.credentialsProvider.getIdentityId();
 
         coordinator = findViewById(R.id.coordinator);
         //setup toolbar
@@ -142,15 +106,6 @@ public class MainActivity extends AppCompatActivity
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(vpPager);
         setupTabIcons();
-
-        if (savedInstanceState == null) {
-            //get user devices
-            new DynamoDBManager.DynamoDBManagerTask(this).execute(new Object[]{
-                    DynamoDBManager.DynamoDBManagerType.GET_USER_DEVICES,
-                    null
-            });
-        }
-
     }
 
     //Method Name: setupViewPager
@@ -279,9 +234,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             openSettingsActivity();
         } else if (id == R.id.nav_logout) {
-            AccessToken.setCurrentAccessToken(null);
-            LoginActivity.credentialsProvider.clearCredentials();
-            LoginActivity.credentialsProvider.clear();
             onNavigateUp();
         }
 
@@ -402,14 +354,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
-    }
-
-    @Override
-    public void onResult(Object result) {
-        //populate user Data
-        PaginatedQueryList<UserDevice> devices = (PaginatedQueryList<UserDevice>)result;
-        DummyContent.populate(devices);
-        notifyFragment();
     }
 
     public static class MyPagerAdapter extends FragmentPagerAdapter {

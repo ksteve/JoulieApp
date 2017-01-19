@@ -1,5 +1,15 @@
 <resources>
 
+    <style name="MyLockTheme" parent="Lock.Theme">
+        <item name="Auth0.HeaderLogo">@drawable/com_auth0_lock_header_logo</item>
+        <item name="Auth0.HeaderTitle">@string/app_name</item>
+        <item name="Auth0.HeaderTitleColor">@color/colorPrimary</item>
+        <item name="Auth0.HeaderBackground">@color/com_auth0_lock_header_background</item>
+        <item name="Auth0.PrimaryColor">@color/colorPrimary</item>
+        <item name="Auth0.DarkPrimaryColor">@color/colorAccent</item>
+    </style>
+
+
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->

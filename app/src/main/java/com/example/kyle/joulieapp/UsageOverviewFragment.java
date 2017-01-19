@@ -11,41 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.unmarshallers.IntegerSetUnmarshaller;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.dynamodbv2.*;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*;
-import com.amazonaws.services.dynamodbv2.model.*;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
-import com.example.kyle.joulieapp.Models.Device;
-import com.example.kyle.joulieapp.Models.DummyContent;
-import com.example.kyle.joulieapp.Models.PiElectricity;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.DataPointInterface;
-import com.jjoe64.graphview.series.LineGraphSeries;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import static com.example.kyle.joulieapp.LoginActivity.LOG_TAG;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,8 +33,6 @@ public class UsageOverviewFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-    private AmazonDynamoDBClient ddbClient;
-    private DynamoDBMapper mapper;
     private GraphView graph;
 
     private TextView totalUsageView;
@@ -109,9 +74,9 @@ public class UsageOverviewFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_usage_overview, container, false);
 
-        ddbClient = new AmazonDynamoDBClient(LoginActivity.credentialsProvider);
-        ddbClient.setRegion(Region.getRegion(Regions.US_WEST_2));
-        mapper = new DynamoDBMapper(ddbClient);
+       // ddbClient = new AmazonDynamoDBClient(LoginActivity.credentialsProvider);
+       // ddbClient.setRegion(Region.getRegion(Regions.US_WEST_2));
+       // mapper = new DynamoDBMapper(ddbClient);
 
         //setup graph
         graph = (GraphView) view.findViewById(R.id.graph);
@@ -126,7 +91,7 @@ public class UsageOverviewFragment extends Fragment {
         totalUsageView = (TextView) view.findViewById(R.id.total_usage);
 
 
-        new getUsageData().execute();
+      //  new getUsageData().execute();
 
         return  view;
     }
@@ -171,101 +136,6 @@ public class UsageOverviewFragment extends Fragment {
     }
 
     public void updateUsageData(){
-        new getUsageData().execute();
+       // new getUsageData().execute();
     }
-
-    private class getUsageData extends AsyncTask<Void, String, Integer> {
-
-        private int[] colours = new int[]{Color.GREEN, Color.RED, Color.BLUE, Color.BLACK};
-        Map<String, ArrayList<DataPoint>> deviceData = new HashMap<>();
-        float totalUsage = 0;
-        int numDataPoints = 0;
-
-        @Override
-        protected Integer doInBackground(Void... voids) {
-
-
-            PaginatedScanList<PiElectricity> result = DynamoDBManager.getInstance().getUsageData();
-
-            for (PiElectricity x:result) {
-                try {
-
-                    JSONObject jObject = new JSONObject(x.getDeviceID());
-
-                    String deviceID = jObject.getString("DeviceID");
-                    int timestamp = jObject.getInt("timestamp");
-                    int value = jObject.getInt("value");
-
-                    Calendar cal = Calendar.getInstance(Locale.ENGLISH);
-                    cal.setTimeInMillis(timestamp);
-                    Date date = cal.getTime();
-                    //String date = DateFormat.format("dd-MM-yyyy", cal).toString();
-                   // return date;
-                    if(checkifuserdevice(deviceID)) {
-                        if (deviceData.containsKey(deviceID)) {
-                            deviceData.get(deviceID).add(new DataPoint(deviceData.get(deviceID).size(), value));
-                        } else {
-                            ArrayList<DataPoint> data = new ArrayList<>();
-                            data.add(new DataPoint(data.size(), value));
-                            deviceData.put(deviceID, data);
-                        }
-                        totalUsage += value;
-                        numDataPoints++;
-                    }
-                }
-                catch (JSONException e){
-                    Log.e(LOG_TAG,
-                            "Json parsing exception",
-                            e);
-                }
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Integer value) {
-            super.onPostExecute(value);
-            int i = 0;
-            graph.removeAllSeries();
-
-            for(Map.Entry<String, ArrayList<DataPoint>> entry: deviceData.entrySet()){
-                Collections.sort(entry.getValue(), new TimeStampComparator());
-                LineGraphSeries<DataPoint> series = new LineGraphSeries<>(entry.getValue().toArray(new DataPoint[entry.getValue().size()]));
-                series.setColor(colours[i]);
-                series.setTitle(entry.getKey());
-                graph.addSeries(series);
-                i++;
-            }
-            float avgUsage = (totalUsage/numDataPoints);
-            totalUsageView.setText(String.valueOf(avgUsage) + " Watts");
-        }
-    }
-
-    private boolean checkifuserdevice(String deviceID){
-
-        if(DummyContent.MY_DEVICES.size() == 0) return false;
-
-        for(Device x: DummyContent.MY_DEVICES){
-            if(x.id.equals(deviceID)){
-                return true;
-            }
-        }
-        return  false;
-
-    }
-
-    private class TimeStampComparator implements Comparator<DataPoint> {
-        @Override
-        public int compare(DataPoint datapoint, DataPoint t1) {
-
-            if (datapoint.getX() > t1.getX()) {
-                return 0;
-            } else {
-                return 1;
-            }
-
-        }
-    }
-
-
 }

@@ -11,31 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanList;
-import com.amazonaws.mobileconnectors.iot.AWSIotMqttNewMessageCallback;
-import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
-import com.example.kyle.joulieapp.Models.PiElectricity;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-
-import static com.example.kyle.joulieapp.LoginActivity.LOG_TAG;
 
 public class DeviceDetailActivity extends AppCompatActivity {
 
@@ -111,51 +94,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private void subscribe(){
         final String topic = "pi/sockets_status/" + guid;
 
-        Log.d(LOG_TAG, "topic = " + topic);
 
-        try {
-            LoginActivity.mqttManager.subscribeToTopic(topic, AWSIotMqttQos.QOS0,
-                    new AWSIotMqttNewMessageCallback() {
-                        @Override
-                        public void onMessageArrived(final String topic, final byte[] data) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        String message = new String(data, "UTF-8");
-                                        Log.d(LOG_TAG, "Message arrived:");
-                                        Log.d(LOG_TAG, "   Topic: " + topic);
-                                        Log.d(LOG_TAG, " Message: " + message);
-
-                                       //tvLastMessage.setText(message);
-
-                                        JSONObject json = new JSONObject(message);
-                                        int number = json.getInt("socketNumber");
-                                        String status = json.getString("status");
-                                        switch (number) {
-                                            case 1:
-                                                updateButton(toggleBtn1, status);
-                                                break;
-                                            case 2:
-                                                updateButton(toggleBtn2, status);
-                                                break;
-                                            case 3:
-                                                updateButton(toggleBtn3, status);
-                                                break;
-                                        }
-
-                                    } catch (UnsupportedEncodingException e) {
-                                        Log.e(LOG_TAG, "Message encoding error.", e);
-                                    } catch (JSONException e) {
-                                        Log.e(LOG_TAG, "Message json format error.", e);
-                                    }
-                                }
-                            });
-                        }
-                    });
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Subscription error.", e);
-        }
     }
 
     private void updateButton(ToggleButton button, String isOn){
@@ -177,9 +116,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
             final String msg = "{\"deviceID\" : \""+ guid +"\",\"socketNumber\" : 1,\"status\" : \"" + status + "\"}";
 
             try {
-                LoginActivity.mqttManager.publishString(msg, topic, AWSIotMqttQos.QOS0);
+
             } catch (Exception e) {
-                Log.e(LOG_TAG, "Publish error.", e);
             }
 
         }
@@ -192,9 +130,9 @@ public class DeviceDetailActivity extends AppCompatActivity {
         final String msg = "{\"deviceID\" : \""+ guid +"\",\"socketNumber\" : " + number + ",\"status\" : \"" + status + "\"}";
 
         try {
-            LoginActivity.mqttManager.publishString(msg, topic, AWSIotMqttQos.QOS0);
+
         } catch (Exception e) {
-            Log.e(LOG_TAG, "Publish error.", e);
+
         }
     }
 
@@ -210,43 +148,43 @@ public class DeviceDetailActivity extends AppCompatActivity {
         @Override
         protected Integer doInBackground(Void... voids) {
 
-            PaginatedScanList<PiElectricity> result = DynamoDBManager.getInstance().getUsageData();
+            //PaginatedScanList<PiElectricity> result = DynamoDBManager.getInstance().getUsageData();
 
-            for (PiElectricity x:result) {
-                try {
-
-                    JSONObject jObject = new JSONObject(x.getDeviceID());
-
-                    String deviceID = jObject.getString("DeviceID");
-                    int timestamp = jObject.getInt("timestamp");
-                    int value = jObject.getInt("value") / 1000;
-
-                    if(deviceID.equals(currentDevice.id)) {
-
-                        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
-                        cal.setTimeInMillis(timestamp);
-                        Date date = cal.getTime();
-                        //String date = DateFormat.format("dd-MM-yyyy", cal).toString();
-                        // return date;
-
-
-                        if (deviceData.containsKey(deviceID)) {
-                            deviceData.get(deviceID).add(new DataPoint(deviceData.get(deviceID).size(), value));
-                        } else {
-                            ArrayList<DataPoint> data = new ArrayList<>();
-                            data.add(new DataPoint(data.size(), value));
-                            deviceData.put(deviceID, data);
-                        }
-                        totalUsage += value;
-                        numDataPoints++;
-                    }
-                }
-                catch (JSONException e){
-                    Log.e(LOG_TAG,
-                            "Json parsing exception",
-                            e);
-                }
-            }
+//            for (PiElectricity x:result) {
+//                try {
+//
+//                    JSONObject jObject = new JSONObject(x.getDeviceID());
+//
+//                    String deviceID = jObject.getString("DeviceID");
+//                    int timestamp = jObject.getInt("timestamp");
+//                    int value = jObject.getInt("value") / 1000;
+//
+//                    if(deviceID.equals(currentDevice.id)) {
+//
+//                        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
+//                        cal.setTimeInMillis(timestamp);
+//                        Date date = cal.getTime();
+//                        //String date = DateFormat.format("dd-MM-yyyy", cal).toString();
+//                        // return date;
+//
+//
+//                        if (deviceData.containsKey(deviceID)) {
+//                            deviceData.get(deviceID).add(new DataPoint(deviceData.get(deviceID).size(), value));
+//                        } else {
+//                            ArrayList<DataPoint> data = new ArrayList<>();
+//                            data.add(new DataPoint(data.size(), value));
+//                            deviceData.put(deviceID, data);
+//                        }
+//                        totalUsage += value;
+//                        numDataPoints++;
+//                    }
+//                }
+//                catch (JSONException e){
+//                    Log.e(LOG_TAG,
+//                            "Json parsing exception",
+//                            e);
+//                }
+//            }
             return null;
         }
 

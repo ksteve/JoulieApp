@@ -13,16 +13,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-
-import com.amazonaws.mobileconnectors.cognito.Dataset;
-import com.amazonaws.mobileconnectors.cognito.DefaultSyncCallback;
-import com.amazonaws.mobileconnectors.cognito.exceptions.DataStorageException;
 import com.example.kyle.joulieapp.Models.Device;
-import com.example.kyle.joulieapp.Models.DummyContent;
 
-import java.util.List;
-
-public class NewDeviceActivity extends AppCompatActivity implements DynamoDBManager.DynamoDBTaskListener {
+public class NewDeviceActivity extends AppCompatActivity {
 
     //controls
     private EditText idView;
@@ -65,10 +58,7 @@ public class NewDeviceActivity extends AppCompatActivity implements DynamoDBMana
                     if (device != null) {
 
                         //insert device into database
-                        //DynamoDBManager.getInstance().insertUserDevice(device);
-                        DynamoDBManager dbManager = DynamoDBManager.getInstance();
-                        Object[] arguments = new Object[]{DynamoDBManager.DynamoDBManagerType.INSERT_USER_DEVICE, device};
-                        new DynamoDBManager.DynamoDBManagerTask(NewDeviceActivity.this).execute(arguments);
+
                     }
                 }
             }
@@ -90,13 +80,5 @@ public class NewDeviceActivity extends AppCompatActivity implements DynamoDBMana
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onResult(Object result) {
-        Intent intent = new Intent();
-        intent.putExtra("Added", "success");
-        setResult(1, intent);
-        finish();
     }
 }

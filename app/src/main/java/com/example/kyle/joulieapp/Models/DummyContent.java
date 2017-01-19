@@ -3,29 +3,13 @@ package com.example.kyle.joulieapp.Models;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
-
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedQueryList;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanList;
-import com.example.kyle.joulieapp.DynamoDBManager;
-import com.example.kyle.joulieapp.NewDeviceActivity;
 import com.example.kyle.joulieapp.R;
-import com.jjoe64.graphview.series.DataPoint;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.StringTokenizer;
 
 
 /**
@@ -54,18 +38,6 @@ public class DummyContent {
 
     private static final int COUNT = 5;
     private static final String LOG_TAG = "DummyContent";
-
-    public static void populate(PaginatedQueryList<UserDevice> devices){
-        Drawable defaultDeviceImage = ContextCompat.getDrawable(mContext, R.mipmap.ic_outlet);
-        MY_DEVICES.clear();
-        for (UserDevice x:devices) {
-
-            String deviceID = x.getDeviceID();
-            String deviceName = x.getName();
-            addDevice(new Device(deviceID, deviceName, defaultDeviceImage));
-        }
-
-    }
 
     public static void setContext(Context context){
         mContext = context;
