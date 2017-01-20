@@ -32,6 +32,7 @@ import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.Usage;
 import com.example.kyle.joulieapp.Models.Rule;
 import com.example.kyle.joulieapp.Models.DummyContent;
+import com.example.kyle.joulieapp.utils.CredentialsManager;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -234,12 +235,18 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             openSettingsActivity();
         } else if (id == R.id.nav_logout) {
-            onNavigateUp();
+            logout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void logout() {
+        CredentialsManager.deleteCredentials(this);
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
     }
 
     //Method Name: notifyFragment
