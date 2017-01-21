@@ -33,6 +33,8 @@ import com.example.kyle.joulieapp.Models.Usage;
 import com.example.kyle.joulieapp.Models.Rule;
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.utils.CredentialsManager;
+import com.example.kyle.joulieapp.utils.JoulieAPI;
+import com.example.kyle.joulieapp.utils.VolleyRequestQueue;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -77,6 +79,10 @@ public class MainActivity extends AppCompatActivity
                 switch (vpPager.getCurrentItem()){
 
                     case MYDEVICES_FRAGMENT:
+//                        JoulieAPI.getInstance().RestRequest(
+//                                VolleyRequestQueue.getInstance(getApplicationContext()).getRequestQueue(),
+//                                CredentialsManager.getCredentials(getApplicationContext()).getIdToken()
+//                        );
                         Intent newDeviceIntent = new Intent(MainActivity.this, NewDeviceActivity.class);
                         startActivityForResult(newDeviceIntent, 1);
                         break;
