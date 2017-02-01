@@ -32,7 +32,9 @@ hr {
 
 
 h4 {
-	padding-bottom: 10%;
+	text-align: center;
+}
+h5 {
 	text-align: center;
 }
 
@@ -45,8 +47,12 @@ p {
 	text-align: center;
 }
 
+.platforms {
+	background-color: #01131B;
+}
+
 .features {
-	background-color: #07171E;
+	background-color: #042531;
 }
 
 .deliverables {
@@ -55,4 +61,17 @@ p {
 
 .rewards {
 	background-color: #1B5A75 ;
+}
+
+.title {
+	padding-bottom: 10%;
+}
+
+img {
+	padding: 5px;
+	max-width: 25%;
+	max-height: 25%;
+	margin-left: auto;
+	margin-right: auto
+
 }
