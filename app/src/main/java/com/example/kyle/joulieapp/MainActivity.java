@@ -34,6 +34,7 @@ import com.example.kyle.joulieapp.Models.Rule;
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.utils.CredentialsManager;
 import com.example.kyle.joulieapp.utils.JoulieAPI;
+import com.example.kyle.joulieapp.utils.JoulieSocketIOAPI;
 import com.example.kyle.joulieapp.utils.VolleyRequestQueue;
 
 public class MainActivity extends AppCompatActivity
@@ -42,7 +43,9 @@ public class MainActivity extends AppCompatActivity
         DeviceFragment.OnListFragmentInteractionListener,
         UsageFragment.OnListFragmentInteractionListener,
         UsageOverviewFragment.OnFragmentInteractionListener,
-        RuleFragment.OnListFragmentInteractionListener{
+        RuleFragment.OnListFragmentInteractionListener,
+        JoulieAPI.ResponseListener,
+        JoulieSocketIOAPI.ResponseListener{
 
     private FragmentPagerAdapter adapterViewPager;
     private ViewPager vpPager;
@@ -71,6 +74,14 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //rest api setup
+        JoulieAPI.getInstance().registerListener(this);
+
+        //Socket IO Setup
+        JoulieSocketIOAPI.getInstance().registerListener(this);
+        JoulieSocketIOAPI.getInstance().connect();
+        JoulieSocketIOAPI.getInstance().status();
+
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,12 +90,12 @@ public class MainActivity extends AppCompatActivity
                 switch (vpPager.getCurrentItem()){
 
                     case MYDEVICES_FRAGMENT:
-//                        JoulieAPI.getInstance().RestRequest(
-//                                VolleyRequestQueue.getInstance(getApplicationContext()).getRequestQueue(),
-//                                CredentialsManager.getCredentials(getApplicationContext()).getIdToken()
-//                        );
-                        Intent newDeviceIntent = new Intent(MainActivity.this, NewDeviceActivity.class);
-                        startActivityForResult(newDeviceIntent, 1);
+                        JoulieAPI.getInstance().restRequest(
+                                VolleyRequestQueue.getInstance(getApplicationContext()).getRequestQueue(),
+                                CredentialsManager.getCredentials(getApplicationContext()).getIdToken()
+                        );
+                        //Intent newDeviceIntent = new Intent(MainActivity.this, NewDeviceActivity.class);
+                        //startActivityForResult(newDeviceIntent, 1);
                         break;
                     case MYUSAGE_FRAGMENT:
                         updateUsageData();
@@ -177,8 +188,22 @@ public class MainActivity extends AppCompatActivity
         } else {
 
         }
+
+
         notifyFragment();
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onResSuccess(String response) {
+        Snackbar snackbar = Snackbar.make(coordinator, response, Snackbar.LENGTH_SHORT);
+        snackbar.show();
+    }
+
+    @Override
+    public void onResError(String errorMessage) {
+        Snackbar snackbar = Snackbar.make(coordinator, errorMessage, Snackbar.LENGTH_SHORT);
+        snackbar.show();
     }
 
     //Method Name: onBackPressed

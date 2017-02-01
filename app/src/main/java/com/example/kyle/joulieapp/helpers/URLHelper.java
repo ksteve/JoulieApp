@@ -10,13 +10,13 @@ import android.provider.SyncStateContract;
 public class URLHelper {
 
     final static String BASE_URL = "joulie.herokuapp.com";
-    final static  String LOCAL_URL = "localhost:3000";
+    final static  String LOCAL_URL = "localhost";
 
     public static final String buildUrl(){
 
         Uri.Builder builder = new Uri.Builder();
-        builder.scheme("https")
-                .authority(BASE_URL);
+        builder.scheme("http")
+                .authority(LOCAL_URL);
         return builder.build().toString();
     }
 

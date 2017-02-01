@@ -84,7 +84,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
             });
             mView.setOnLongClickListener(this);
             mStreamImage = (ImageView) view.findViewById(R.id.streamImage);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mContentView = (TextView) view.findViewById(R.id.device_name);
             //mRemoveStream = (ImageButton) view.findViewById(R.id.remove_btn);
             //mRemoveStream.setOnClickListener(this);
 

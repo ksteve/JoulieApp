@@ -14,14 +14,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import com.example.kyle.joulieapp.Models.Device;
+import com.example.kyle.joulieapp.Models.DummyContent;
 
 public class NewDeviceActivity extends AppCompatActivity {
 
     //controls
-    private EditText idView;
     private EditText deviceNameView;
     private ImageView deviceImageView;
-
     private Drawable defaultDeviceImage;
 
     @Override
@@ -33,7 +32,6 @@ public class NewDeviceActivity extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
 
         deviceImageView = (ImageView) findViewById(R.id.deviceImage);
-        idView = (EditText) findViewById(R.id.id);
         deviceNameView = (EditText) findViewById(R.id.device_name);
 
         defaultDeviceImage = ContextCompat.getDrawable(NewDeviceActivity.this, R.mipmap.ic_outlet);
@@ -44,23 +42,13 @@ public class NewDeviceActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(idView.getText().toString().trim().isEmpty()){
-                    idView.setError("Device ID is Required");
-                }
-
                 if(deviceNameView.getText().toString().trim().isEmpty()){
                     deviceNameView.setError("Device Name is Required");
                 }
 
-                if(!idView.getText().toString().trim().isEmpty() && !deviceNameView.getText().toString().trim().isEmpty()){
+                DummyContent.addDevice(new Device("dsf", deviceNameView.getText().toString(), defaultDeviceImage));
+                finish();
 
-                    final Device device = new Device(idView.getText().toString(), deviceNameView.getText().toString(), defaultDeviceImage);
-                    if (device != null) {
-
-                        //insert device into database
-
-                    }
-                }
             }
         });
 

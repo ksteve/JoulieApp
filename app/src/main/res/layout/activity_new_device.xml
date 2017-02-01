@@ -14,20 +14,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
-        android:id="@+id/deviceImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"/>
-
-    <TextView
-        android:id="@+id/id_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Device ID"/>
+        android:id="@+id/deviceImage"/>
+
+    <TextView
+        android:id="@+id/type_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Type"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/id"/>
+        android:id="@+id/device_type"
+        android:text="Switch+Monitor"/>
 
     <TextView
         android:id="@+id/name_label"
@@ -40,6 +41,16 @@
         android:layout_height="wrap_content"
         android:id="@+id/device_name"/>
 
+    <TextView
+        android:id="@+id/ip_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="IP Address"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ip_address"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

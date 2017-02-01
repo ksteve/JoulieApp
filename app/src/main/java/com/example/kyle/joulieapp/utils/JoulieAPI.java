@@ -26,6 +26,9 @@ import java.util.Map;
  * Created by Kyle on 2017-01-20.
  */
 public class JoulieAPI {
+
+    private ResponseListener mListener;
+
     private static JoulieAPI ourInstance = new JoulieAPI();
 
     public static JoulieAPI getInstance() {
@@ -35,24 +38,26 @@ public class JoulieAPI {
     private JoulieAPI() {
     }
 
-
-    public void RestRequest(final RequestQueue queue, final String idToken){
+    public void restRequest(final RequestQueue queue, final String idToken){
         try {
 
-            String url = URLHelper.buildUrl();
+            final String url = "http://192.168.2.14:3500/devices/add"; //URLHelper.buildUrl();
+            final JSONObject jsonBody = new JSONObject();
+            jsonBody.put("name", "test");
 
-            JsonObjectRequest jaRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+
+            JsonObjectRequest jaRequest = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             // Display the first 500 characters of the response string.
-                            try {
-                               String sdf =  response.getString("test");
-                                //listener1.onDataLoaded(newPosts);
+//                            try {
 
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                                mListener.onResSuccess(response.toString());
+
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
 
                         }
                     }, new Response.ErrorListener() {
@@ -72,6 +77,8 @@ public class JoulieAPI {
                     } else if (error instanceof TimeoutError) {
                         message = "Connection TimeOut! Please check your internet connection.";
                     }
+
+                    mListener.onResError(message);
                     //listener.onError(message);
                    // Log.v("", "error");
                 }
@@ -93,4 +100,14 @@ public class JoulieAPI {
             ex.printStackTrace();
         }
     }
+
+    public void registerListener(ResponseListener listener){
+        mListener = listener;
+    }
+
+    public interface ResponseListener {
+        void onResSuccess(String response);
+        void onResError(String errorMessage);
+    }
+
 }
