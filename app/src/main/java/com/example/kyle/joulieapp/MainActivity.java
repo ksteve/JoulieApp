@@ -54,9 +54,9 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton fab;
     private View coordinator;
 
-    private static final int MYDEVICES_FRAGMENT = 0;
-    private static final int MYUSAGE_FRAGMENT = 1;
-    private static final int MYRULES_FRAGMENT = 2;
+    private static final int MYUSAGE_FRAGMENT = 0;
+    private static final int MYRULES_FRAGMENT = 1;
+    private static final int MYDEVICES_FRAGMENT = 2;
 
     //Method Name: onCreate
     //Parameters: Bundle savedInstanceState
@@ -89,6 +89,13 @@ public class MainActivity extends AppCompatActivity
 
                 switch (vpPager.getCurrentItem()){
 
+                    case MYUSAGE_FRAGMENT:
+                        updateUsageData();
+                        break;
+                    case MYRULES_FRAGMENT:
+                        Intent newRuleIntent = new Intent(MainActivity.this, NewRuleActivity.class);
+                        startActivityForResult(newRuleIntent, 1);
+                        break;
                     case MYDEVICES_FRAGMENT:
                         JoulieAPI.getInstance().restRequest(
                                 VolleyRequestQueue.getInstance(getApplicationContext()).getRequestQueue(),
@@ -96,13 +103,6 @@ public class MainActivity extends AppCompatActivity
                         );
                         //Intent newDeviceIntent = new Intent(MainActivity.this, NewDeviceActivity.class);
                         //startActivityForResult(newDeviceIntent, 1);
-                        break;
-                    case MYUSAGE_FRAGMENT:
-                        updateUsageData();
-                        break;
-                    case MYRULES_FRAGMENT:
-                        Intent newRuleIntent = new Intent(MainActivity.this, NewRuleActivity.class);
-                        startActivityForResult(newRuleIntent, 1);
                         break;
                 }
             }
@@ -145,11 +145,11 @@ public class MainActivity extends AppCompatActivity
     //Return: void
     //Description: sets up the tab icons
     private void setupTabIcons() {
-        tabLayout.getTabAt(0).setIcon(R.drawable.ic_power_24dp);
+        tabLayout.getTabAt(0).setIcon(R.drawable.ic_trending_up_24dp);
         tabLayout.getTabAt(0).setText("");
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_trending_up_24dp);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_access_alarm_24dp);
         tabLayout.getTabAt(1).setText("");
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_access_alarm_24dp);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_power_24dp);
         tabLayout.getTabAt(2).setText("");
     }
 
@@ -257,12 +257,12 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_devices) {
-            vpPager.setCurrentItem(MYDEVICES_FRAGMENT, true);
-        } else if (id == R.id.nav_usage) {
+        if (id == R.id.nav_usage) {
             vpPager.setCurrentItem(MYUSAGE_FRAGMENT, true);
         } else if (id == R.id.nav_rules) {
             vpPager.setCurrentItem(MYRULES_FRAGMENT, true);
+        } else if (id == R.id.nav_devices) {
+            vpPager.setCurrentItem(MYDEVICES_FRAGMENT, true);
         } else if (id == R.id.nav_settings) {
             openSettingsActivity();
         } else if (id == R.id.nav_logout) {
@@ -345,13 +345,13 @@ public class MainActivity extends AppCompatActivity
         actionBar.setTitle(adapterViewPager.getPageTitle(position));
 
         switch (position){
-            case MYDEVICES_FRAGMENT:
-                fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_add_black_24dp));
-                break;
             case MYUSAGE_FRAGMENT:
                 fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_refresh_black_24dp));
                 break;
             case MYRULES_FRAGMENT:
+                fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_add_black_24dp));
+                break;
+            case MYDEVICES_FRAGMENT:
                 fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_add_black_24dp));
                 break;
             default:
@@ -411,12 +411,12 @@ public class MainActivity extends AppCompatActivity
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case MYDEVICES_FRAGMENT: // Fragment # 0 - This will show FirstFragment
-                    return DeviceFragment.newInstance(1);
                 case MYUSAGE_FRAGMENT: // Fragment # 0 - This will show FirstFragment different title
                     return UsageOverviewFragment.newInstance("","");
                 case MYRULES_FRAGMENT: // Fragment # 1 - This will show SecondFragment
                     return RuleFragment.newInstance(1);
+                case MYDEVICES_FRAGMENT: // Fragment # 0 - This will show FirstFragment
+                    return DeviceFragment.newInstance(1);
                 default:
                     return null;
             }
@@ -426,12 +426,12 @@ public class MainActivity extends AppCompatActivity
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
-                case MYDEVICES_FRAGMENT: // Fragment # 0 - This will show FirstFragment
-                    return "Devices";
-                case MYUSAGE_FRAGMENT: // Fragment # 0 - This will show FirstFragment different title
+                case MYUSAGE_FRAGMENT: // Fragment # 0 - This will show FirstFragment
                     return "Usage";
                 case MYRULES_FRAGMENT: // Fragment # 1 - This will show SecondFragment
                     return "Rules";
+                case MYDEVICES_FRAGMENT: // Fragment # 2 - This will show ThirdFragment
+                    return "Devices";
                 default:
                     return "Joulie";
             }

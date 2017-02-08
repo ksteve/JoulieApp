@@ -4,10 +4,6 @@
     <group android:id="@+id/group1"
            android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_devices"
-            android:icon="@drawable/ic_power_24dp"
-            android:title="Devices"/>
-        <item
             android:id="@+id/nav_usage"
             android:icon="@drawable/ic_trending_up_24dp"
             android:title="Usage"/>
@@ -15,6 +11,10 @@
             android:id="@+id/nav_rules"
             android:icon="@drawable/ic_access_alarm_24dp"
             android:title="Rules"/>
+        <item
+            android:id="@+id/nav_devices"
+            android:icon="@drawable/ic_power_24dp"
+            android:title="Devices"/>
 
     </group>
     <group android:id="@+id/group2">
