@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.example.kyle.joulieapp.Models.Usage;
 import com.example.kyle.joulieapp.Models.DummyContent;
+import com.github.mikephil.charting.charts.LineChart;
+
 
 /**
  * A fragment representing a list of Items.
@@ -53,6 +55,7 @@ public class UsageFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
     }
 
     @Override
@@ -81,6 +84,9 @@ public class UsageFragment extends Fragment {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
         }
+
+        // in this example, a LineChart is initialized from xml
+        //LineChart chart = (LineChart) view.findViewById(R.id.chart);
 
         return view;
     }

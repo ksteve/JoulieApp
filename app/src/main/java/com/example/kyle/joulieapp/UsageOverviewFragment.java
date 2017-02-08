@@ -11,8 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LegendRenderer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,7 +42,8 @@ public class UsageOverviewFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-    private GraphView graph;
+    //private GraphView graph;
+    private LineChart chart;
 
     private TextView totalUsageView;
 
@@ -74,24 +84,54 @@ public class UsageOverviewFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_usage_overview, container, false);
 
-       // ddbClient = new AmazonDynamoDBClient(LoginActivity.credentialsProvider);
-       // ddbClient.setRegion(Region.getRegion(Regions.US_WEST_2));
-       // mapper = new DynamoDBMapper(ddbClient);
-
-        //setup graph
-        graph = (GraphView) view.findViewById(R.id.graph);
-        graph.setFocusable(true);
-        graph.setFocusableInTouchMode(true);
-        //graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
-       // graph.getViewport().setScrollable(true); // enables horizontal scrolling
-        //graph.getViewport().setScalable(true); // enables horizontal zooming and scrolling
-        graph.getLegendRenderer().setVisible(true);
-        graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
 
         totalUsageView = (TextView) view.findViewById(R.id.total_usage);
 
 
       //  new getUsageData().execute();
+
+        // in this example, a LineChart is initialized from xml
+        chart = (LineChart) view.findViewById(R.id.chart);
+
+        //populate some fake hardcoded data to test
+        List<Entry> entries = new ArrayList<Entry>();
+
+        entries.add(new Entry(0f, 0.125f));
+        entries.add(new Entry(6f, 0.25f));
+        entries.add(new Entry(12f, 0.50f));
+        entries.add(new Entry(18f, 1.0f));
+        entries.add(new Entry(23f, 1.2f));
+        entries.add(new Entry(23.75f, 1.25f));
+
+        LineDataSet dataSet = new LineDataSet(entries, "Device1"); // add entries to dataset
+        dataSet.setColors(new int[] { R.color.red1}, this.getContext());
+
+        //for one line on chart then just use these next 3 lines
+        //LineData lineData = new LineData(dataSet);
+        //chart.setData(lineData);
+        //chart.invalidate(); // refresh
+
+        //add 2nd line
+        List<Entry> entries2 = new ArrayList<Entry>();
+
+        entries2.add(new Entry(0f, 0.15f));
+        entries2.add(new Entry(6f, 0.35f));
+        entries2.add(new Entry(12f, 0.70f));
+        entries2.add(new Entry(18f, 1.1f));
+        entries2.add(new Entry(23f, 1.3f));
+        entries2.add(new Entry(23.75f, 1.5f));
+
+        LineDataSet dataSet2 = new LineDataSet(entries2, "Device2"); // add entries to dataset
+        dataSet2.setColors(new int[] { R.color.blue1}, this.getContext());
+
+        // use the interface ILineDataSet
+        List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        dataSets.add(dataSet);
+        dataSets.add(dataSet2);
+
+        LineData data = new LineData(dataSets);
+        chart.setData(data);
+        chart.invalidate(); // refresh
 
         return  view;
     }
