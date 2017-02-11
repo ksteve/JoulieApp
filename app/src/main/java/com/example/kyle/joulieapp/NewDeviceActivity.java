@@ -1,9 +1,11 @@
 package com.example.kyle.joulieapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,8 +17,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
+import com.example.kyle.joulieapp.utils.CredentialsManager;
+import com.example.kyle.joulieapp.utils.JoulieAPI;
+import com.example.kyle.joulieapp.utils.VolleyRequestQueue;
+import com.google.gson.JsonObject;
 
-public class NewDeviceActivity extends AppCompatActivity {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class NewDeviceActivity extends AppCompatActivity implements JoulieAPI.ResponseListener {
 
     //controls
     private EditText deviceNameView;
@@ -44,11 +53,13 @@ public class NewDeviceActivity extends AppCompatActivity {
 
                 if(deviceNameView.getText().toString().trim().isEmpty()){
                     deviceNameView.setError("Device Name is Required");
+                } else {
+
+                    JoulieAPI.getInstance().registerListener(NewDeviceActivity.this);
+                    JoulieAPI.getInstance().restRequest(
+                            VolleyRequestQueue.getInstance(getApplicationContext()).getRequestQueue(),
+                            CredentialsManager.getCredentials(getApplicationContext()).getIdToken());
                 }
-
-                DummyContent.addDevice(new Device("dsf", deviceNameView.getText().toString(), defaultDeviceImage));
-                finish();
-
             }
         });
 
@@ -68,5 +79,34 @@ public class NewDeviceActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResSuccess(JSONObject response) {
+        try {
+            String result;
+            if(response.has("error")){
+                result = response.getString("error");
+            } else {
+                result = response.getString("result");
+                DummyContent.addDevice(new Device("dsf", deviceNameView.getText().toString(), defaultDeviceImage));
+            }
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("result", result);
+            setResult(Activity.RESULT_OK, resultIntent);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        //Snackbar snackbar = Snackbar.make(, response, Snackbar.LENGTH_SHORT);
+        //snackbar.show();
+        finish();
+    }
+
+    @Override
+    public void onResError(String errorMessage) {
+        finish();
     }
 }

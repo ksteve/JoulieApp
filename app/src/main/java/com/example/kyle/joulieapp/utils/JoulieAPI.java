@@ -1,5 +1,6 @@
 package com.example.kyle.joulieapp.utils;
 
+import android.provider.SyncStateContract;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -14,7 +15,10 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
+import com.example.kyle.joulieapp.Models.Device;
+import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.helpers.URLHelper;
+import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,24 +45,31 @@ public class JoulieAPI {
     public void restRequest(final RequestQueue queue, final String idToken){
         try {
 
-            final String url = "http://192.168.2.14:3500/devices/add"; //URLHelper.buildUrl();
+            final String url = Constants.BASE_URL + Constants.CREATE_DEVICE_ENDPOINT;
+
+            //compose request body
+            final JSONObject jsonContainer = new JSONObject();
             final JSONObject jsonBody = new JSONObject();
-            jsonBody.put("name", "test");
+            jsonBody.put("conn_name", "nest");
+            jsonBody.put("adaptor", "nest");
+            jsonBody.put("token",
+                    "c.k9ESFrVN5RRMohA9drUlQRc5VINAUgdJUXKd1HK8aVveAWB6snK6wMvMN2zImZ8GlJIeqtcrxPofkUXePQdyWMqcnkPRYO5x6TYOEBgbVjiUnhBdczmh9TeEdCAfiR0pysSGkOwyjYKtn5gI");
+            jsonBody.put("device_name", "thermostat");
+            jsonBody.put("driver", "nest-thermostat");
+            jsonBody.put("deviceId", "sPmk4pq4eGMa7nT5eiYy5G66DVALDY-J");
+            jsonContainer.put("opts", jsonBody);
 
-
-            JsonObjectRequest jaRequest = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
+            JsonObjectRequest jaRequest = new JsonObjectRequest(Request.Method.POST, url, jsonContainer,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             // Display the first 500 characters of the response string.
 //                            try {
-
-                                mListener.onResSuccess(response.toString());
-
+                                mListener.onResSuccess(response);
 //                            } catch (JSONException e) {
+
 //                                e.printStackTrace();
 //                            }
-
                         }
                     }, new Response.ErrorListener() {
                 @Override
@@ -106,7 +117,7 @@ public class JoulieAPI {
     }
 
     public interface ResponseListener {
-        void onResSuccess(String response);
+        void onResSuccess(JSONObject response);
         void onResError(String errorMessage);
     }
 

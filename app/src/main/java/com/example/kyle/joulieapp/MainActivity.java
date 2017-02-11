@@ -36,6 +36,9 @@ import com.example.kyle.joulieapp.utils.CredentialsManager;
 import com.example.kyle.joulieapp.utils.JoulieAPI;
 import com.example.kyle.joulieapp.utils.JoulieSocketIOAPI;
 import com.example.kyle.joulieapp.utils.VolleyRequestQueue;
+import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -44,7 +47,6 @@ public class MainActivity extends AppCompatActivity
         UsageFragment.OnListFragmentInteractionListener,
         UsageOverviewFragment.OnFragmentInteractionListener,
         RuleFragment.OnListFragmentInteractionListener,
-        JoulieAPI.ResponseListener,
         JoulieSocketIOAPI.ResponseListener{
 
     private FragmentPagerAdapter adapterViewPager;
@@ -75,12 +77,12 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         //rest api setup
-        JoulieAPI.getInstance().registerListener(this);
+        //JoulieAPI.getInstance().registerListener(this);
 
         //Socket IO Setup
-        JoulieSocketIOAPI.getInstance().registerListener(this);
-        JoulieSocketIOAPI.getInstance().connect();
-        JoulieSocketIOAPI.getInstance().status();
+        //JoulieSocketIOAPI.getInstance().registerListener(this);
+        //JoulieSocketIOAPI.getInstance().connect();
+        //JoulieSocketIOAPI.getInstance().status();
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -97,12 +99,8 @@ public class MainActivity extends AppCompatActivity
                         startActivityForResult(newRuleIntent, 1);
                         break;
                     case MYDEVICES_FRAGMENT:
-                        JoulieAPI.getInstance().restRequest(
-                                VolleyRequestQueue.getInstance(getApplicationContext()).getRequestQueue(),
-                                CredentialsManager.getCredentials(getApplicationContext()).getIdToken()
-                        );
-                        //Intent newDeviceIntent = new Intent(MainActivity.this, NewDeviceActivity.class);
-                        //startActivityForResult(newDeviceIntent, 1);
+                        Intent newDeviceIntent = new Intent(MainActivity.this, NewDeviceActivity.class);
+                        startActivityForResult(newDeviceIntent, 1);
                         break;
                 }
             }
@@ -180,30 +178,11 @@ public class MainActivity extends AppCompatActivity
     //Description: called upon adding a device
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if(data != null && data.getStringExtra("Added") == "Success"){
-            Snackbar snackbar = Snackbar.make(coordinator, "Device Added", Snackbar.LENGTH_SHORT);
-            snackbar.show();
-
-        } else {
-
-        }
-
-
-        notifyFragment();
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
-    public void onResSuccess(String response) {
-        Snackbar snackbar = Snackbar.make(coordinator, response, Snackbar.LENGTH_SHORT);
+        String result = data.getStringExtra("result");
+        Snackbar snackbar = Snackbar.make(coordinator, result, Snackbar.LENGTH_SHORT);
         snackbar.show();
-    }
-
-    @Override
-    public void onResError(String errorMessage) {
-        Snackbar snackbar = Snackbar.make(coordinator, errorMessage, Snackbar.LENGTH_SHORT);
-        snackbar.show();
+        notifyFragment();
     }
 
     //Method Name: onBackPressed
@@ -391,6 +370,16 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onResSuccess(String response) {
+
+    }
+
+    @Override
+    public void onResError(String errorMessage) {
 
     }
 
