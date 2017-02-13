@@ -179,9 +179,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        String result = data.getStringExtra("result");
-        Snackbar snackbar = Snackbar.make(coordinator, result, Snackbar.LENGTH_SHORT);
-        snackbar.show();
+
+        if(data != null && data.hasExtra("result")) {
+            String result = data.getStringExtra("result");
+            Snackbar snackbar = Snackbar.make(coordinator, result, Snackbar.LENGTH_SHORT);
+            snackbar.show();
+        }
         notifyFragment();
     }
 

@@ -87,21 +87,19 @@ public class NewDeviceActivity extends AppCompatActivity implements JoulieAPI.Re
             String result;
             if(response.has("error")){
                 result = response.getString("error");
-            } else {
+            } else if (response.has("result")) {
                 result = response.getString("result");
                 DummyContent.addDevice(new Device("dsf", deviceNameView.getText().toString(), defaultDeviceImage));
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("result", result);
+                setResult(Activity.RESULT_OK, resultIntent);
+            } else {
+                DummyContent.addDevice(new Device("dsf", deviceNameView.getText().toString(), defaultDeviceImage));
             }
-            Intent resultIntent = new Intent();
-            resultIntent.putExtra("result", result);
-            setResult(Activity.RESULT_OK, resultIntent);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
-        //Snackbar snackbar = Snackbar.make(, response, Snackbar.LENGTH_SHORT);
-        //snackbar.show();
         finish();
     }
 

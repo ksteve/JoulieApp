@@ -112,6 +112,70 @@ public class JoulieAPI {
         }
     }
 
+    public void updateTempRequest(final RequestQueue queue, final String idToken){
+        try {
+
+            final String url = Constants.BASE_URL + Constants.UPDATE_TEMP;
+
+            //compose request body
+            final JSONObject jsonContainer = new JSONObject();
+            final JSONObject jsonBody = new JSONObject();
+            //jsonBody.put("conn_name", "nest");
+            jsonContainer.put("opts", "24");
+
+            JsonObjectRequest jaRequest = new JsonObjectRequest(Request.Method.POST, url, jsonContainer,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // Display the first 500 characters of the response string.
+//                            try {
+                            mListener.onResSuccess(response);
+//                            } catch (JSONException e) {
+
+//                                e.printStackTrace();
+//                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    String message = null;
+                    if (error instanceof NetworkError) {
+                        message = "Cannot connect to Internet...Please check your connection!";
+                    } else if (error instanceof ServerError) {
+                        message = "The server could not be found. Please try again after some time!!";
+                    } else if (error instanceof AuthFailureError) {
+                        message = "Cannot connect to Internet...Please check your connection!";
+                    } else if (error instanceof ParseError) {
+                        message = "Parsing error! Please try again after some time!!";
+                    } else if (error instanceof NoConnectionError) {
+                        message = "Cannot connect to Internet...Please check your connection!";
+                    } else if (error instanceof TimeoutError) {
+                        message = "Connection TimeOut! Please check your internet connection.";
+                    }
+
+                    mListener.onResError(message);
+                    //listener.onError(message);
+                    // Log.v("", "error");
+                }
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    // Basic Authentication
+                    //String auth = "Basic " + Base64.encodeToString(CONSUMER_KEY_AND_SECRET.getBytes(), Base64.NO_WRAP);
+
+                    headers.put("Authorization", "Bearer " + idToken);
+                    return headers;
+                }
+            };
+            // Add the request to the RequestQueue.
+            queue.add(jaRequest);
+
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void registerListener(ResponseListener listener){
         mListener = listener;
     }
