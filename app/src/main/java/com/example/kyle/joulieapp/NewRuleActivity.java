@@ -16,7 +16,7 @@ public class NewRuleActivity extends AppCompatActivity implements RuleFragment.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_device);
+        setContentView(R.layout.activity_new_rule);
         ActionBar ab = getSupportActionBar();
         ab.setTitle("Create New Rule");
         ab.setDisplayHomeAsUpEnabled(true);
