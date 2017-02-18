@@ -9,14 +9,20 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.Models.Rule;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class NewRuleActivity extends AppCompatActivity implements RuleFragment.OnListFragmentInteractionListener{
 
     private EditText editTextTime;
+    private Spinner socketDropdown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +31,18 @@ public class NewRuleActivity extends AppCompatActivity implements RuleFragment.O
         ActionBar ab = getSupportActionBar();
         ab.setTitle("Create New Rule");
         ab.setDisplayHomeAsUpEnabled(true);
+
+        //set input filter for time input so only valid input can be entered
         initTimeInput();
 
+        //start socket dropdown with one entry for socket 1
+        socketDropdown = (Spinner) findViewById(R.id.socket_dropdown);
+        List<String> list = new ArrayList<String>();
+        list.add("1");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        socketDropdown.setAdapter(dataAdapter);
     }
 
     @Override
@@ -55,6 +71,7 @@ public class NewRuleActivity extends AppCompatActivity implements RuleFragment.O
 
         //the following InputFilter related code was borrowed from
         //http://stackoverflow.com/questions/13120947/how-to-restrict-to-input-time-for-edittext-in-android
+        //this code is used to filter input for the time so that only valid times can be entered
         InputFilter[] timeFilter = new InputFilter[1];
 
         timeFilter[0]   = new InputFilter() {
