@@ -23,6 +23,7 @@ public class NewRuleActivity extends AppCompatActivity implements RuleFragment.O
 
     private EditText editTextTime;
     private Spinner socketDropdown;
+    private Spinner deviceDropdown;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +38,24 @@ public class NewRuleActivity extends AppCompatActivity implements RuleFragment.O
 
         //start socket dropdown with one entry for socket 1
         socketDropdown = (Spinner) findViewById(R.id.socket_dropdown);
-        List<String> list = new ArrayList<String>();
-        list.add("1");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        socketDropdown.setAdapter(dataAdapter);
+        List<String> socketList = new ArrayList<String>();
+        socketList.add("1");
+        ArrayAdapter<String> socketDataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, socketList);
+        socketDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        socketDropdown.setAdapter(socketDataAdapter);
+
+        //populate device dropdown with device names
+        deviceDropdown = (Spinner) findViewById(R.id.device_dropdown);
+        List<String> deviceList = new ArrayList<String>();
+        for (int i = 0; i < DummyContent.MY_DEVICES.size(); i++){
+            deviceList.add(DummyContent.MY_DEVICES.get(i).deviceName);
+        }
+        ArrayAdapter<String> deviceDataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, deviceList);
+        deviceDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        deviceDropdown.setAdapter(deviceDataAdapter);
+
     }
 
     @Override
