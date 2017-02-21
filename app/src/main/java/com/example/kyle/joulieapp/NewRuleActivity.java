@@ -1,6 +1,10 @@
 package com.example.kyle.joulieapp;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -9,21 +13,37 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.Models.Rule;
+import com.example.kyle.joulieapp.utils.CredentialsManager;
+import com.example.kyle.joulieapp.utils.JoulieAPI;
+import com.example.kyle.joulieapp.utils.VolleyRequestQueue;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class NewRuleActivity extends AppCompatActivity implements RuleFragment.OnListFragmentInteractionListener{
+import static com.example.kyle.joulieapp.R.styleable.CoordinatorLayout;
+
+public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.ResponseListener{
 
     private EditText editTextTime;
+    private EditText ruleName;
     private Spinner socketDropdown;
     private Spinner deviceDropdown;
+    private ToggleButton turnOnOff;
+    private List<String> deviceList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +52,9 @@ public class NewRuleActivity extends AppCompatActivity implements RuleFragment.O
         ActionBar ab = getSupportActionBar();
         ab.setTitle("Create New Rule");
         ab.setDisplayHomeAsUpEnabled(true);
+
+        ruleName = (EditText) findViewById(R.id.ruleName_input);
+        editTextTime = (EditText) findViewById(R.id.time_input);
 
         //set input filter for time input so only valid input can be entered
         initTimeInput();
@@ -47,7 +70,7 @@ public class NewRuleActivity extends AppCompatActivity implements RuleFragment.O
 
         //populate device dropdown with device names
         deviceDropdown = (Spinner) findViewById(R.id.device_dropdown);
-        List<String> deviceList = new ArrayList<String>();
+        deviceList = new ArrayList<String>();
         for (int i = 0; i < DummyContent.MY_DEVICES.size(); i++){
             deviceList.add(DummyContent.MY_DEVICES.get(i).deviceName);
         }
@@ -56,12 +79,37 @@ public class NewRuleActivity extends AppCompatActivity implements RuleFragment.O
         deviceDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         deviceDropdown.setAdapter(deviceDataAdapter);
 
+        if (deviceList.size() == 0){
+            Toast.makeText(getApplicationContext(), "Error: no devices found", Toast.LENGTH_SHORT).show();
+        }
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (deviceList.size() == 0 || ruleName.getText().toString().trim().isEmpty() || editTextTime.getText().toString().trim().isEmpty()) {
+                    if (deviceList.size() == 0){
+                        Toast.makeText(getApplicationContext(), "Error: no devices found", Toast.LENGTH_SHORT).show();
+                    }
+                    if (ruleName.getText().toString().trim().isEmpty()) {
+                        ruleName.setError("Rule Name is Required");
+                    }
+                    if (editTextTime.getText().toString().trim().isEmpty()) {
+                        editTextTime.setError("Time is Required");
+                    }
+                }
+                else {
+                    JoulieAPI.getInstance().registerListener(NewRuleActivity.this);
+                    JoulieAPI.getInstance().restRequest(
+                            VolleyRequestQueue.getInstance(getApplicationContext()).getRequestQueue(),
+                            CredentialsManager.getCredentials(getApplicationContext()).getIdToken());
+                }
+            }
+        });
+
     }
 
-    @Override
-    public void onListFragmentInteraction(Rule item) {
-        DummyContent.notify = true;
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -140,6 +188,51 @@ public class NewRuleActivity extends AppCompatActivity implements RuleFragment.O
         };
 
         editTextTime.setFilters(timeFilter);
+    }
+
+    @Override
+    public void onResSuccess(JSONObject response) {
+        ruleName = (EditText) findViewById(R.id.ruleName_input);
+        editTextTime = (EditText) findViewById(R.id.time_input);
+        socketDropdown = (Spinner) findViewById(R.id.socket_dropdown);
+        turnOnOff = (ToggleButton) findViewById(R.id.toggleButton);
+        int nOnOff = 0;
+        Device dev = null;
+
+        for (int i = 0; i < DummyContent.MY_DEVICES.size(); i++){
+            if (deviceList.get(i) == DummyContent.MY_DEVICES.get(i).deviceName){
+                dev = DummyContent.MY_DEVICES.get(i);
+            }
+        }
+
+
+        if (turnOnOff.isChecked()){
+            nOnOff = 1;
+        }
+
+        try {
+            String result;
+            if(response.has("error")){
+                result = response.getString("error");
+            } else if (response.has("result")) {
+                result = response.getString("result");
+                DummyContent.addRule(new Rule(UUID.randomUUID().toString(), ruleName.getText().toString(), dev, nOnOff, editTextTime.getText().toString(), Integer.parseInt(socketDropdown.getSelectedItem().toString())));
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("result", result);
+                setResult(Activity.RESULT_OK, resultIntent);
+            } else {
+                DummyContent.addRule(new Rule(UUID.randomUUID().toString(), ruleName.getText().toString(), dev, nOnOff, editTextTime.getText().toString(), Integer.parseInt(socketDropdown.getSelectedItem().toString())));
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        finish();
+    }
+
+    @Override
+    public void onResError(String errorMessage) {
+        finish();
     }
 
 }
