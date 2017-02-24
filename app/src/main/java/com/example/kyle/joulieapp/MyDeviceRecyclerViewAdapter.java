@@ -54,7 +54,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mStreamImage.setImageDrawable(mValues.get(position).image);
-        holder.mContentView.setText(mValues.get(position).deviceName);
+        holder.mContentView.setText(mValues.get(position).getDeviceName());
 
         //Populate NumberPicker values from minimum and maximum value range
         //Set the minimum value of NumberPicker

@@ -43,12 +43,12 @@ public class DeviceDetailActivity extends AppCompatActivity {
         }
 
         ActionBar ab = getSupportActionBar();
-        ab.setTitle(currentDevice.deviceName);
+        ab.setTitle(currentDevice.getDeviceName());
         ab.setDisplayHomeAsUpEnabled(true);
 
         avg_usage = (TextView) findViewById(R.id.avg_usage);
         deviceID = (TextView) findViewById(R.id.deviceID);
-        deviceID.setText(currentDevice.id);
+        deviceID.setText(currentDevice.getId());
         graph = (GraphView) findViewById(R.id.graph);
         toggleBtn1 = (ToggleButton) findViewById(R.id.toggle_power1);
         toggleBtn2 = (ToggleButton) findViewById(R.id.toggle_power2);

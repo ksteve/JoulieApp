@@ -3,6 +3,8 @@ package com.example.kyle.joulieapp.helpers;
 import android.net.Uri;
 import android.provider.SyncStateContract;
 
+
+
 /**
  * Created by Kyle on 2017-01-21.
  */

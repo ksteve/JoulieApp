@@ -83,9 +83,6 @@ public class DummyContent {
 
     public static void addDevice(Device item) {
         MY_DEVICES.add(item);
-        if(item.usage != null){
-            MY_USAGES.add(item.usage);
-        }
     }
 
     public static void addUsage(Usage item) {
@@ -99,10 +96,6 @@ public class DummyContent {
 
     public static void removeDevice(Device item) {
         MY_DEVICES.remove(item);
-        if(item.usage !=null){
-            MY_USAGES.remove(item.usage);
-        }
-
     }
 
     public static void removeUsage(Usage item) {

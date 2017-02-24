@@ -14,17 +14,17 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
-import com.example.kyle.joulieapp.Models.Device;
-import com.example.kyle.joulieapp.Models.DummyContent;
-import com.example.kyle.joulieapp.helpers.URLHelper;
-import com.google.gson.JsonObject;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+
+/**
+ *  USING RETROFIT 2 For now
+ *  Leave this code here in case change of mind
+ */
 
 /**
  * Created by Kyle on 2017-01-20.

@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
+import com.example.kyle.joulieapp.api.ApiService;
 import com.example.kyle.joulieapp.utils.CredentialsManager;
 import com.example.kyle.joulieapp.utils.JoulieAPI;
 import com.example.kyle.joulieapp.utils.VolleyRequestQueue;
@@ -25,7 +27,11 @@ import com.google.gson.JsonObject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class NewDeviceActivity extends AppCompatActivity implements JoulieAPI.ResponseListener {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class NewDeviceActivity extends AppCompatActivity {
 
     //controls
     private EditText deviceNameView;
@@ -51,14 +57,42 @@ public class NewDeviceActivity extends AppCompatActivity implements JoulieAPI.Re
             @Override
             public void onClick(View view) {
 
-                if(deviceNameView.getText().toString().trim().isEmpty()){
+                if (deviceNameView.getText().toString().trim().isEmpty()) {
                     deviceNameView.setError("Device Name is Required");
                 } else {
 
-                    JoulieAPI.getInstance().registerListener(NewDeviceActivity.this);
-                    JoulieAPI.getInstance().restRequest(
-                            VolleyRequestQueue.getInstance(getApplicationContext()).getRequestQueue(),
-                            CredentialsManager.getCredentials(getApplicationContext()).getIdToken());
+                    final Device device = new Device("Test-Device", deviceNameView.getText().toString(), defaultDeviceImage);
+                    ApiService apiService = ApiService.retrofit.create(ApiService.class);
+                    Call<Device> call = apiService.createDevice(device);
+                    call.enqueue(new Callback<Device>() {
+                        @Override
+                        public void onResponse(Call<Device> call, Response<Device> response) {
+                            DummyContent.MY_DEVICES.add(device);
+//                            try {
+//
+//                                if(response.){
+//                                    result = response.getString("error");
+//                                } else if (response.has("result")) {
+//                                    result = response.getString("result");
+//                                    DummyContent.addDevice(new Device("dsf", deviceNameView.getText().toString(), defaultDeviceImage));
+//                                    Intent resultIntent = new Intent();
+//                                    resultIntent.putExtra("result", result);
+//                                    setResult(Activity.RESULT_OK, resultIntent);
+//                                } else {
+//                                    DummyContent.addDevice(new Device("dsf", deviceNameView.getText().toString(), defaultDeviceImage));
+//                                }
+//
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(Call<Device> call, Throwable t) {
+                            finish();
+                        }
+                    });
                 }
             }
         });
@@ -79,32 +113,5 @@ public class NewDeviceActivity extends AppCompatActivity implements JoulieAPI.Re
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onResSuccess(JSONObject response) {
-        try {
-            String result;
-            if(response.has("error")){
-                result = response.getString("error");
-            } else if (response.has("result")) {
-                result = response.getString("result");
-                DummyContent.addDevice(new Device("dsf", deviceNameView.getText().toString(), defaultDeviceImage));
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("result", result);
-                setResult(Activity.RESULT_OK, resultIntent);
-            } else {
-                DummyContent.addDevice(new Device("dsf", deviceNameView.getText().toString(), defaultDeviceImage));
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        finish();
-    }
-
-    @Override
-    public void onResError(String errorMessage) {
-        finish();
     }
 }

@@ -72,7 +72,7 @@ public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.Resp
         deviceDropdown = (Spinner) findViewById(R.id.device_dropdown);
         deviceList = new ArrayList<String>();
         for (int i = 0; i < DummyContent.MY_DEVICES.size(); i++){
-            deviceList.add(DummyContent.MY_DEVICES.get(i).deviceName);
+            deviceList.add(DummyContent.MY_DEVICES.get(i).getDeviceName());
         }
         ArrayAdapter<String> deviceDataAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, deviceList);
@@ -200,7 +200,7 @@ public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.Resp
         Device dev = null;
 
         for (int i = 0; i < DummyContent.MY_DEVICES.size(); i++){
-            if (deviceList.get(i) == DummyContent.MY_DEVICES.get(i).deviceName){
+            if (deviceList.get(i) == DummyContent.MY_DEVICES.get(i).getDeviceName()){
                 dev = DummyContent.MY_DEVICES.get(i);
             }
         }

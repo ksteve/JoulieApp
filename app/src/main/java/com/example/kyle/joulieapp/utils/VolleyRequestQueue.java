@@ -7,6 +7,11 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
 /**
+ *  USING RETROFIT 2 For now
+ *  Leave this code here in case change of mind
+ */
+
+/**
  * Created by Kyle on 2017-01-20.
  */
 public class VolleyRequestQueue {
