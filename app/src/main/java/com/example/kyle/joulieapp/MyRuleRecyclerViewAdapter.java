@@ -37,8 +37,14 @@ public class MyRuleRecyclerViewAdapter extends RecyclerView.Adapter<MyRuleRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        String onOff = "off";
+
+        if (mValues.get(position).turnOnOff == 1){
+            onOff = "on";
+        }
+
         holder.mItem = mValues.get(position);
-        holder.mContentView.setText(mValues.get(position).ruleName);
+        holder.mContentView.setText(mValues.get(position).ruleName + ": " + mValues.get(position).device.deviceName + " s" + mValues.get(position).socket + " " + onOff + "@" + mValues.get(position).time);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
