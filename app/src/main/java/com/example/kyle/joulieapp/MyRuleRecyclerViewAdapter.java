@@ -44,7 +44,7 @@ public class MyRuleRecyclerViewAdapter extends RecyclerView.Adapter<MyRuleRecycl
         }
 
         holder.mItem = mValues.get(position);
-        holder.mContentView.setText(mValues.get(position).ruleName + ": " + mValues.get(position).device.deviceName + " s" + mValues.get(position).socket + " " + onOff + "@" + mValues.get(position).time);
+        holder.mContentView.setText(mValues.get(position).ruleName + ": " + mValues.get(position).device.getDeviceName() + " s" + mValues.get(position).socket + " " + onOff + "@" + mValues.get(position).time);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
