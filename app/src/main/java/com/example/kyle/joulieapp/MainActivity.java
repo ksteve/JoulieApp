@@ -36,7 +36,11 @@ import com.example.kyle.joulieapp.utils.CredentialsManager;
 import com.example.kyle.joulieapp.utils.JoulieAPI;
 import com.example.kyle.joulieapp.utils.JoulieSocketIOAPI;
 import com.example.kyle.joulieapp.utils.VolleyRequestQueue;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonObject;
+
 
 import org.json.JSONObject;
 
@@ -70,6 +74,9 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         // TODO: 2016-12-04 check if authenticated
+
+        //setup token for firebase cloud messaging
+       // String token = FirebaseInstanceId.getInstance().getToken();
 
         coordinator = findViewById(R.id.coordinator);
         //setup toolbar

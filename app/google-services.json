@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "871971733005",
+    "firebase_url": "https://joulie-6410e.firebaseio.com",
+    "project_id": "joulie-6410e",
+    "storage_bucket": "joulie-6410e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871971733005:android:5a9bdcf9e8bc9b69",
+        "android_client_info": {
+          "package_name": "com.example.kyle.joulieapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "871971733005-hslbotjgkj3pip0d4ji58a4808lj8vce.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3ORIBWAb8NwLocIY9L6x0adUSdAtvX6Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
