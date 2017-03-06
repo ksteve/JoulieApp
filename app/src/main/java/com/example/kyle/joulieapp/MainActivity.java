@@ -27,6 +27,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CheckBox;
+
 import java.util.List;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.Usage;
@@ -155,11 +157,11 @@ public class MainActivity extends AppCompatActivity
     //Parameters: boolean show
     //Return: void
     //Description: toggles Fab
-    public void toggleFab(boolean show){
+    public void toggleFab(FloatingActionButton floatingActionButton, boolean show){
         if(show){
-            fab.show();
+            floatingActionButton.show();
         } else {
-            fab.hide();
+            floatingActionButton.hide();
         }
     }
 
@@ -403,11 +405,11 @@ public class MainActivity extends AppCompatActivity
         @Override
         public Fragment getItem(int position) {
             switch (position) {
-                case MYUSAGE_FRAGMENT: // Fragment # 0 - This will show FirstFragment different title
+                case MYUSAGE_FRAGMENT: // Fragment # 0 - This will show First Fragment different title
                     return UsageOverviewFragment.newInstance("","");
-                case MYRULES_FRAGMENT: // Fragment # 1 - This will show SecondFragment
+                case MYRULES_FRAGMENT: // Fragment # 1 - This will show Second Fragment
                     return RuleFragment.newInstance(1);
-                case MYDEVICES_FRAGMENT: // Fragment # 0 - This will show FirstFragment
+                case MYDEVICES_FRAGMENT: // Fragment # 2 - This will show Third Fragment
                     return DeviceFragment.newInstance(1);
                 default:
                     return null;
