@@ -2,6 +2,7 @@ package com.example.kyle.joulieapp;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,10 +10,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.Models.Rule;
+
+import static com.example.kyle.joulieapp.R.id.fabRemove;
 
 /**
  * A fragment representing a list of Items.
@@ -29,6 +33,7 @@ public class RuleFragment extends Fragment {
     private OnListFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
     private TextView emptyView;
+    private FloatingActionButton fabRemove;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -54,6 +59,7 @@ public class RuleFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
     }
 
     @Override
@@ -81,6 +87,19 @@ public class RuleFragment extends Fragment {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
         }
+
+        fabRemove = (FloatingActionButton) view.findViewById(R.id.fabRemove);
+
+        fabRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (Rule rule: ((MyRuleRecyclerViewAdapter) recyclerView.getAdapter()).selectedRules){
+                    DummyContent.MY_RULES.remove(rule);
+                }
+                ((MyRuleRecyclerViewAdapter) recyclerView.getAdapter()).selectedRules.clear();
+                recyclerView.getAdapter().notifyDataSetChanged();
+            }
+        });
 
         return view;
     }
