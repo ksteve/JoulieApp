@@ -16,7 +16,11 @@ public class Device {
     @SerializedName("id")
     private String id;
 
-    private transient String type;
+    @SerializedName("type")
+    private String type;
+
+    @SerializedName("state")
+    private boolean powerState;
 
     public transient Drawable image;
 
@@ -31,11 +35,12 @@ public class Device {
     //@Bindable
     //private transient int currentTemp;
 
-    public Device(String id, String streamName, Drawable image) {
+    public Device(String id, String deviceType,String deviceName, Drawable image) {
         this.id = id;
-        this.deviceName = streamName;
+        this.deviceName = deviceName;
+        this.type = deviceType;
         this.image = image;
-        //currentTemp = 0;
+        this.powerState = false;
     }
 
     public Device(){
@@ -58,16 +63,10 @@ public class Device {
         this.deviceName = deviceName;
     }
 
-//    public int getCurrentTemp(){
-//        return currentTemp;
-//    }
+    public boolean getPowerState() { return powerState;}
 
-//    public void setCurrentTemp(int temp){
-//        this.currentTemp = temp;
-//       // notifyPropertyChanged(BR.device);
-//    }
-
-
-
+    public void setPowerState(boolean state) {
+        this.powerState = state;
+    }
 
 }

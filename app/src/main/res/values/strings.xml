@@ -20,6 +20,10 @@
         <item>heavy</item>
     </string-array>
 
+    <string-array name="device_types">
+        <item>Wemo Insight Switch</item>
+        <item>TP-Link Smart Plug</item>
+    </string-array>
 
     <!-- apis -->
     <string name="auth0_client_id">QFzpBmFU8WtS7LCJiwblg8IEetfmsFNh</string>

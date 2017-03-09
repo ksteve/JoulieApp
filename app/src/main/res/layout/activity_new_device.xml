@@ -24,11 +24,10 @@
         android:layout_height="wrap_content"
         android:text="Type"/>
 
-    <EditText
+    <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/device_type"
-        android:text="Switch+Monitor"/>
+        android:id="@+id/device_type"/>
 
     <TextView
         android:id="@+id/name_label"
@@ -39,18 +38,32 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/device_name"/>
+        android:id="@+id/device_name"
+        android:maxLines="1"/>
 
     <TextView
         android:id="@+id/ip_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="IP Address"/>
+        android:text="IP Address (Optional)"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/ip_address"/>
+        android:id="@+id/ip_address"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/port_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Port (Optional)"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/port"
+        android:maxLines="1"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -60,6 +73,5 @@
         android:layout_marginBottom="48dp"
         android:layout_gravity="bottom|right"
         android:src="@drawable/ic_check_black_24dp"/>
-
 
 </LinearLayout>

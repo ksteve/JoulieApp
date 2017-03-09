@@ -3,11 +3,13 @@ package com.example.kyle.joulieapp;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
@@ -18,6 +20,7 @@ import android.widget.ToggleButton;
 
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.Models.Device;
+import com.example.kyle.joulieapp.api.ApiService;
 import com.example.kyle.joulieapp.utils.CredentialsManager;
 import com.example.kyle.joulieapp.utils.JoulieAPI;
 import com.example.kyle.joulieapp.utils.VolleyRequestQueue;
@@ -25,6 +28,10 @@ import com.example.kyle.joulieapp.utils.VolleyRequestQueue;
 import org.json.JSONObject;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Device} and makes a call to the
@@ -56,35 +63,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
         holder.mStreamImage.setImageDrawable(mValues.get(position).image);
         holder.mContentView.setText(mValues.get(position).getDeviceName());
 
-        //Populate NumberPicker values from minimum and maximum value range
-        //Set the minimum value of NumberPicker
-        holder.mSpinner.setMinValue(0);
-        //Specify the maximum value/number of NumberPicker
-        //
-        holder.mSpinner.setMaxValue(25);
-        holder.mSpinner.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                JoulieAPI.getInstance().registerListener(new JoulieAPI.ResponseListener() {
-                    @Override
-                    public void onResSuccess(JSONObject response) {
-
-                    }
-
-                    @Override
-                    public void onResError(String errorMessage) {
-
-                    }
-                });
-                JoulieAPI.getInstance().updateTempRequest(
-                        VolleyRequestQueue.getInstance(numberPicker.getContext().getApplicationContext()).getRequestQueue(),
-                        CredentialsManager.getCredentials(numberPicker.getContext().getApplicationContext()).getIdToken());
-            }
-        });
-
-
         holder.mView.setClickable(true);
-
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,6 +72,29 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
                     // fragment is attached to one) that an item has been selected.
                     mListener.onListFragmentInteraction(holder.mItem);
                 }
+            }
+        });
+
+        holder.mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, final boolean b) {
+
+                String state = (b) ? "1" : "0";
+
+                ApiService apiService = ApiService.retrofit.create(ApiService.class);
+                Call<String> call = apiService.sendCommand("Test","Switch", "toggle_power", state);
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        Log.d("tag", response.message());
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Log.d("tag", t.getMessage());
+                    }
+                });
+
             }
         });
 
@@ -110,7 +112,6 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
         public final ImageView mStreamImage;
         public final TextView mContentView;
         public final Switch mSwitch;
-        public final NumberPicker mSpinner;
         //public final ImageButton mRemoveStream;
         public Device mItem;
 
@@ -126,8 +127,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
             mView.setOnLongClickListener(this);
             mStreamImage = (ImageView) view.findViewById(R.id.streamImage);
             mContentView = (TextView) view.findViewById(R.id.device_name);
-            mSpinner = (NumberPicker) view.findViewById(R.id.temp_spinner);
-            mSwitch = (Switch) view.findViewById(R.id.my_switch);
+            mSwitch = (Switch) view.findViewById(R.id.power_switch);
             //mRemoveStream = (ImageButton) view.findViewById(R.id.remove_btn);
             //mRemoveStream.setOnClickListener(this);
 
@@ -148,7 +148,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
                 selectedItems.put(getAdapterPosition(), true);
                 view.setSelected(true);
                 view.findViewById(R.id.stream_linearlayout).setSelected(true);
-               // ((MainActivity)view.getContext()).onCreateOptionsMenu()
+                // ((MainActivity)view.getContext()).onCreateOptionsMenu()
             }
             return false;
         }
