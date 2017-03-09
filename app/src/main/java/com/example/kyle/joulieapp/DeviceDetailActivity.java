@@ -26,9 +26,6 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private TextView deviceID;
     private TextView avg_usage;
     private GraphView graph;
-    private ToggleButton toggleBtn1;
-    private ToggleButton toggleBtn2;
-    private ToggleButton toggleBtn3;
     private String guid = "6b5e49b13c5148b7a50c6c29fd1f282f";
 
     @Override
@@ -50,44 +47,11 @@ public class DeviceDetailActivity extends AppCompatActivity {
         deviceID = (TextView) findViewById(R.id.deviceID);
         deviceID.setText(currentDevice.getId());
         graph = (GraphView) findViewById(R.id.graph);
-        toggleBtn1 = (ToggleButton) findViewById(R.id.toggle_power1);
-        toggleBtn2 = (ToggleButton) findViewById(R.id.toggle_power2);
-        toggleBtn3 = (ToggleButton) findViewById(R.id.toggle_power3);
-
-        toggleBtn1 = (ToggleButton) findViewById(R.id.toggle_power1);
-        toggleBtn1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                publishSwitch(1, toggleBtn1.isChecked());
-            }
-        });
-
-        toggleBtn2 = (ToggleButton) findViewById(R.id.toggle_power2);
-        toggleBtn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                publishSwitch(2, toggleBtn2.isChecked());
-            }
-        });
-
-        toggleBtn3 = (ToggleButton) findViewById(R.id.toggle_power3);
-        toggleBtn3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                publishSwitch(3, toggleBtn3.isChecked());
-            }
-        });
 
         subscribe();
         new getUsageData().execute(null, null, null);
     }
 
-    private void setControls(boolean status){
-        toggleBtn1.setEnabled(status);
-        toggleBtn2.setEnabled(status);
-        toggleBtn3.setEnabled(status);
-       // btnRefresh.setEnabled(status);
-    }
 
     //subscribeClick event handler
     //used to subscribe to a topic
@@ -97,31 +61,6 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
     }
 
-    private void updateButton(ToggleButton button, String isOn){
-        if ("on".equals(isOn)){
-            button.setChecked(true);
-        }else if ("off".equals(isOn)){
-            button.setChecked(false);
-        }
-    }
-
-    //publishClick event handler
-    //used to publish to a topic
-    View.OnClickListener publishClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-           // final String guid = currentDevice.id;
-            final String topic = "pi/sockets";
-            String status = toggleBtn1.isChecked() ? "on" : "off";
-            final String msg = "{\"deviceID\" : \""+ guid +"\",\"socketNumber\" : 1,\"status\" : \"" + status + "\"}";
-
-            try {
-
-            } catch (Exception e) {
-            }
-
-        }
-    };
 
     private void publishSwitch(int number, boolean isOn){
        // final String guid = currentDevice.id;
