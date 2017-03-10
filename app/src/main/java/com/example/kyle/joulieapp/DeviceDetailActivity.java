@@ -13,11 +13,17 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DeviceDetailActivity extends AppCompatActivity {
@@ -25,7 +31,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private Device currentDevice;
     private TextView deviceID;
     private TextView avg_usage;
-    private GraphView graph;
+    //private GraphView graph;
+    private LineChart chart;
     private String guid = "6b5e49b13c5148b7a50c6c29fd1f282f";
 
     @Override
@@ -46,7 +53,27 @@ public class DeviceDetailActivity extends AppCompatActivity {
         avg_usage = (TextView) findViewById(R.id.avg_usage);
         deviceID = (TextView) findViewById(R.id.deviceID);
         deviceID.setText(currentDevice.getId());
-        graph = (GraphView) findViewById(R.id.graph);
+        chart = (LineChart) findViewById(R.id.chart);
+
+        //populate some fake hardcoded data to test
+        List<Entry> entries = new ArrayList<Entry>();
+
+        entries.add(new Entry(0f, 0.125f));
+        entries.add(new Entry(6f, 0.25f));
+        entries.add(new Entry(12f, 0.50f));
+        entries.add(new Entry(18f, 1.0f));
+        entries.add(new Entry(23f, 1.2f));
+        entries.add(new Entry(23.75f, 1.25f));
+
+        LineDataSet dataSet = new LineDataSet(entries, "Device1"); // add entries to dataset
+        dataSet.setColors(new int[] { R.color.red1}, this);
+
+        // use the interface ILineDataSet
+        List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        dataSets.add(dataSet);
+        LineData data = new LineData(dataSets);
+        chart.setData(data);
+        chart.invalidate(); // refresh
 
         subscribe();
         new getUsageData().execute(null, null, null);
@@ -130,16 +157,35 @@ public class DeviceDetailActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Integer value) {
             super.onPostExecute(value);
-            int i = 0;
-            graph.removeAllSeries();
+            //int i = 0;
+            //graph.removeAllSeries();
+
+            // TODO: 2017-03-10 test this code with actual received data
+            chart.clearValues();
 
             for(Map.Entry<String, ArrayList<DataPoint>> entry: deviceData.entrySet()){
                // Collections.sort(entry.getValue(), new UsageOverviewFragment.TimeStampComparator());
-                LineGraphSeries<DataPoint> series = new LineGraphSeries<>(entry.getValue().toArray(new DataPoint[entry.getValue().size()]));
-                series.setColor(Color.GREEN);
-                series.setTitle(entry.getKey());
-                graph.addSeries(series);
-                i++;
+                //LineGraphSeries<DataPoint> series = new LineGraphSeries<>(entry.getValue().toArray(new DataPoint[entry.getValue().size()]));
+                //series.setColor(Color.GREEN);
+                //series.setTitle(entry.getKey());
+                //graph.addSeries(series);
+                //i++;
+
+                //populate data
+                List<Entry> entries = new ArrayList<Entry>();
+                for (DataPoint dp: entry.getValue().toArray(new DataPoint[entry.getValue().size()])) {
+                    entries.add(new Entry((float) dp.getX(), (float) dp.getY()));
+                }
+
+                LineDataSet dataSet = new LineDataSet(entries, "Device1"); // add entries to dataset
+                dataSet.setColors(new int[] { R.color.red1}, getApplicationContext());
+
+                // use the interface ILineDataSet
+                List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+                dataSets.add(dataSet);
+                LineData data = new LineData(dataSets);
+                chart.setData(data);
+                chart.invalidate(); // refresh
             }
             float avgUsage = (totalUsage/numDataPoints);
             avg_usage.setText(String.valueOf(avgUsage) + " kWatts");
