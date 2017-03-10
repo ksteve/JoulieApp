@@ -43,31 +43,6 @@ public class DummyContent {
         mContext = context;
     }
 
-    private static  void loadUsages(){
-        InputStream is = mContext.getResources().openRawResource(R.raw.artist_song);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        try {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] RowData = line.split(",");
-                addUsageOptions(new Usage("1"));
-                // do something with "data" and "value"
-            }
-        }
-        catch (IOException ex) {
-            // handle exception
-        }
-        finally {
-            try {
-                is.close();
-            }
-            catch (IOException e) {
-                // handle exception
-            }
-        }
-    }
-
-
     private static void addDeviceOptions(Device item) {
         DEVICE_OPTIONS.add(item);
     }

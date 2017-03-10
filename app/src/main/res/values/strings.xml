@@ -26,12 +26,15 @@
     </string-array>
 
     <!-- apis -->
-    <string name="auth0_client_id">QFzpBmFU8WtS7LCJiwblg8IEetfmsFNh</string>
-    <string name="auth0_domain">app62367704.auth0.com</string>
+    <string name="auth0_client_id">igP9wpK19wh9ri5DiXBNzNP4AbLw2vit</string>
+    <string name="auth0_domain">joulie.auth0.com</string>
     <string name="auth0_preferences">AUTH0_SHARED_PREFERENCES_KEY</string>
     <string name="auth0_refresh_token">AUTH0_REFRESH_TOKEN</string>
     <string name="auth0_access_token">AUTH0_ACCESS_TOKEN</string>
     <string name="auth0_id_token">AUTH0_ID_TOKEN</string>
     <string name="auth0_credential_type">AUTH0_CREDENTIAL_TYPE</string>
+
+    <string name="google_server_client_id">133313775143-lgjlusjakd9evrcl5v59cha948s4giha.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">1923164431244563</string>
 
 </resources>

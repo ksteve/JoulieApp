@@ -4,11 +4,16 @@ import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.auth0.android.Auth0;
 import com.auth0.android.authentication.AuthenticationAPIClient;
 import com.auth0.android.authentication.AuthenticationException;
 import com.auth0.android.callback.BaseCallback;
+import com.auth0.android.facebook.FacebookAuthHandler;
+import com.auth0.android.facebook.FacebookAuthProvider;
+import com.auth0.android.google.GoogleAuthHandler;
+import com.auth0.android.google.GoogleAuthProvider;
 import com.auth0.android.lock.AuthenticationCallback;
 import com.auth0.android.lock.Lock;
 import com.auth0.android.lock.LockCallback;
@@ -23,6 +28,8 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity {
 
     private Lock lock;
+    private GoogleAuthProvider gProvider;
+    private FacebookAuthProvider fbProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +40,18 @@ public class LoginActivity extends AppCompatActivity {
                 getResources().getString(R.string.auth0_domain));
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("scope", "openid offline_access");
+       // parameters.put("scope", "openid offline_access");
 
+        AuthenticationAPIClient aClient = new AuthenticationAPIClient(auth0);
+        gProvider = new GoogleAuthProvider(getString(R.string.google_server_client_id), aClient);
+        fbProvider = new FacebookAuthProvider(aClient);
+
+        GoogleAuthHandler googleAuthHandler = new GoogleAuthHandler(gProvider);
+        FacebookAuthHandler facebookAuthHandler = new FacebookAuthHandler(fbProvider);
         lock = Lock.newBuilder(auth0, callback)
-                .withAuthenticationParameters(parameters)
+                //.withAuthenticationParameters(parameters)
+                .withAuthHandlers(googleAuthHandler)
+                .withAuthHandlers(facebookAuthHandler)
                 // Add parameters to the Lock Builder
                 .build(this);
 
@@ -45,7 +60,8 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        AuthenticationAPIClient aClient = new AuthenticationAPIClient(auth0);
+        Log.d("TOKEN: ", CredentialsManager.getCredentials(this).getIdToken());
+
         aClient.tokenInfo(CredentialsManager.getCredentials(this).getIdToken())
                 .start(new BaseCallback<UserProfile, AuthenticationException>() {
                     @Override
@@ -97,5 +113,6 @@ public class LoginActivity extends AppCompatActivity {
             Snackbar.make(findViewById(R.id.activity_login), error.getMessage(), Snackbar.LENGTH_SHORT).show();
         }
     };
+
 
 }
