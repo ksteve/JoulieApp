@@ -1,37 +1,23 @@
 package com.example.kyle.joulieapp;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
-import com.example.kyle.joulieapp.api.ApiService;
-import com.example.kyle.joulieapp.utils.CredentialsManager;
-import com.example.kyle.joulieapp.utils.JoulieAPI;
-import com.example.kyle.joulieapp.utils.VolleyRequestQueue;
-import com.google.gson.JsonObject;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.kyle.joulieapp.api.ApiClient;
+import com.example.kyle.joulieapp.api.ApiInterface;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -81,8 +67,8 @@ public class NewDeviceActivity extends AppCompatActivity {
                             deviceNameView.getText().toString(),
                             defaultDeviceImage);
 
-                    ApiService apiService = ApiService.retrofit.create(ApiService.class);
-                    Call<Device> call = apiService.createDevice(device);
+                    ApiInterface apiInterface = ApiClient.getClient(NewDeviceActivity.this).create(ApiInterface.class);
+                    Call<Device> call = apiInterface.createDevice("Test", device);
                     call.enqueue(new Callback<Device>() {
                         @Override
                         public void onResponse(Call<Device> call, Response<Device> response) {

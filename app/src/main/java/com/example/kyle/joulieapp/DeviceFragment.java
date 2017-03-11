@@ -71,7 +71,7 @@ public class DeviceFragment extends Fragment {
         } else {
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
-        recyclerView.setAdapter(new MyDeviceRecyclerViewAdapter(DummyContent.MY_DEVICES, mListener));
+        recyclerView.setAdapter(new MyDeviceRecyclerViewAdapter(getActivity(),DummyContent.MY_DEVICES, mListener));
 
         if (DummyContent.MY_DEVICES.isEmpty()) {
             recyclerView.setVisibility(View.GONE);

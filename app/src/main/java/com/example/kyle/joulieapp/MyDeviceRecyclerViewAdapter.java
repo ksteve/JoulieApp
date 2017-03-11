@@ -1,6 +1,7 @@
 package com.example.kyle.joulieapp;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -8,24 +9,17 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
-import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.Models.Device;
-import com.example.kyle.joulieapp.api.ApiService;
-import com.example.kyle.joulieapp.utils.CredentialsManager;
-import com.example.kyle.joulieapp.utils.JoulieAPI;
-import com.example.kyle.joulieapp.utils.VolleyRequestQueue;
+import com.example.kyle.joulieapp.api.ApiClient;
+import com.example.kyle.joulieapp.api.ApiInterface;
 
-import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -43,11 +37,13 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
     private final List<Device> mValues;
     private final DeviceFragment.OnListFragmentInteractionListener mListener;
     private SparseBooleanArray selectedItems;
+    private ApiInterface apiInterface;
 
-    public MyDeviceRecyclerViewAdapter(List<Device> items, DeviceFragment.OnListFragmentInteractionListener listener) {
+    public MyDeviceRecyclerViewAdapter(Context context, List<Device> items, DeviceFragment.OnListFragmentInteractionListener listener) {
         selectedItems = new SparseBooleanArray();
         mValues = items;
         mListener = listener;
+        apiInterface = ApiClient.getClient(context).create(ApiInterface.class);
     }
 
     @Override
@@ -60,8 +56,10 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mStreamImage.setImageDrawable(mValues.get(position).image);
-        holder.mContentView.setText(mValues.get(position).getDeviceName());
+        holder.mDeviceImage.setImageDrawable(mValues.get(position).image);
+        holder.mDeviceName.setText(mValues.get(position).getDeviceName());
+        holder.mDeviceType.setText(mValues.get(position).getType());
+        holder.mSwitch.setChecked(mValues.get(position).getPowerState());
 
         holder.mView.setClickable(true);
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -80,9 +78,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
             public void onCheckedChanged(CompoundButton compoundButton, final boolean b) {
 
                 String state = (b) ? "1" : "0";
-
-                ApiService apiService = ApiService.retrofit.create(ApiService.class);
-                Call<String> call = apiService.sendCommand("Test","Switch", "toggle_power", state);
+                Call<String> call = apiInterface.sendCommand("Test","Switch", "toggle_power", state);
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
@@ -109,8 +105,9 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
         public final View mView;
-        public final ImageView mStreamImage;
-        public final TextView mContentView;
+        public final ImageView mDeviceImage;
+        public final TextView mDeviceName;
+        public final TextView mDeviceType;
         public final Switch mSwitch;
         //public final ImageButton mRemoveStream;
         public Device mItem;
@@ -125,8 +122,9 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
                 }
             });
             mView.setOnLongClickListener(this);
-            mStreamImage = (ImageView) view.findViewById(R.id.streamImage);
-            mContentView = (TextView) view.findViewById(R.id.device_name);
+            mDeviceImage = (ImageView) view.findViewById(R.id.streamImage);
+            mDeviceName = (TextView) view.findViewById(R.id.device_name);
+            mDeviceType = (TextView) view.findViewById(R.id.device_type);
             mSwitch = (Switch) view.findViewById(R.id.power_switch);
             //mRemoveStream = (ImageButton) view.findViewById(R.id.remove_btn);
             //mRemoveStream.setOnClickListener(this);
@@ -135,7 +133,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mDeviceName.getText() + "'";
         }
 
         @Override
