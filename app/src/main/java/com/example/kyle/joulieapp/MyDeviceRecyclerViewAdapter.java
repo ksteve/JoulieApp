@@ -21,6 +21,7 @@ import com.example.kyle.joulieapp.api.ApiInterface;
 
 import org.w3c.dom.Text;
 
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -77,8 +78,11 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, final boolean b) {
 
-                String state = (b) ? "1" : "0";
-                Call<String> call = apiInterface.sendCommand("Test","Switch", "toggle_power", state);
+                String state = (b) ? "1 " : "0";
+                HashMap<String,String> body = new HashMap<String, String>();
+                body.put("state", state);
+
+                Call<String> call = apiInterface.sendCommand("Test","switch", "toggle_power", body);
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {

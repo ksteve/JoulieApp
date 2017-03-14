@@ -18,9 +18,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -107,7 +104,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private class getUsageData extends AsyncTask<Void, String, Integer> {
 
         private int[] colours = new int[]{Color.GREEN, Color.RED, Color.BLUE, Color.BLACK};
-        Map<String, ArrayList<DataPoint>> deviceData = new HashMap<>();
+       // Map<String, ArrayList<DataPoint>> deviceData = new HashMap<>();
         float totalUsage = 0;
         int numDataPoints = 0;
 
@@ -163,32 +160,32 @@ public class DeviceDetailActivity extends AppCompatActivity {
             // TODO: 2017-03-10 test this code with actual received data
             chart.clearValues();
 
-            for(Map.Entry<String, ArrayList<DataPoint>> entry: deviceData.entrySet()){
-               // Collections.sort(entry.getValue(), new UsageOverviewFragment.TimeStampComparator());
-                //LineGraphSeries<DataPoint> series = new LineGraphSeries<>(entry.getValue().toArray(new DataPoint[entry.getValue().size()]));
-                //series.setColor(Color.GREEN);
-                //series.setTitle(entry.getKey());
-                //graph.addSeries(series);
-                //i++;
-
-                //populate data
-                List<Entry> entries = new ArrayList<Entry>();
-                for (DataPoint dp: entry.getValue().toArray(new DataPoint[entry.getValue().size()])) {
-                    entries.add(new Entry((float) dp.getX(), (float) dp.getY()));
-                }
-
-                LineDataSet dataSet = new LineDataSet(entries, "Device1"); // add entries to dataset
-                dataSet.setColors(new int[] { R.color.red1}, getApplicationContext());
-
-                // use the interface ILineDataSet
-                List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-                dataSets.add(dataSet);
-                LineData data = new LineData(dataSets);
-                chart.setData(data);
-                chart.invalidate(); // refresh
-            }
-            float avgUsage = (totalUsage/numDataPoints);
-            avg_usage.setText(String.valueOf(avgUsage) + " kWatts");
+//            for(Map.Entry<String, ArrayList<DataPoint>> entry: deviceData.entrySet()){
+//               // Collections.sort(entry.getValue(), new UsageOverviewFragment.TimeStampComparator());
+//                //LineGraphSeries<DataPoint> series = new LineGraphSeries<>(entry.getValue().toArray(new DataPoint[entry.getValue().size()]));
+//                //series.setColor(Color.GREEN);
+//                //series.setTitle(entry.getKey());
+//                //graph.addSeries(series);
+//                //i++;
+//
+//                //populate data
+//                List<Entry> entries = new ArrayList<Entry>();
+//                for (DataPoint dp: entry.getValue().toArray(new DataPoint[entry.getValue().size()])) {
+//                    entries.add(new Entry((float) dp.getX(), (float) dp.getY()));
+//                }
+//
+//                LineDataSet dataSet = new LineDataSet(entries, "Device1"); // add entries to dataset
+//                dataSet.setColors(new int[] { R.color.red1}, getApplicationContext());
+//
+//                // use the interface ILineDataSet
+//                List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+//                dataSets.add(dataSet);
+//                LineData data = new LineData(dataSets);
+//                chart.setData(data);
+//                chart.invalidate(); // refresh
+//            }
+//            float avgUsage = (totalUsage/numDataPoints);
+//            avg_usage.setText(String.valueOf(avgUsage) + " kWatts");
         }
     }
 

@@ -35,7 +35,9 @@ public class ApiClient {
                       Request original = chain.request();
 
                       Request request = original.newBuilder()
-                              .header("Authorization", "Bearer: " + CredentialsManager.getCredentials(context).getIdToken())
+                             // .header("Accept", "application/json")
+                            //  .header("Content-Type", "application/json")
+                              .header("Authorization", "Bearer " + CredentialsManager.getCredentials(context).getIdToken())
                               .method(original.method(), original.body())
                               .build();
 
@@ -46,7 +48,7 @@ public class ApiClient {
             OkHttpClient client = httpClient.build();
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl("https://joulie-cylon.herokuapp.com/")
+                    .baseUrl("https://joulie-core.herokuapp.com/")
                     //.baseUrl("http://192.168.2.14:3000/")
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())

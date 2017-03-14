@@ -44,7 +44,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-auth:10.2.0'
     compile 'com.google.android.gms:play-services-auth-base:10.2.0'
     compile 'com.google.android.gms:play-services-base:10.2.0'
-
     testCompile 'junit:junit:4.12'
 }
 

@@ -28,6 +28,8 @@ public class NewDeviceActivity extends AppCompatActivity {
     //controls
     private Spinner deviceType;
     private EditText deviceNameView;
+    private EditText deviceIP;
+    private EditText devicePort;
     private ImageView deviceImageView;
     private Drawable defaultDeviceImage;
 
@@ -42,6 +44,8 @@ public class NewDeviceActivity extends AppCompatActivity {
         deviceImageView = (ImageView) findViewById(R.id.deviceImage);
         deviceNameView = (EditText) findViewById(R.id.device_name);
         deviceType = (Spinner) findViewById(R.id.device_type);
+        deviceIP = (EditText) findViewById(R.id.ip_address);
+        devicePort = (EditText) findViewById(R.id.port);
 
         defaultDeviceImage = ContextCompat.getDrawable(NewDeviceActivity.this, R.mipmap.ic_outlet);
         deviceImageView.setImageDrawable(defaultDeviceImage);
@@ -65,14 +69,17 @@ public class NewDeviceActivity extends AppCompatActivity {
                     final Device device = new Device("1",
                             deviceType.getSelectedItem().toString(),
                             deviceNameView.getText().toString(),
+                            deviceIP.getText().toString(),
+                            devicePort.getText().toString(),
                             defaultDeviceImage);
+
+                    DummyContent.MY_DEVICES.add(device);
 
                     ApiInterface apiInterface = ApiClient.getClient(NewDeviceActivity.this).create(ApiInterface.class);
                     Call<Device> call = apiInterface.createDevice("Test", device);
                     call.enqueue(new Callback<Device>() {
                         @Override
                         public void onResponse(Call<Device> call, Response<Device> response) {
-                            DummyContent.MY_DEVICES.add(device);
                             finish();
                         }
 
