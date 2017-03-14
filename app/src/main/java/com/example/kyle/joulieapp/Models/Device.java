@@ -20,9 +20,35 @@ public class Device {
     private String type;
 
     @SerializedName("state")
+
     private boolean powerState;
 
+    @SerializedName("ip")
+    private String ipAddress;
+
+    @SerializedName("port")
+    private String port;
+
+    public transient String status;
+
     public transient Drawable image;
+
+    //@Bindable
+    //private transient int currentTemp;
+
+    public Device(String id, String deviceType,String deviceName, String deviceIP, String devicePort, Drawable image) {
+        setId(id);
+        setDeviceName(deviceName);
+        setType(deviceType);
+        setImage(image);
+        setPowerState(false);
+        setIpAddress(deviceIP);
+        setPort(devicePort);
+    }
+
+//    public Device(){
+//
+//    }
 
     public String getId() {
         return id;
@@ -32,27 +58,20 @@ public class Device {
         this.id = id;
     }
 
-    //@Bindable
-    //private transient int currentTemp;
-
-    public Device(String id, String deviceType,String deviceName, Drawable image) {
-        this.id = id;
-        this.deviceName = deviceName;
-        this.type = deviceType;
-        this.image = image;
-        this.powerState = false;
-    }
-
-    public Device(){
-
-    }
-
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
-        this.type = type;
+        switch (type){
+            case "Wemo Insight Switch":
+                this.type = "wemo";
+                break;
+
+            case "TP-Link Smart Plug":
+                this.type = "tplink";
+                break;
+        }
     }
 
     public String getDeviceName() {
@@ -67,6 +86,30 @@ public class Device {
 
     public void setPowerState(boolean state) {
         this.powerState = state;
+    }
+
+    public String getIpAddress(){
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress){
+        this.ipAddress = ipAddress;
+    }
+
+    public String getPort(){
+        return port;
+    }
+
+    public void setPort(String port){
+        this.port = port;
+    }
+
+    public Drawable getImage() {
+        return image;
+    }
+
+    public void setImage(Drawable image) {
+        this.image = image;
     }
 
 }

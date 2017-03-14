@@ -2,6 +2,8 @@ package com.example.kyle.joulieapp.api;
 
 import com.example.kyle.joulieapp.Models.Device;
 
+import java.util.HashMap;
+
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -35,6 +37,6 @@ public interface ApiInterface {
 
     //send a command to a specific device
     @POST("robot/{robot_name}/device/{device_name}/{command_name}")
-    Call<String> sendCommand(@Path("robot_name") String robotName, @Path("device_name") String deviceName, @Path("command_name") String commandName, @Body String state);
+    Call<String> sendCommand(@Path("robot_name") String robotName, @Path("device_name") String deviceName, @Path("command_name") String commandName, @Body HashMap<String, String> body);
 
 }

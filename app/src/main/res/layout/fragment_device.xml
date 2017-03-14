@@ -71,7 +71,6 @@
             android:paddingEnd="16dp"
             android:splitTrack="false"
             android:text="Power"
-            android:textAlignment="viewStart"
             android:textOn="On"/>
 
     </RelativeLayout>
