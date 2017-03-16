@@ -2,6 +2,7 @@ package com.example.kyle.joulieapp;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.Models.Device;
+import com.example.kyle.joulieapp.Models.Rule;
 
 /**
  * A fragment representing a list of Items.
@@ -29,6 +31,8 @@ public class DeviceFragment extends Fragment {
     private OnListFragmentInteractionListener mListener;
     private  RecyclerView recyclerView;
     private TextView emptyView;
+    private FloatingActionButton fabRemove;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -81,6 +85,19 @@ public class DeviceFragment extends Fragment {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
         }
+
+        fabRemove = (FloatingActionButton) view.findViewById(R.id.fabRemove);
+
+        fabRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (Device device: ((MyDeviceRecyclerViewAdapter) recyclerView.getAdapter()).selectedDevices){
+                    DummyContent.MY_DEVICES.remove(device);
+                }
+                ((MyDeviceRecyclerViewAdapter) recyclerView.getAdapter()).selectedDevices.clear();
+                recyclerView.getAdapter().notifyDataSetChanged();
+            }
+        });
 
         return view;
     }

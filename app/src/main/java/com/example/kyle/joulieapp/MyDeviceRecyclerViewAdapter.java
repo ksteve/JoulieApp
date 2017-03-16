@@ -9,6 +9,7 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -21,6 +22,7 @@ import com.example.kyle.joulieapp.api.ApiInterface;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,6 +38,7 @@ import retrofit2.Response;
 public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRecyclerViewAdapter.ViewHolder> {
 
     private final List<Device> mValues;
+    public final List<Device> selectedDevices;
     private final DeviceFragment.OnListFragmentInteractionListener mListener;
     private SparseBooleanArray selectedItems;
     private ApiInterface apiInterface;
@@ -45,6 +48,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
         mValues = items;
         mListener = listener;
         apiInterface = ApiClient.getClient(context).create(ApiInterface.class);
+        selectedDevices = new ArrayList<>();
     }
 
     @Override
@@ -55,7 +59,8 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        holder.checkBox.setChecked(false);
         holder.mItem = mValues.get(position);
         holder.mDeviceImage.setImageDrawable(mValues.get(position).image);
         holder.mDeviceName.setText(mValues.get(position).getDeviceName());
@@ -98,7 +103,17 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
             }
         });
 
-
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    selectedDevices.add(mValues.get(position));
+                }
+                else{
+                    selectedDevices.remove(mValues.get(position));
+                }
+            }
+        });
 
     }
 
@@ -115,6 +130,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
         public final Switch mSwitch;
         //public final ImageButton mRemoveStream;
         public Device mItem;
+        public final CheckBox checkBox;
 
         public ViewHolder(View view) {
             super(view);
@@ -130,6 +146,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
             mDeviceName = (TextView) view.findViewById(R.id.device_name);
             mDeviceType = (TextView) view.findViewById(R.id.device_type);
             mSwitch = (Switch) view.findViewById(R.id.power_switch);
+            checkBox = (CheckBox) view.findViewById(R.id.checkBox);
             //mRemoveStream = (ImageButton) view.findViewById(R.id.remove_btn);
             //mRemoveStream.setOnClickListener(this);
 

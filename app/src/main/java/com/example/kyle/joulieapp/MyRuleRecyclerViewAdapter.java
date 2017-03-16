@@ -30,7 +30,7 @@ public class MyRuleRecyclerViewAdapter extends RecyclerView.Adapter<MyRuleRecycl
     public MyRuleRecyclerViewAdapter(List<Rule> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
-        selectedRules = new ArrayList<Rule>();
+        selectedRules = new ArrayList<>();
     }
 
     @Override
