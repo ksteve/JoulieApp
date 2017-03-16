@@ -26,12 +26,13 @@
         android:text="@string/no_rules"/>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabRemove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        app:layout_anchor="@id/main"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
         android:src="@android:drawable/ic_delete"
-        android:id="@+id/fabRemove" />
+        app:layout_anchor="@id/main" />
 
 </RelativeLayout>
