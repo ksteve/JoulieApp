@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -42,6 +45,7 @@ public class UsageOverviewFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     //private GraphView graph;
     private LineChart chart;
+    private TabLayout tabLayout;
 
     private TextView totalUsageView;
 
@@ -82,14 +86,19 @@ public class UsageOverviewFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_usage_overview, container, false);
 
+        //setup Tab layout
+        tabLayout = (TabLayout) view.findViewById(R.id.graph_tabs);
+        setupTabIcons();
 
-        totalUsageView = (TextView) view.findViewById(R.id.total_usage);
+       // totalUsageView = (TextView) view.findViewById(R.id.total_usage);
 
 
       //  new getUsageData().execute();
 
+
         // in this example, a LineChart is initialized from xml
         chart = (LineChart) view.findViewById(R.id.chart);
+        chart.getAxis(YAxis.AxisDependency.LEFT).setEnabled(false);
 
         //populate some fake hardcoded data to test
         List<Entry> entries = new ArrayList<Entry>();
@@ -103,7 +112,7 @@ public class UsageOverviewFragment extends Fragment {
 
         LineDataSet dataSet = new LineDataSet(entries, "Device1"); // add entries to dataset
         dataSet.setColors(new int[] { R.color.red1}, this.getContext());
-
+        dataSet.setLineWidth(4);
         //for one line on chart then just use these next 3 lines
         //LineData lineData = new LineData(dataSet);
         //chart.setData(lineData);
@@ -121,6 +130,7 @@ public class UsageOverviewFragment extends Fragment {
 
         LineDataSet dataSet2 = new LineDataSet(entries2, "Device2"); // add entries to dataset
         dataSet2.setColors(new int[] { R.color.blue1}, this.getContext());
+        dataSet2.setLineWidth(4);
 
         // use the interface ILineDataSet
         List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
@@ -129,9 +139,17 @@ public class UsageOverviewFragment extends Fragment {
 
         LineData data = new LineData(dataSets);
         chart.setData(data);
+        chart.animateXY(500, 500);
         chart.invalidate(); // refresh
 
         return  view;
+    }
+
+    private void setupTabIcons() {
+        tabLayout.addTab(tabLayout.newTab().setText("1D"), true);
+        tabLayout.addTab(tabLayout.newTab().setText("1W"));
+        tabLayout.addTab(tabLayout.newTab().setText("1M"));
+        tabLayout.addTab(tabLayout.newTab().setText("1Y"));
     }
 
     // TODO: Rename method, update argument and hook method into UI event
