@@ -9,6 +9,7 @@ package com.example.kyle.joulieapp;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -28,7 +29,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
+import java.util.HashMap;
 import java.util.List;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.Usage;
@@ -37,6 +40,7 @@ import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.utils.CredentialsManager;
 import com.example.kyle.joulieapp.utils.JoulieAPI;
 import com.example.kyle.joulieapp.utils.JoulieSocketIOAPI;
+import com.example.kyle.joulieapp.utils.Tools;
 import com.example.kyle.joulieapp.utils.VolleyRequestQueue;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -45,6 +49,8 @@ import com.google.gson.JsonObject;
 
 
 import org.json.JSONObject;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -123,6 +129,18 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //set profile picture
+        CircleImageView profilePic = (CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_pic);
+        HashMap<String, String> userProfile = CredentialsManager.getUserProfile(getApplicationContext());
+        new Tools.DownloadImageTask(profilePic).execute(userProfile.get(getString(R.string.user_picture)));
+
+       // profilePic.setImageDrawable(Tools.LoadImageFromWebOperations(userProfile.get(getString(R.string.user_picture))));
+
+        //set email
+        TextView profileEmail = (TextView) navigationView.getHeaderView(0).findViewById(R.id.profile_email);
+        profileEmail.setText(userProfile.get(getString(R.string.user_email)));
+
 
         //setup view pager
         setupViewPager();
@@ -266,7 +284,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void logout() {
-        CredentialsManager.deleteCredentials(this);
+        CredentialsManager.deleteCredentials(getApplicationContext());
+        CredentialsManager.deleteUserProfile(getApplicationContext());
         startActivity(new Intent(this, LoginActivity.class));
         finish();
     }

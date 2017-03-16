@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private Lock lock;
     private GoogleAuthProvider gProvider;
     private FacebookAuthProvider fbProvider;
+    private AuthenticationAPIClient aClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         Map<String, Object> parameters = new HashMap<>();
        // parameters.put("scope", "openid offline_access");
 
-        AuthenticationAPIClient aClient = new AuthenticationAPIClient(auth0);
+        aClient = new AuthenticationAPIClient(auth0);
         gProvider = new GoogleAuthProvider(getString(R.string.google_server_client_id), aClient);
         fbProvider = new FacebookAuthProvider(aClient);
 
@@ -62,10 +63,13 @@ public class LoginActivity extends AppCompatActivity {
 
         Log.d("TOKEN: ", CredentialsManager.getCredentials(this).getIdToken());
 
+        //aClient
+
         aClient.tokenInfo(CredentialsManager.getCredentials(this).getIdToken())
                 .start(new BaseCallback<UserProfile, AuthenticationException>() {
                     @Override
                     public void onSuccess(final UserProfile payload) {
+                        CredentialsManager.saveUserProfile(getApplicationContext(),payload);
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         finish();
                     }
@@ -78,10 +82,10 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         });
                         CredentialsManager.deleteCredentials(getApplicationContext());
+                        CredentialsManager.deleteUserProfile(getApplicationContext());
                         startActivity(lock.newIntent(LoginActivity.this));
                     }
                 });
-
     }
 
     @Override
@@ -92,13 +96,36 @@ public class LoginActivity extends AppCompatActivity {
         lock = null;
     }
 
+
     private LockCallback callback = new AuthenticationCallback() {
         @Override
         public void onAuthentication(Credentials credentials) {
             // Login Success response
             CredentialsManager.saveCredentials(getApplicationContext(), credentials);
-            startActivity(new Intent(LoginActivity.this,MainActivity.class));
-            finish();
+            aClient.tokenInfo(CredentialsManager.getCredentials(LoginActivity.this).getIdToken())
+                    .start(new BaseCallback<UserProfile, AuthenticationException>() {
+                        @Override
+                        public void onSuccess(final UserProfile payload) {
+                            CredentialsManager.saveUserProfile(getApplicationContext(),payload);
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(AuthenticationException error) {
+                            LoginActivity.this.runOnUiThread(new Runnable() {
+                                public void run() {
+                                    Snackbar.make(findViewById(R.id.activity_login), "Session Expired, please Log In", Snackbar.LENGTH_SHORT).show();
+                                }
+                            });
+                            CredentialsManager.deleteCredentials(getApplicationContext());
+                            CredentialsManager.deleteUserProfile(getApplicationContext());
+                            startActivity(lock.newIntent(LoginActivity.this));
+                        }
+                    });
+
+            //startActivity(new Intent(LoginActivity.this,MainActivity.class));
+            //finish();
         }
 
         @Override

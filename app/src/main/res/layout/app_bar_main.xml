@@ -6,7 +6,6 @@
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context="com.example.kyle.joulieapp.MainActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -19,7 +18,33 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:layout_scrollFlags="scroll|snap"/>
+
+            <LinearLayout
+                android:id="@+id/summary_contanier"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_scrollFlags="scroll|snap">
+
+            <TextView
+                android:id="@+id/today_usage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:textSize="8pt"
+                android:text="Today's Usage: --"/>
+
+            <TextView
+                android:id="@+id/current_usage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:textSize="8pt"
+                android:text="Current Usage: --"/>
+
+            </LinearLayout>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
@@ -42,6 +67,5 @@
         app:layout_anchor="@id/main"
         app:layout_anchorGravity="bottom|end|right"
         android:src="@drawable/ic_add_black_24dp"/>
-
 
 </android.support.design.widget.CoordinatorLayout>
