@@ -21,9 +21,9 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Settings");
 
         // Display the fragment as the main content.
-        getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new SettingsFragment())
-                .commit();
+//        getFragmentManager().beginTransaction()
+//                .replace(android.R.id.content, new SettingsFragment())
+//                .commit();
 
         editTextOnPeakStartTime = (EditText) findViewById(R.id.onPeakStartTime_input);
         editTextOnPeakEndTime = (EditText) findViewById(R.id.onPeakEndTime_input);
