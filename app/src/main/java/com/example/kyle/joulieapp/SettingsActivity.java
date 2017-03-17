@@ -4,13 +4,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.text.method.DigitsKeyListener;
 import android.view.MenuItem;
 import android.widget.EditText;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SettingsActivity extends AppCompatActivity {
 
     private EditText editTextOnPeakStartTime;
     private EditText editTextOnPeakEndTime;
+    private EditText editTextOnPeakCost;
+    private EditText editTextOffPeakCost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +31,14 @@ public class SettingsActivity extends AppCompatActivity {
 //                .replace(android.R.id.content, new SettingsFragment())
 //                .commit();
 
-        editTextOnPeakStartTime = (EditText) findViewById(R.id.onPeakStartTime_input);
-        editTextOnPeakEndTime = (EditText) findViewById(R.id.onPeakEndTime_input);
-
         //set input filter for time inputs so only valid input can be entered
         initTimeInput();
+
+        editTextOnPeakCost = (EditText) findViewById(R.id.onPeakCost_input);
+        editTextOffPeakCost = (EditText) findViewById(R.id.offPeakCost_input);
+
+        initCostInput(editTextOnPeakCost);
+        initCostInput(editTextOffPeakCost);
     }
 
     @Override
@@ -111,4 +120,42 @@ public class SettingsActivity extends AppCompatActivity {
         editTextOnPeakStartTime.setFilters(timeFilter);
         editTextOnPeakEndTime.setFilters(timeFilter);
     }
+
+    private void initCostInput(final EditText et){
+
+        //the following InputFilter related code was borrowed from:
+        //https://gist.github.com/gaara87/3607765
+        et.setFilters(new InputFilter[] {
+                new DigitsKeyListener(Boolean.FALSE, Boolean.TRUE) {
+                    int beforeDecimal = 5, afterDecimal = 2;
+
+                    @Override
+                    public CharSequence filter(CharSequence source, int start, int end,
+                                               Spanned dest, int dstart, int dend) {
+                        String temp = et.getText() + source.toString();
+
+                        if (temp.equals(".")) {
+                            return "0.";
+                        }
+                        else if (temp.equals("0")) {
+                            return ""; // don't allow beginning with a 0
+                        }
+                        else if (temp.toString().indexOf(".") == -1) {
+                            // no decimal point placed yet
+                            if (temp.length() > beforeDecimal) {
+                                return "";
+                            }
+                        } else {
+                            temp = temp.substring(temp.indexOf(".") + 1);
+                            if (temp.length() > afterDecimal) {
+                                return "";
+                            }
+                        }
+
+                        return super.filter(source, start, end, dest, dstart, dend);
+                    }
+                }
+        });
+    }
+
 }
