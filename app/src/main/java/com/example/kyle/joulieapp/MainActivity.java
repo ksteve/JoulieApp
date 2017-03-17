@@ -7,6 +7,8 @@
 package com.example.kyle.joulieapp;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
@@ -133,7 +135,6 @@ public class MainActivity extends AppCompatActivity
         TextView profileEmail = (TextView) navigationView.getHeaderView(0).findViewById(R.id.profile_email);
         profileEmail.setText(userProfile.get(getString(R.string.user_email)));
 
-
         //setup view pager
         setupViewPager();
 
@@ -142,7 +143,8 @@ public class MainActivity extends AppCompatActivity
         tabLayout.setupWithViewPager(vpPager);
         setupTabIcons();
 
-        
+        registerNetworkChanges();
+
     }
 
     //Method Name: setupViewPager
@@ -171,6 +173,14 @@ public class MainActivity extends AppCompatActivity
         tabLayout.getTabAt(1).setText("");
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_power_24dp);
         tabLayout.getTabAt(2).setText("");
+    }
+
+    private void registerNetworkChanges(){
+
+        //setup the main activity to be notified when network changes occur
+        MainActivity.this.registerReceiver(
+                new ConnectivityChangeReceiver(),
+                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     //Method Name: toggleFab
