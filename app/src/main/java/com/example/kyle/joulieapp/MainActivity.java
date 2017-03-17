@@ -91,14 +91,6 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //rest api setup
-        //JoulieAPI.getInstance().registerListener(this);
-
-        //Socket IO Setup
-        //JoulieSocketIOAPI.getInstance().registerListener(this);
-        //JoulieSocketIOAPI.getInstance().connect();
-        //JoulieSocketIOAPI.getInstance().status();
-
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,6 +141,8 @@ public class MainActivity extends AppCompatActivity
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(vpPager);
         setupTabIcons();
+
+        
     }
 
     //Method Name: setupViewPager
@@ -161,6 +155,7 @@ public class MainActivity extends AppCompatActivity
         adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
         vpPager.setAdapter(adapterViewPager);
         vpPager.addOnPageChangeListener(MainActivity.this);
+        vpPager.setOffscreenPageLimit(3);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(adapterViewPager.getPageTitle(vpPager.getCurrentItem()));
     }
