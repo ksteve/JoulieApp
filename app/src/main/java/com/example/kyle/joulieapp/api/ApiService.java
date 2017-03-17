@@ -17,7 +17,7 @@ import retrofit2.http.Path;
  * Created by Kyle on 2017-02-24.
  */
 
-public interface ApiInterface {
+public interface ApiService {
 
     //Creating a new Robot
     @POST("robot/{robot_name}")
@@ -38,5 +38,8 @@ public interface ApiInterface {
     //send a command to a specific device
     @POST("robot/{robot_name}/device/{device_name}/{command_name}")
     Call<String> sendCommand(@Path("robot_name") String robotName, @Path("device_name") String deviceName, @Path("command_name") String commandName, @Body HashMap<String, String> body);
+
+    // TODO: 2017-03-17 get usage data endpoint
+    // TODO: 2017-03-17 create new rule endpoint
 
 }

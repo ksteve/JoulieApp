@@ -18,9 +18,7 @@ import android.widget.TextView;
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.api.ApiClient;
-import com.example.kyle.joulieapp.api.ApiInterface;
-
-import org.w3c.dom.Text;
+import com.example.kyle.joulieapp.api.ApiService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,13 +39,13 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
     public final List<Device> selectedDevices;
     private final DeviceFragment.OnListFragmentInteractionListener mListener;
     private SparseBooleanArray selectedItems;
-    private ApiInterface apiInterface;
+    private ApiService apiService;
 
     public MyDeviceRecyclerViewAdapter(Context context, List<Device> items, DeviceFragment.OnListFragmentInteractionListener listener) {
         selectedItems = new SparseBooleanArray();
         mValues = items;
         mListener = listener;
-        apiInterface = ApiClient.getClient(context).create(ApiInterface.class);
+        apiService = ApiClient.getInstance(context.getApplicationContext()).getApiService();
         selectedDevices = new ArrayList<>();
     }
 
@@ -87,7 +85,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
                 HashMap<String,String> body = new HashMap<String, String>();
                 body.put("state", state);
 
-                Call<String> call = apiInterface.sendCommand("Test","switch", "toggle_power", body);
+                Call<String> call = apiService.sendCommand("Test","switch", "toggle_power", body);
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {

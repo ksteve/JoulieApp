@@ -17,7 +17,7 @@ import android.widget.Spinner;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.api.ApiClient;
-import com.example.kyle.joulieapp.api.ApiInterface;
+import com.example.kyle.joulieapp.api.ApiService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -75,8 +75,11 @@ public class NewDeviceActivity extends AppCompatActivity {
 
                     DummyContent.MY_DEVICES.add(device);
 
-                    ApiInterface apiInterface = ApiClient.getClient(NewDeviceActivity.this).create(ApiInterface.class);
-                    Call<Device> call = apiInterface.createDevice("Test", device);
+                    ApiService apiService = ApiClient
+                            .getInstance(getApplicationContext())
+                            .getApiService();
+
+                    Call<Device> call = apiService.createDevice("Test", device);
                     call.enqueue(new Callback<Device>() {
                         @Override
                         public void onResponse(Call<Device> call, Response<Device> response) {
