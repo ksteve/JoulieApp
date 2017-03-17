@@ -11,5 +11,73 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.kyle.joulieapp.SettingsActivity">
 
+    <TextView
+        android:text="On-Peak Start Time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/onPeakStartTime_label" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="time"
+        android:ems="10"
+        android:id="@+id/onPeakStartTime_input"
+        android:layout_below="@+id/onPeakStartTime_label"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/onPeakEndTime_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/onPeakStartTime_input"
+        android:layout_marginTop="15dp"
+        android:text="On-Peak End Time" />
+
+    <EditText
+        android:id="@+id/onPeakEndTime_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="time"
+        android:layout_below="@+id/onPeakEndTime_label"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/onPeakCost_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/onPeakEndTime_input"
+        android:layout_marginTop="15dp"
+        android:text="On-Peak Cost (cents/kWh)" />
+
+    <EditText
+        android:id="@+id/onPeakCost_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:layout_below="@+id/onPeakCost_label"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/offPeakCost_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Off-Peak Cost (cents/kWh)"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/onPeakCost_input"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:id="@+id/offPeakCost_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:layout_below="@+id/offPeakCost_label"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
