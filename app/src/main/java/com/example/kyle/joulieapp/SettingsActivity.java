@@ -1,11 +1,13 @@
 package com.example.kyle.joulieapp;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.method.DigitsKeyListener;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 
 import java.util.regex.Matcher;
@@ -26,6 +28,18 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Settings");
 
+        editTextOnPeakStartTime = (EditText) findViewById(R.id.onPeakStartTime_input);
+        editTextOnPeakEndTime = (EditText) findViewById(R.id.onPeakEndTime_input);
+        editTextOnPeakCost = (EditText) findViewById(R.id.onPeakCost_input);
+        editTextOffPeakCost = (EditText) findViewById(R.id.offPeakCost_input);
+
+        //reload preferences if saved
+        SharedPreferences prefs = getSharedPreferences("myPreferences",MODE_PRIVATE);
+        editTextOnPeakStartTime.setText(prefs.getString("sOnPeakStartTime" , ""));
+        editTextOnPeakEndTime.setText(prefs.getString("sOnPeakEndTime" , ""));
+        editTextOnPeakCost.setText(prefs.getString("sOnPeakCost", ""));
+        editTextOffPeakCost.setText(prefs.getString("sOffPeakCost", ""));
+
         // Display the fragment as the main content.
 //        getFragmentManager().beginTransaction()
 //                .replace(android.R.id.content, new SettingsFragment())
@@ -33,9 +47,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         //set input filter for time inputs so only valid input can be entered
         initTimeInput();
-
-        editTextOnPeakCost = (EditText) findViewById(R.id.onPeakCost_input);
-        editTextOffPeakCost = (EditText) findViewById(R.id.offPeakCost_input);
 
         initCostInput(editTextOnPeakCost);
         initCostInput(editTextOffPeakCost);
@@ -157,5 +168,25 @@ public class SettingsActivity extends AppCompatActivity {
                 }
         });
     }
+
+    public void onSaveButtonClick(View v) {
+
+        SharedPreferences prefs = getSharedPreferences("myPreferences",MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+
+        //save entries
+        editTextOnPeakStartTime = (EditText) findViewById(R.id.onPeakStartTime_input);
+        editTextOnPeakEndTime = (EditText) findViewById(R.id.onPeakEndTime_input);
+        editTextOnPeakCost = (EditText) findViewById(R.id.onPeakCost_input);
+        editTextOffPeakCost = (EditText) findViewById(R.id.offPeakCost_input);
+
+        prefsEditor.putString("sOnPeakStartTime", editTextOnPeakStartTime.getText().toString());
+        prefsEditor.putString("sOnPeakEndTime", editTextOnPeakEndTime.getText().toString());
+        prefsEditor.putString("sOnPeakCost", editTextOnPeakCost.getText().toString());
+        prefsEditor.putString("sOffPeakCost", editTextOffPeakCost.getText().toString());
+
+        prefsEditor.commit();
+    }
+
 
 }
