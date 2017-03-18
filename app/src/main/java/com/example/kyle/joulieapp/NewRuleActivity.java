@@ -31,6 +31,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -227,6 +229,16 @@ public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.Resp
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        // Sorting rules by device name to keep rules for each device together
+        Collections.sort(DummyContent.MY_RULES, new Comparator<Rule>() {
+            @Override
+            public int compare(Rule rule2, Rule rule1)
+            {
+
+                return  rule2.device.getDeviceName().compareTo(rule1.device.getDeviceName());
+            }
+        });
         finish();
     }
 
