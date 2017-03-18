@@ -200,7 +200,7 @@ public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.Resp
         Device dev = null;
 
         for (int i = 0; i < DummyContent.MY_DEVICES.size(); i++){
-            if (deviceList.get(i) == DummyContent.MY_DEVICES.get(i).getDeviceName()){
+            if (deviceDropdown.getSelectedItem().toString() == DummyContent.MY_DEVICES.get(i).getDeviceName()){
                 dev = DummyContent.MY_DEVICES.get(i);
             }
         }
