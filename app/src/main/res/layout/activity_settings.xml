@@ -80,4 +80,13 @@
         android:layout_below="@+id/offPeakCost_label"
         android:layout_alignParentStart="true" />
 
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="onSaveButtonClick"
+        android:text="Save" />
+
 </RelativeLayout>
