@@ -31,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleAuthProvider gProvider;
     private FacebookAuthProvider fbProvider;
     private AuthenticationAPIClient aClient;
+    private BaseCallback<UserProfile, AuthenticationException> mBaseCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +97,6 @@ public class LoginActivity extends AppCompatActivity {
         lock = null;
     }
 
-
     private LockCallback callback = new AuthenticationCallback() {
         @Override
         public void onAuthentication(Credentials credentials) {
@@ -123,9 +123,6 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(lock.newIntent(LoginActivity.this));
                         }
                     });
-
-            //startActivity(new Intent(LoginActivity.this,MainActivity.class));
-            //finish();
         }
 
         @Override

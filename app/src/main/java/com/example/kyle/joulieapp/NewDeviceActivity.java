@@ -47,7 +47,7 @@ public class NewDeviceActivity extends AppCompatActivity {
         deviceIP = (EditText) findViewById(R.id.ip_address);
         devicePort = (EditText) findViewById(R.id.port);
 
-        defaultDeviceImage = ContextCompat.getDrawable(NewDeviceActivity.this, R.mipmap.ic_outlet);
+        defaultDeviceImage = ContextCompat.getDrawable(NewDeviceActivity.this, R.drawable.ic_smart_plug);
         deviceImageView.setImageDrawable(defaultDeviceImage);
 
         ArrayAdapter spinnerArrayAdapter = new ArrayAdapter(this,

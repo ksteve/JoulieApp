@@ -5,12 +5,11 @@ import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
-import android.widget.ToggleButton;
+
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.github.mikephil.charting.charts.LineChart;
@@ -19,9 +18,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DeviceDetailActivity extends AppCompatActivity {
 
@@ -42,7 +39,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
             currentDevice = DummyContent.MY_DEVICES.get(device_index);
             //The key argument here must match that used in the other activity
         }
-
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
         ActionBar ab = getSupportActionBar();
         ab.setTitle(currentDevice.getDeviceName());
         ab.setDisplayHomeAsUpEnabled(true);
