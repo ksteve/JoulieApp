@@ -66,6 +66,7 @@ public class UsageFragment extends Fragment {
         // Set the adapter
         Context context = view.getContext();
         recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        recyclerView.offsetChildrenVertical(10);
         emptyView = (TextView) view.findViewById(R.id.empty_view);
         if (mColumnCount <= 1) {
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -76,14 +77,14 @@ public class UsageFragment extends Fragment {
         recyclerView.setAdapter(new MyUsageRecyclerViewAdapter(DummyContent.MY_USAGES, mListener));
 
 
-        if (DummyContent.MY_USAGES.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
-        }
-        else {
+//        if (DummyContent.MY_USAGES.isEmpty()) {
+//            recyclerView.setVisibility(View.GONE);
+//            emptyView.setVisibility(View.VISIBLE);
+//        }
+//        else {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
-        }
+        //}
 
         // in this example, a LineChart is initialized from xml
         //LineChart chart = (LineChart) view.findViewById(R.id.chart);
@@ -110,16 +111,16 @@ public class UsageFragment extends Fragment {
     }
 
     public void notifyAdapter(){
-        if (DummyContent.MY_USAGES.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
-        }
-        else
-        {
+//        if (DummyContent.MY_USAGES.isEmpty()) {
+//            recyclerView.setVisibility(View.GONE);
+//            emptyView.setVisibility(View.VISIBLE);
+//        }
+//        else
+//        {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
-        }
-        recyclerView.getAdapter().notifyDataSetChanged();
+      //  }
+      //  recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     /**

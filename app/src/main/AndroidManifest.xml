@@ -86,8 +86,7 @@
         </activity>
         <activity android:name=".SettingsActivity">
         </activity>
-        <activity android:name=".DeviceDetailActivity"
-                  android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".DeviceDetailActivity">
         </activity>
 
         <!-- [START firebase_service] -->

@@ -15,10 +15,10 @@ import java.util.regex.Pattern;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private EditText editTextOnPeakStartTime;
-    private EditText editTextOnPeakEndTime;
-    private EditText editTextOnPeakCost;
-    private EditText editTextOffPeakCost;
+//    private EditText editTextOnPeakStartTime;
+//    private EditText editTextOnPeakEndTime;
+//    private EditText editTextOnPeakCost;
+//    private EditText editTextOffPeakCost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,28 +28,28 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Settings");
 
-        editTextOnPeakStartTime = (EditText) findViewById(R.id.onPeakStartTime_input);
-        editTextOnPeakEndTime = (EditText) findViewById(R.id.onPeakEndTime_input);
-        editTextOnPeakCost = (EditText) findViewById(R.id.onPeakCost_input);
-        editTextOffPeakCost = (EditText) findViewById(R.id.offPeakCost_input);
+//        editTextOnPeakStartTime = (EditText) findViewById(R.id.onPeakStartTime_input);
+//        editTextOnPeakEndTime = (EditText) findViewById(R.id.onPeakEndTime_input);
+//        editTextOnPeakCost = (EditText) findViewById(R.id.onPeakCost_input);
+//        editTextOffPeakCost = (EditText) findViewById(R.id.offPeakCost_input);
 
         //reload preferences if saved
-        SharedPreferences prefs = getSharedPreferences("myPreferences",MODE_PRIVATE);
-        editTextOnPeakStartTime.setText(prefs.getString("sOnPeakStartTime" , ""));
-        editTextOnPeakEndTime.setText(prefs.getString("sOnPeakEndTime" , ""));
-        editTextOnPeakCost.setText(prefs.getString("sOnPeakCost", ""));
-        editTextOffPeakCost.setText(prefs.getString("sOffPeakCost", ""));
+//        SharedPreferences prefs = getSharedPreferences("myPreferences",MODE_PRIVATE);
+//        editTextOnPeakStartTime.setText(prefs.getString("sOnPeakStartTime" , ""));
+//        editTextOnPeakEndTime.setText(prefs.getString("sOnPeakEndTime" , ""));
+//        editTextOnPeakCost.setText(prefs.getString("sOnPeakCost", ""));
+//        editTextOffPeakCost.setText(prefs.getString("sOffPeakCost", ""));
 
-        // Display the fragment as the main content.
-//        getFragmentManager().beginTransaction()
-//                .replace(android.R.id.content, new SettingsFragment())
-//                .commit();
+       //  Display the fragment as the main content.
+        getFragmentManager().beginTransaction()
+                .replace(android.R.id.content, new SettingsFragment())
+                .commit();
 
         //set input filter for time inputs so only valid input can be entered
-        initTimeInput();
+       // initTimeInput();
 
-        initCostInput(editTextOnPeakCost);
-        initCostInput(editTextOffPeakCost);
+        //initCostInput(editTextOnPeakCost);
+       // initCostInput(editTextOffPeakCost);
     }
 
     @Override
@@ -68,8 +68,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void initTimeInput(){
-        editTextOnPeakStartTime = (EditText) findViewById(R.id.onPeakStartTime_input);
-        editTextOnPeakEndTime = (EditText) findViewById(R.id.onPeakEndTime_input);
+       // editTextOnPeakStartTime = (EditText) findViewById(R.id.onPeakStartTime_input);
+       // editTextOnPeakEndTime = (EditText) findViewById(R.id.onPeakEndTime_input);
 
         //the following InputFilter related code was borrowed from
         //http://stackoverflow.com/questions/13120947/how-to-restrict-to-input-time-for-edittext-in-android
@@ -128,8 +128,8 @@ public class SettingsActivity extends AppCompatActivity {
             }
         };
 
-        editTextOnPeakStartTime.setFilters(timeFilter);
-        editTextOnPeakEndTime.setFilters(timeFilter);
+      //  editTextOnPeakStartTime.setFilters(timeFilter);
+       // editTextOnPeakEndTime.setFilters(timeFilter);
     }
 
     private void initCostInput(final EditText et){
@@ -171,21 +171,21 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void onSaveButtonClick(View v) {
 
-        SharedPreferences prefs = getSharedPreferences("myPreferences",MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor = prefs.edit();
+       // SharedPreferences prefs = getSharedPreferences("myPreferences",MODE_PRIVATE);
+       // SharedPreferences.Editor prefsEditor = prefs.edit();
 
         //save entries
-        editTextOnPeakStartTime = (EditText) findViewById(R.id.onPeakStartTime_input);
-        editTextOnPeakEndTime = (EditText) findViewById(R.id.onPeakEndTime_input);
-        editTextOnPeakCost = (EditText) findViewById(R.id.onPeakCost_input);
-        editTextOffPeakCost = (EditText) findViewById(R.id.offPeakCost_input);
+       // editTextOnPeakStartTime = (EditText) findViewById(R.id.onPeakStartTime_input);
+       // editTextOnPeakEndTime = (EditText) findViewById(R.id.onPeakEndTime_input);
+       // editTextOnPeakCost = (EditText) findViewById(R.id.onPeakCost_input);
+       // editTextOffPeakCost = (EditText) findViewById(R.id.offPeakCost_input);
 
-        prefsEditor.putString("sOnPeakStartTime", editTextOnPeakStartTime.getText().toString());
-        prefsEditor.putString("sOnPeakEndTime", editTextOnPeakEndTime.getText().toString());
-        prefsEditor.putString("sOnPeakCost", editTextOnPeakCost.getText().toString());
-        prefsEditor.putString("sOffPeakCost", editTextOffPeakCost.getText().toString());
+       // prefsEditor.putString("sOnPeakStartTime", editTextOnPeakStartTime.getText().toString());
+       // prefsEditor.putString("sOnPeakEndTime", editTextOnPeakEndTime.getText().toString());
+       // prefsEditor.putString("sOnPeakCost", editTextOnPeakCost.getText().toString());
+       // prefsEditor.putString("sOffPeakCost", editTextOffPeakCost.getText().toString());
 
-        prefsEditor.commit();
+      //  prefsEditor.commit();
     }
 
 

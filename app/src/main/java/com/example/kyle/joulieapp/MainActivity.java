@@ -441,7 +441,7 @@ public class MainActivity extends AppCompatActivity
         public Fragment getItem(int position) {
             switch (position) {
                 case MYUSAGE_FRAGMENT: // Fragment # 0 - This will show First Fragment different title
-                    return UsageOverviewFragment.newInstance("","");
+                    return UsageFragment.newInstance(1);
                 case MYRULES_FRAGMENT: // Fragment # 1 - This will show Second Fragment
                     return RuleFragment.newInstance(1);
                 case MYDEVICES_FRAGMENT: // Fragment # 2 - This will show Third Fragment
