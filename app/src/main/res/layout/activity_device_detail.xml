@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_device_detail"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -12,11 +13,12 @@
     android:orientation="vertical"
     tools:context="com.example.kyle.joulieapp.DeviceDetailActivity">
 
-
     <LinearLayout
+        android:id="@+id/id_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_below="@+id/deviceImage">
 
         <TextView
             android:layout_width="wrap_content"
@@ -31,11 +33,14 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/usage_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_below="@+id/id_container">
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Avg Usage: "/>
@@ -51,6 +56,16 @@
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="300dp"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/usage_container"/>
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/deviceImage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:srcCompat="@color/cardview_light_background"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>

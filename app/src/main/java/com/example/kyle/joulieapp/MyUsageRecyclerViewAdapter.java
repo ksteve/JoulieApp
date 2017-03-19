@@ -6,12 +6,14 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.kyle.joulieapp.UsageFragment.OnListFragmentInteractionListener;
 import com.example.kyle.joulieapp.Models.Usage;
 import com.example.kyle.joulieapp.Models.DummyContent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,65 +21,70 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyUsageRecyclerViewAdapter extends RecyclerView.Adapter<MyUsageRecyclerViewAdapter.ViewHolder> {
+public class MyUsageRecyclerViewAdapter extends RecyclerView.Adapter {
 
-    private final List<Usage> mValues;
+    private final int SUMMARY_TYPE = 0;
+    private final int TRENDS_TYPE = 1;
+    private final int COSTS_TYPE = 2;
+    private final int DEVICES_TYPE = 3;
+
+    private final List<Integer> mValues;
     private final OnListFragmentInteractionListener mListener;
     private SparseBooleanArray whichMedias = new SparseBooleanArray(3);
 
     public MyUsageRecyclerViewAdapter(List<Usage> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+
+        mValues = new ArrayList<>();
+        mValues.add(TRENDS_TYPE);
+        mValues.add(SUMMARY_TYPE);
+      //  mValues.add(COSTS_TYPE);
+        mValues.add(DEVICES_TYPE);
+
+        //mValues = items;
         mListener = listener;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_usage, parent, false);
-        return new ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        View view;
+        switch(viewType){
+            case SUMMARY_TYPE:
+                view= LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.fragment_usage_overview, parent, false);
+                return new UsageSummaryViewHolder(view);
+
+            case TRENDS_TYPE:
+                view= LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.viewholder_trends, parent, false);
+                return new TrendsViewHolder(view);
+
+            case COSTS_TYPE:
+                view= LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.fragment_usage_overview, parent, false);
+                return new UsageSummaryViewHolder(view);
+
+            case DEVICES_TYPE:
+                view= LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.viewholder_devices_usage, parent, false);
+                return new DevicesUsageViewHolder(view);
+        }
+        return null;
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.mItem = mValues.get(position);
-        holder.mContentView.setText(mValues.get(position).id);
+    public int getItemViewType(int position) {
+        return mValues.get(position);
+    }
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
-            }
-        });
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        //holder.mItem = mValues.get(position);
+
     }
 
     @Override
     public int getItemCount() {
         return mValues.size();
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public final View mView;
-        public final TextView mContentView;
-        public Usage mItem;
-
-        public ViewHolder(View view) {
-            super(view);
-            mView = view;
-            mContentView = (TextView) view.findViewById(R.id.content);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
-        }
-
-        @Override
-        public void onClick(View view) {
-
-        }
     }
 }

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BubbleChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -45,6 +46,7 @@ public class UsageOverviewFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     //private GraphView graph;
     private LineChart chart;
+    private BubbleChart bChart;
     private TabLayout tabLayout;
 
     private TextView totalUsageView;
@@ -99,7 +101,9 @@ public class UsageOverviewFragment extends Fragment {
         // in this example, a LineChart is initialized from xml
         chart = (LineChart) view.findViewById(R.id.chart);
         chart.getAxis(YAxis.AxisDependency.LEFT).setEnabled(false);
-
+        chart.getAxisRight().disableGridDashedLine();
+        chart.getXAxis().setDrawGridLines(false);
+        chart.setDrawGridBackground(false);
         //populate some fake hardcoded data to test
         List<Entry> entries = new ArrayList<Entry>();
 
@@ -141,6 +145,23 @@ public class UsageOverviewFragment extends Fragment {
         chart.setData(data);
         chart.animateXY(500, 500);
         chart.invalidate(); // refresh
+
+//        bChart = (BubbleChart) view.findViewById(R.id.bubble_chart);
+//        bChart.getDescription().setEnabled(false);
+
+//        bChart.setTouchEnabled(true);
+//
+//        // enable scaling and dragging
+//        bChart.setDragEnabled(true);
+//        bChart.setScaleEnabled(true);
+//
+//        bChart.setMaxVisibleValueCount(200);
+//        bChart.setPinchZoom(true);
+//
+//        bChart.animateX(3000);
+//
+//
+//        chart.invalidate(); // refresh
 
         return  view;
     }

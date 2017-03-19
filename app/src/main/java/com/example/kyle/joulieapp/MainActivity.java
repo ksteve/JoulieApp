@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity
                 switch (vpPager.getCurrentItem()){
 
                     case MYUSAGE_FRAGMENT:
-                        updateUsageData();
+                        //updateUsageData();
                         break;
                     case MYRULES_FRAGMENT:
                         Intent newRuleIntent = new Intent(MainActivity.this, NewRuleActivity.class);
@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
+        toggleFab(false);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -187,11 +188,11 @@ public class MainActivity extends AppCompatActivity
     //Parameters: boolean show
     //Return: void
     //Description: toggles Fab
-    public void toggleFab(FloatingActionButton floatingActionButton, boolean show){
+    public void toggleFab(boolean show){
         if(show){
-            floatingActionButton.show();
+            fab.show();
         } else {
-            floatingActionButton.hide();
+            fab.hide();
         }
     }
 
@@ -361,16 +362,19 @@ public class MainActivity extends AppCompatActivity
 
         switch (position){
             case MYUSAGE_FRAGMENT:
-                fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_refresh_black_24dp));
+                toggleFab(false);
+                //fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_refresh_black_24dp));
                 break;
             case MYRULES_FRAGMENT:
+                toggleFab(true);
                 fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_add_black_24dp));
                 break;
             case MYDEVICES_FRAGMENT:
+                toggleFab(true);
                 fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_add_black_24dp));
                 break;
             default:
-                fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_add_black_24dp));
+                //fab.setImageDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.ic_add_black_24dp));
                 break;
         }
     }
@@ -437,7 +441,7 @@ public class MainActivity extends AppCompatActivity
         public Fragment getItem(int position) {
             switch (position) {
                 case MYUSAGE_FRAGMENT: // Fragment # 0 - This will show First Fragment different title
-                    return UsageOverviewFragment.newInstance("","");
+                    return UsageFragment.newInstance(1);
                 case MYRULES_FRAGMENT: // Fragment # 1 - This will show Second Fragment
                     return RuleFragment.newInstance(1);
                 case MYDEVICES_FRAGMENT: // Fragment # 2 - This will show Third Fragment
