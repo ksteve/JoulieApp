@@ -103,8 +103,6 @@ public class NewDeviceActivity extends AppCompatActivity {
                             devicePort.getText().toString(),
                             defaultDeviceImage);
 
-                    DummyContent.MY_DEVICES.add(device);
-
                     ApiService apiService = ApiClient
                             .getInstance(getApplicationContext())
                             .getApiService();
@@ -113,6 +111,7 @@ public class NewDeviceActivity extends AppCompatActivity {
                     call.enqueue(new Callback<Device>() {
                         @Override
                         public void onResponse(Call<Device> call, Response<Device> response) {
+                            DummyContent.MY_DEVICES.add(device);
                             finish();
                         }
 
