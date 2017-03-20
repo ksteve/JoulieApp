@@ -81,11 +81,20 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, final boolean b) {
 
-                String state = (b) ? "1 " : "0";
-                HashMap<String,String> body = new HashMap<String, String>();
+                String state = (b) ? "1" : "0";
+                HashMap<String,String> body = new HashMap<>();
                 body.put("state", state);
 
-                Call<String> call = apiService.sendCommand("Test","switch", "toggle_power", body);
+                String robot_name = "Test";
+                String device_name = holder.mItem.getDeviceName();
+                String command = "";
+                if(holder.mItem.getType() == "wemo"){
+                    command = "toggle_power";
+                } else if(holder.mItem.getType() == "tplink"){
+                    command = "setPowerState";
+                }
+
+                Call<String> call = apiService.sendCommand(robot_name,device_name, command, body);
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
