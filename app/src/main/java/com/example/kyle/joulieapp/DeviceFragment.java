@@ -15,6 +15,12 @@ import android.widget.TextView;
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.Rule;
+import com.example.kyle.joulieapp.api.ApiClient;
+import com.example.kyle.joulieapp.api.ApiService;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A fragment representing a list of Items.
@@ -91,8 +97,23 @@ public class DeviceFragment extends Fragment {
         fabRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (Device device: ((MyDeviceRecyclerViewAdapter) recyclerView.getAdapter()).selectedDevices){
-                    DummyContent.MY_DEVICES.remove(device);
+                for (final Device device: ((MyDeviceRecyclerViewAdapter) recyclerView.getAdapter()).selectedDevices){
+                    ApiService apiService = ApiClient
+                            .getInstance(getActivity().getApplicationContext())
+                            .getApiService();
+
+                    Call<Device> call = apiService.deleteDevice("Test", device.getDeviceName());
+                    call.enqueue(new Callback<Device>() {
+                        @Override
+                        public void onResponse(Call<Device> call, Response<Device> response) {
+                            DummyContent.MY_DEVICES.remove(device);
+                        }
+
+                        @Override
+                        public void onFailure(Call<Device> call, Throwable t) {
+                            //TODO: show error msg in toast
+                        }
+                    });
                 }
                 ((MyDeviceRecyclerViewAdapter) recyclerView.getAdapter()).selectedDevices.clear();
                 recyclerView.getAdapter().notifyDataSetChanged();
