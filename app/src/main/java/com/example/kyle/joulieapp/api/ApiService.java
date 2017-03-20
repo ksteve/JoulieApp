@@ -32,8 +32,8 @@ public interface ApiService {
     Call<Device> createDevice(@Path("robot_id") String robotID, @Body Device device);
 
     //delete a device from the specified robot
-    @DELETE("robot/{robot_id}/device/{device_id}")
-    Call deleteDevice(@Path("robot_id")String robotID, @Path("device_id") String deviceID);
+    @POST("robot/{robot_id}/device/{device_id}")
+    Call<String> deleteDevice(@Path("robot_id")String robotID, @Path("device_id") String deviceID);
 
     //send a command to a specific device
     @POST("robot/{robot_name}/device/{device_name}/{command_name}")

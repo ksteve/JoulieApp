@@ -102,21 +102,24 @@ public class DeviceFragment extends Fragment {
                             .getInstance(getActivity().getApplicationContext())
                             .getApiService();
 
-                    Call<Device> call = apiService.deleteDevice("Test", device.getDeviceName());
-                    call.enqueue(new Callback<Device>() {
+                    Call<String> call = apiService.deleteDevice("Test", device.getDeviceName());
+                    call.enqueue(new Callback<String>() {
                         @Override
-                        public void onResponse(Call<Device> call, Response<Device> response) {
+                        public void onResponse(Call<String> call, Response<String> response) {
                             DummyContent.MY_DEVICES.remove(device);
+                            ((MyDeviceRecyclerViewAdapter) recyclerView.getAdapter()).selectedDevices.remove(device);
+                            recyclerView.getAdapter().notifyDataSetChanged();
                         }
 
                         @Override
-                        public void onFailure(Call<Device> call, Throwable t) {
+                        public void onFailure(Call<String> call, Throwable t) {
                             //TODO: show error msg in toast
                         }
                     });
+                   // ((MyDeviceRecyclerViewAdapter) recyclerView.getAdapter()).selectedDevices.clear();
+
                 }
-                ((MyDeviceRecyclerViewAdapter) recyclerView.getAdapter()).selectedDevices.clear();
-                recyclerView.getAdapter().notifyDataSetChanged();
+
             }
         });
 
