@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.kyle.joulieapp.Models.Device;
@@ -31,6 +33,9 @@ public class DeviceDetailActivity extends AppCompatActivity {
     //private GraphView graph;
     private LineChart mLineChart;
     private String guid = "6b5e49b13c5148b7a50c6c29fd1f282f";
+    private RadioGroup rgChartDisplay;
+    private RadioButton rbKilowatt;
+    private RadioButton rbDollars;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +64,11 @@ public class DeviceDetailActivity extends AppCompatActivity {
         setupChart();
 
        // new getUsageData().execute(null, null, null);
+
+        rbKilowatt = (RadioButton) findViewById(R.id.rbKilowatt);
+        rbDollars = (RadioButton) findViewById(R.id.rbDollars);
+        rgChartDisplay = (RadioGroup) findViewById(R.id.rgChartDisplayType);
+        rgChartDisplay.check(rbKilowatt.getId());
     }
 
     private void setupChart(){
