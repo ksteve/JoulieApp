@@ -36,6 +36,10 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private RadioGroup rgChartDisplay;
     private RadioButton rbKilowatt;
     private RadioButton rbDollars;
+    private float fCost;
+    private List<ILineDataSet> dataSets;
+    private LineDataSet dataSetKilowatt;
+    private LineDataSet dataSetDollars;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,19 +88,30 @@ public class DeviceDetailActivity extends AppCompatActivity {
         mLineChart.getLegend().setYOffset(150);
 
         //populate some fake hardcoded data to test
-        List<Entry> entries = new ArrayList<Entry>();
+        List<Entry> entriesKilowatt = new ArrayList<Entry>();
 
-        entries.add(new Entry(0f, 0.125f));
-        entries.add(new Entry(6f, 0.25f));
-        entries.add(new Entry(12f, 0.50f));
-        entries.add(new Entry(18f, 1.0f));
-        entries.add(new Entry(23f, 1.2f));
-        entries.add(new Entry(23.75f, 1.25f));
+        entriesKilowatt.add(new Entry(0f, 0.125f));
+        entriesKilowatt.add(new Entry(6f, 0.25f));
+        entriesKilowatt.add(new Entry(12f, 0.50f));
+        entriesKilowatt.add(new Entry(18f, 1.0f));
+        entriesKilowatt.add(new Entry(23f, 1.2f));
+        entriesKilowatt.add(new Entry(23.75f, 1.25f));
+
+        fCost = 0.08f;
+        List<Entry> entriesDollars = new ArrayList<>();
+
+        for (int i = 0; i < entriesKilowatt.size(); i++){
+            entriesDollars.add(new Entry(entriesKilowatt.get(i).getX(), entriesKilowatt.get(i).getY() * fCost));
+        }
 
 
-        LineDataSet dataSet = new LineDataSet(entries, "Device1"); // add entries to dataset
-        dataSet.setColors(new int[] { R.color.red1}, DeviceDetailActivity.this);
-        dataSet.setLineWidth(4);
+        dataSetKilowatt = new LineDataSet(entriesKilowatt, "Device1"); // add entries to dataset
+        dataSetKilowatt.setColors(new int[] { R.color.red1}, DeviceDetailActivity.this);
+        dataSetKilowatt.setLineWidth(4);
+
+        dataSetDollars = new LineDataSet(entriesDollars, "Device1"); // add entries to dataset
+        dataSetDollars.setColors(new int[] { R.color.red1}, DeviceDetailActivity.this);
+        dataSetDollars.setLineWidth(4);
         //for one line on chart then just use these next 3 lines
         //LineData lineData = new LineData(dataSet);
         //chart.setData(lineData);
@@ -104,16 +119,50 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
         //add 2nd line
         // use the interface ILineDataSet
-        List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-        dataSets.add(dataSet);
+        dataSets = new ArrayList<ILineDataSet>();
+        dataSets.add(dataSetKilowatt);
 
         LineData data = new LineData(dataSets);
         mLineChart.setData(data);
         mLineChart.animateXY(500, 500);
         mLineChart.invalidate(); // refresh
 
+        rbKilowatt = (RadioButton) findViewById(R.id.rbKilowatt);
+        rbDollars = (RadioButton) findViewById(R.id.rbDollars);
+        rgChartDisplay = (RadioGroup) findViewById(R.id.rgChartDisplayType);
+
+        rgChartDisplay.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // checkedId is the RadioButton selected
+                if (checkedId == rbDollars.getId()){
+                    setChartData(true);
+                }
+                else {
+                    setChartData(false);
+                }
+            }
+        });
+
     }
 
+    private void setChartData(boolean dollars){
+        dataSets.clear();
+
+        if (dollars){
+            dataSets.add(dataSetDollars);
+        }
+        else{
+            dataSets.add(dataSetKilowatt);
+        }
+
+        mLineChart.clear();
+        LineData data = new LineData(dataSets);
+        mLineChart.setData(data);
+        mLineChart.animateXY(500, 500);
+        mLineChart.invalidate(); // refresh
+    }
 
     //subscribeClick event handler
     //used to subscribe to a topic
