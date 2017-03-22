@@ -22,10 +22,10 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver {
 
         WifiManager wifiManager = NetworkUtil.getWifiStatus(context);
        //Log.v(tag, "wifi: " + wifiManager.getConnectionInfo());
-        Log.v(tag, wifiManager.getConnectionInfo().getBSSID());
-        Log.v(tag, wifiManager.getConnectionInfo().getSSID());
-        Log.v(tag, String.valueOf(wifiManager.getConnectionInfo().getIpAddress()));
-        Log.v(tag, String.valueOf(wifiManager.getConnectionInfo().getNetworkId()));
+//        Log.v(tag, wifiManager.getConnectionInfo().getBSSID());
+//        Log.v(tag, wifiManager.getConnectionInfo().getSSID());
+//        Log.v(tag, String.valueOf(wifiManager.getConnectionInfo().getIpAddress()));
+//        Log.v(tag, String.valueOf(wifiManager.getConnectionInfo().getNetworkId()));
 //        for(WifiConfiguration w: wifiManager.getConfiguredNetworks()){
 //            Log.v(tag, w.SSID);
 //        }

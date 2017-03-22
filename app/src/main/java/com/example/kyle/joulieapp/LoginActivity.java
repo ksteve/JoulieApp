@@ -20,10 +20,16 @@ import com.auth0.android.lock.LockCallback;
 import com.auth0.android.lock.utils.LockException;
 import com.auth0.android.result.Credentials;
 import com.auth0.android.result.UserProfile;
+import com.example.kyle.joulieapp.api.ApiClient;
+import com.example.kyle.joulieapp.api.ApiService;
 import com.example.kyle.joulieapp.utils.CredentialsManager;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -32,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     private FacebookAuthProvider fbProvider;
     private AuthenticationAPIClient aClient;
     private BaseCallback<UserProfile, AuthenticationException> mBaseCallback;
+    private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         aClient = new AuthenticationAPIClient(auth0);
         gProvider = new GoogleAuthProvider(getString(R.string.google_server_client_id), aClient);
         fbProvider = new FacebookAuthProvider(aClient);
+        apiService = ApiClient.getInstance(this.getApplicationContext()).getApiService();
 
         GoogleAuthHandler googleAuthHandler = new GoogleAuthHandler(gProvider);
         FacebookAuthHandler facebookAuthHandler = new FacebookAuthHandler(fbProvider);
@@ -63,6 +71,20 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         Log.d("TOKEN: ", CredentialsManager.getCredentials(this).getIdToken());
+        HashMap<String,String> body = new HashMap<>();
+        Call<String> call = apiService.newUser(body);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                Log.d("tag", response.message());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.d("tag", t.getMessage());
+            }
+        });
+
 
         //aClient
 
