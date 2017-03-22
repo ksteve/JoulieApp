@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BubbleChart;
@@ -49,6 +51,15 @@ public class UsageOverviewFragment extends Fragment {
     private TabLayout tabLayout;
 
     private TextView totalUsageView;
+    private RadioGroup rgChartDisplay;
+    private RadioButton rbKilowatt;
+    private RadioButton rbDollars;
+    private float fCost;
+    private List<ILineDataSet> dataSets;
+    private LineDataSet dataSetKilowatt1;
+    private LineDataSet dataSetDollars1;
+    private LineDataSet dataSetKilowatt2;
+    private LineDataSet dataSetDollars2;
 
     public UsageOverviewFragment() {
         // Required empty public constructor
@@ -87,11 +98,16 @@ public class UsageOverviewFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_usage_overview, container, false);
 
+        rbKilowatt = (RadioButton) view.findViewById(R.id.rbKilowatt);
+        rbDollars = (RadioButton) view.findViewById(R.id.rbDollars);
+        rgChartDisplay = (RadioGroup) view.findViewById(R.id.rgChartDisplayType);
+        rgChartDisplay.check(rbKilowatt.getId());
+
         //setup Tab layout
         tabLayout = (TabLayout) view.findViewById(R.id.graph_tabs);
         mLineChart = (LineChart) view.findViewById(R.id.chart);
         setupTabIcons();
-        setupChart();
+        setupChart(view);
         return  view;
     }
 
@@ -119,7 +135,7 @@ public class UsageOverviewFragment extends Fragment {
         });
     }
 
-    private void setupChart(){
+    private void setupChart(View view){
         mLineChart.getAxis(YAxis.AxisDependency.LEFT).setEnabled(false);
         mLineChart.getAxisRight().disableGridDashedLine();
 
@@ -132,48 +148,107 @@ public class UsageOverviewFragment extends Fragment {
         mLineChart.getLegend().setYOffset(150);
 
         //populate some fake hardcoded data to test
-        List<Entry> entries = new ArrayList<Entry>();
+        List<Entry> entriesKilowatt1 = new ArrayList<Entry>();
 
-        entries.add(new Entry(0f, 0.125f));
-        entries.add(new Entry(6f, 0.25f));
-        entries.add(new Entry(12f, 0.50f));
-        entries.add(new Entry(18f, 1.0f));
-        entries.add(new Entry(23f, 1.2f));
-        entries.add(new Entry(23.75f, 1.25f));
+        entriesKilowatt1.add(new Entry(0f, 0.125f));
+        entriesKilowatt1.add(new Entry(6f, 0.25f));
+        entriesKilowatt1.add(new Entry(12f, 0.50f));
+        entriesKilowatt1.add(new Entry(18f, 1.0f));
+        entriesKilowatt1.add(new Entry(23f, 1.2f));
+        entriesKilowatt1.add(new Entry(23.75f, 1.25f));
+
+        fCost = 0.08f;
+        List<Entry> entriesDollars1 = new ArrayList<>();
+
+        for (int i = 0; i < entriesKilowatt1.size(); i++){
+            entriesDollars1.add(new Entry(entriesKilowatt1.get(i).getX(), entriesKilowatt1.get(i).getY() * fCost));
+        }
 
 
-        LineDataSet dataSet = new LineDataSet(entries, "Device1"); // add entries to dataset
-        dataSet.setColors(new int[] { R.color.red1}, getActivity().getApplicationContext());
-        dataSet.setLineWidth(4);
+        dataSetKilowatt1 = new LineDataSet(entriesKilowatt1, "Device1"); // add entries to dataset
+        dataSetKilowatt1.setColors(new int[] { R.color.red1}, getActivity().getApplicationContext());
+        dataSetKilowatt1.setLineWidth(4);
+
+        dataSetDollars1 = new LineDataSet(entriesDollars1, "Device1"); // add entries to dataset
+        dataSetDollars1.setColors(new int[] { R.color.red1}, getActivity().getApplicationContext());
+        dataSetDollars1.setLineWidth(4);
+
         //for one line on chart then just use these next 3 lines
         //LineData lineData = new LineData(dataSet);
         //chart.setData(lineData);
         //chart.invalidate(); // refresh
 
         //add 2nd line
-        List<Entry> entries2 = new ArrayList<Entry>();
+        List<Entry> entriesKilowatt2 = new ArrayList<Entry>();
 
-        entries2.add(new Entry(0f, 0.15f));
-        entries2.add(new Entry(6f, 0.35f));
-        entries2.add(new Entry(12f, 0.70f));
-        entries2.add(new Entry(18f, 1.1f));
-        entries2.add(new Entry(23f, 1.3f));
-        entries2.add(new Entry(23.75f, 1.5f));
+        entriesKilowatt2.add(new Entry(0f, 0.15f));
+        entriesKilowatt2.add(new Entry(6f, 0.35f));
+        entriesKilowatt2.add(new Entry(12f, 0.70f));
+        entriesKilowatt2.add(new Entry(18f, 1.1f));
+        entriesKilowatt2.add(new Entry(23f, 1.3f));
+        entriesKilowatt2.add(new Entry(23.75f, 1.5f));
 
-        LineDataSet dataSet2 = new LineDataSet(entries2, "Device2"); // add entries to dataset
-        dataSet2.setColors(new int[] { R.color.blue1}, getActivity().getApplicationContext());
-        dataSet2.setLineWidth(4);
+        List<Entry> entriesDollars2 = new ArrayList<>();
+
+        for (int i = 0; i < entriesKilowatt2.size(); i++){
+            entriesDollars2.add(new Entry(entriesKilowatt2.get(i).getX(), entriesKilowatt2.get(i).getY() * fCost));
+        }
+
+        dataSetKilowatt2 = new LineDataSet(entriesKilowatt2, "Device2"); // add entries to dataset
+        dataSetKilowatt2.setColors(new int[] { R.color.blue1}, getActivity().getApplicationContext());
+        dataSetKilowatt2.setLineWidth(4);
+
+        dataSetDollars2 = new LineDataSet(entriesDollars2, "Device2"); // add entries to dataset
+        dataSetDollars2.setColors(new int[] { R.color.blue1}, getActivity().getApplicationContext());
+        dataSetDollars2.setLineWidth(4);
 
         // use the interface ILineDataSet
-        List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-        dataSets.add(dataSet);
-        dataSets.add(dataSet2);
+        dataSets = new ArrayList<ILineDataSet>();
+        dataSets.add(dataSetKilowatt1);
+        dataSets.add(dataSetKilowatt2);
 
         LineData data = new LineData(dataSets);
         mLineChart.setData(data);
         mLineChart.animateXY(1200, 1200);
         mLineChart.invalidate(); // refresh
 
+        rbKilowatt = (RadioButton) view.findViewById(R.id.rbKilowatt);
+        rbDollars = (RadioButton) view.findViewById(R.id.rbDollars);
+        rgChartDisplay = (RadioGroup) view.findViewById(R.id.rgChartDisplayType);
+
+        rgChartDisplay.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // checkedId is the RadioButton selected
+                if (checkedId == rbDollars.getId()){
+                    setChartData(true);
+                }
+                else {
+                    setChartData(false);
+                }
+            }
+        });
+
+    }
+
+    private void setChartData(boolean dollars){
+        dataSets.clear();
+
+        if (dollars){
+            dataSets.add(dataSetDollars1);
+            dataSets.add(dataSetDollars2);
+        }
+        else{
+            dataSets.add(dataSetKilowatt1);
+            dataSets.add(dataSetKilowatt2);
+        }
+
+        mLineChart.clear();
+        LineData data = new LineData(dataSets);
+        mLineChart.setData(data);
+        mLineChart.animateXY(500, 500);
+        mLineChart.invalidate(); // refresh
     }
 
     // TODO: Rename method, update argument and hook method into UI event
