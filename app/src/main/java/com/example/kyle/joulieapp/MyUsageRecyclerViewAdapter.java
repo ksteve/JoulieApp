@@ -35,10 +35,10 @@ public class MyUsageRecyclerViewAdapter extends RecyclerView.Adapter {
     public MyUsageRecyclerViewAdapter(List<Usage> items, OnListFragmentInteractionListener listener) {
 
         mValues = new ArrayList<>();
-        mValues.add(TRENDS_TYPE);
+        //mValues.add(TRENDS_TYPE);
         mValues.add(SUMMARY_TYPE);
       //  mValues.add(COSTS_TYPE);
-        mValues.add(DEVICES_TYPE);
+        //mValues.add(DEVICES_TYPE);
 
         //mValues = items;
         mListener = listener;

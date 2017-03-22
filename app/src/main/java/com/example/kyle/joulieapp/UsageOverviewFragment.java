@@ -45,8 +45,7 @@ public class UsageOverviewFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     //private GraphView graph;
-    private LineChart chart;
-    private BubbleChart bChart;
+    private LineChart mLineChart;
     private TabLayout tabLayout;
 
     private TextView totalUsageView;
@@ -90,20 +89,48 @@ public class UsageOverviewFragment extends Fragment {
 
         //setup Tab layout
         tabLayout = (TabLayout) view.findViewById(R.id.graph_tabs);
+        mLineChart = (LineChart) view.findViewById(R.id.chart);
         setupTabIcons();
+        setupChart();
+        return  view;
+    }
 
-       // totalUsageView = (TextView) view.findViewById(R.id.total_usage);
+    private void setupTabIcons() {
+        tabLayout.addTab(tabLayout.newTab().setText("1D"), true);
+        tabLayout.addTab(tabLayout.newTab().setText("1W"));
+        tabLayout.addTab(tabLayout.newTab().setText("1M"));
+        tabLayout.addTab(tabLayout.newTab().setText("1Y"));
 
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
 
-      //  new getUsageData().execute();
+            }
 
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
 
-        // in this example, a LineChart is initialized from xml
-        chart = (LineChart) view.findViewById(R.id.chart);
-        chart.getAxis(YAxis.AxisDependency.LEFT).setEnabled(false);
-        chart.getAxisRight().disableGridDashedLine();
-        chart.getXAxis().setDrawGridLines(false);
-        chart.setDrawGridBackground(false);
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
+    private void setupChart(){
+        mLineChart.getAxis(YAxis.AxisDependency.LEFT).setEnabled(false);
+        mLineChart.getAxisRight().disableGridDashedLine();
+
+        mLineChart.getXAxis().setDrawGridLines(false);
+        mLineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+
+        mLineChart.setDrawGridBackground(false);
+
+        mLineChart.getLegend().setDrawInside(true);
+        mLineChart.getLegend().setYOffset(150);
+
         //populate some fake hardcoded data to test
         List<Entry> entries = new ArrayList<Entry>();
 
@@ -114,8 +141,9 @@ public class UsageOverviewFragment extends Fragment {
         entries.add(new Entry(23f, 1.2f));
         entries.add(new Entry(23.75f, 1.25f));
 
+
         LineDataSet dataSet = new LineDataSet(entries, "Device1"); // add entries to dataset
-        dataSet.setColors(new int[] { R.color.red1}, this.getContext());
+        dataSet.setColors(new int[] { R.color.red1}, getActivity().getApplicationContext());
         dataSet.setLineWidth(4);
         //for one line on chart then just use these next 3 lines
         //LineData lineData = new LineData(dataSet);
@@ -133,7 +161,7 @@ public class UsageOverviewFragment extends Fragment {
         entries2.add(new Entry(23.75f, 1.5f));
 
         LineDataSet dataSet2 = new LineDataSet(entries2, "Device2"); // add entries to dataset
-        dataSet2.setColors(new int[] { R.color.blue1}, this.getContext());
+        dataSet2.setColors(new int[] { R.color.blue1}, getActivity().getApplicationContext());
         dataSet2.setLineWidth(4);
 
         // use the interface ILineDataSet
@@ -142,35 +170,10 @@ public class UsageOverviewFragment extends Fragment {
         dataSets.add(dataSet2);
 
         LineData data = new LineData(dataSets);
-        chart.setData(data);
-        chart.animateXY(500, 500);
-        chart.invalidate(); // refresh
+        mLineChart.setData(data);
+        mLineChart.animateXY(1200, 1200);
+        mLineChart.invalidate(); // refresh
 
-//        bChart = (BubbleChart) view.findViewById(R.id.bubble_chart);
-//        bChart.getDescription().setEnabled(false);
-
-//        bChart.setTouchEnabled(true);
-//
-//        // enable scaling and dragging
-//        bChart.setDragEnabled(true);
-//        bChart.setScaleEnabled(true);
-//
-//        bChart.setMaxVisibleValueCount(200);
-//        bChart.setPinchZoom(true);
-//
-//        bChart.animateX(3000);
-//
-//
-//        chart.invalidate(); // refresh
-
-        return  view;
-    }
-
-    private void setupTabIcons() {
-        tabLayout.addTab(tabLayout.newTab().setText("1D"), true);
-        tabLayout.addTab(tabLayout.newTab().setText("1W"));
-        tabLayout.addTab(tabLayout.newTab().setText("1M"));
-        tabLayout.addTab(tabLayout.newTab().setText("1Y"));
     }
 
     // TODO: Rename method, update argument and hook method into UI event

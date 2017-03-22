@@ -1,42 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.kyle.joulieapp.UsageOverviewFragment"
     android:layout_width="match_parent"
-    android:layout_height="450dp"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="8dp"
-    android:layout_marginStart="5dp"
-    android:layout_marginEnd="5dp"
-    android:id="@+id/cardView">
+    android:layout_height="match_parent"
+    android:padding="5dp">
 
-    <RelativeLayout
+    <android.support.v7.widget.CardView
+        android:id="@+id/trend_card"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="5dp">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="120dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@android:color/darker_gray"
+                android:id="@+id/view2"/>
+
+            <TextView
+                android:id="@+id/usage_trend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/trends_title"
+                android:text="- 5.2 %"
+                android:textSize="32sp"/>
+
+            <TextView
+                android:id="@+id/month_usage_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="usage this month"
+                android:layout_below="@+id/usage_trend"
+                android:layout_alignParentStart="true"/>
+
+            <TextView
+                android:id="@+id/month_savings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$5.00"
+                android:textSize="32sp"
+                android:layout_alignBaseline="@+id/avg_usage"
+                android:layout_alignBottom="@+id/avg_usage"
+                android:layout_alignStart="@+id/avg_cost_label"/>
+
+            <TextView
+                android:id="@+id/month_savings_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/month_savings"
+                android:layout_below="@+id/month_savings"
+                android:text="savings this month"/>
+
+            <TextView
+                android:id="@+id/avg_usage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="17.5 kWh"
+                android:textSize="32sp"
+                android:layout_below="@+id/month_usage_desc"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="24dp"/>
+
+            <TextView
+                android:id="@+id/avg_usage_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Average Usage"
+                android:textSize="12sp"
+                android:layout_below="@+id/avg_usage"
+                android:layout_alignParentStart="true"/>
+
+
+            <TextView
+                android:id="@+id/avg_cost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="42dp"
+                android:text="$50"
+                android:textSize="32sp"
+                android:layout_above="@+id/month_usage_desc"
+                android:layout_toEndOf="@+id/view2"/>
+
+            <TextView
+                android:id="@+id/avg_cost_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/avg_cost"
+                android:layout_below="@+id/avg_cost"
+                android:text="Average Cost/Month"
+                android:textSize="12sp"/>
+
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/chart_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/trend_card"
+        android:layout_above="@+id/graph_tabs"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="5dp">
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chart"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="match_parent"
             android:layout_above="@+id/graph_tabs"
             android:layout_marginTop="12dp"/>
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/graph_tabs"
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="6dp"
-            android:background="#d7d7d7"
-            app:tabGravity="fill"
-            app:tabMode="fixed"/>
+    </android.support.v7.widget.CardView>
 
-    </RelativeLayout>
-</android.support.v7.widget.CardView>
+    <android.support.design.widget.TabLayout
+        android:id="@+id/graph_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="6dp"
+        android:background="#d7d7d7"
+        app:tabGravity="fill"
+        app:tabMode="fixed"/>
+
+</RelativeLayout>
 
 
 
