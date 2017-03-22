@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
                 getResources().getString(R.string.auth0_domain));
 
         Map<String, Object> parameters = new HashMap<>();
-       // parameters.put("scope", "openid offline_access");
+        parameters.put("scope", "openid offline_access");
 
         aClient = new AuthenticationAPIClient(auth0);
         gProvider = new GoogleAuthProvider(getString(R.string.google_server_client_id), aClient);
@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         GoogleAuthHandler googleAuthHandler = new GoogleAuthHandler(gProvider);
         FacebookAuthHandler facebookAuthHandler = new FacebookAuthHandler(fbProvider);
         lock = Lock.newBuilder(auth0, callback)
-                //.withAuthenticationParameters(parameters)
+                .withAuthenticationParameters(parameters)
                 .withAuthHandlers(googleAuthHandler)
                 .withAuthHandlers(facebookAuthHandler)
                 // Add parameters to the Lock Builder

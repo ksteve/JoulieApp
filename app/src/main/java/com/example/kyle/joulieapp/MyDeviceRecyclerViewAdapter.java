@@ -182,7 +182,6 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
         @Override
         public void onClick(View view) {
             AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-
             builder.setMessage("Delete this device?");
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override

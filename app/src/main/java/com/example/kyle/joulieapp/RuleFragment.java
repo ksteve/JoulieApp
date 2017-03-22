@@ -13,8 +13,17 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.Models.Rule;
+import com.example.kyle.joulieapp.api.ApiClient;
+import com.example.kyle.joulieapp.api.ApiService;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.example.kyle.joulieapp.R.id.fabRemove;
 
@@ -104,6 +113,11 @@ public class RuleFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getRules();
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -120,6 +134,26 @@ public class RuleFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void getRules() {
+        ApiService apiService = ApiClient.getInstance(getActivity().getApplicationContext()).getApiService();
+        Call<List<Rule>> call = apiService.getRules();
+        call.enqueue(new Callback<List<Rule>>() {
+            @Override
+            public void onResponse(Call<List<Rule>> call, Response<List<Rule>> response) {
+                MyRuleRecyclerViewAdapter adapter = (MyRuleRecyclerViewAdapter) recyclerView.getAdapter();
+                if(response.body() != null) {
+                    DummyContent.setMyRules(response.body());
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Rule>> call, Throwable t) {
+                //// TODO: 2017-03-22 error hanlding
+            }
+        });
     }
 
     public void notifyAdapter(){

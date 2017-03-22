@@ -18,6 +18,8 @@ import com.example.kyle.joulieapp.Models.Rule;
 import com.example.kyle.joulieapp.api.ApiClient;
 import com.example.kyle.joulieapp.api.ApiService;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -72,8 +74,6 @@ public class DeviceFragment extends Fragment {
         // Set the adapter
         Context context = view.getContext();
 
-
-
         recyclerView = (RecyclerView) view.findViewById(R.id.list);
         emptyView = (TextView) view.findViewById(R.id.empty_view);
         if (mColumnCount <= 1) {
@@ -126,6 +126,11 @@ public class DeviceFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getDevices();
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -142,6 +147,26 @@ public class DeviceFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void getDevices() {
+        ApiService apiService = ApiClient.getInstance(getActivity().getApplicationContext()).getApiService();
+        Call<List<Device>> call = apiService.getDevices();
+        call.enqueue(new Callback<List<Device>>() {
+            @Override
+            public void onResponse(Call<List<Device>> call, Response<List<Device>> response) {
+                MyDeviceRecyclerViewAdapter adapter = (MyDeviceRecyclerViewAdapter) recyclerView.getAdapter();
+                if(response.body() != null) {
+                    DummyContent.setMyDevices(response.body());
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Device>> call, Throwable t) {
+                //// TODO: 2017-03-22 error hanlding
+            }
+        });
     }
 
     public void notifyAdapter(){

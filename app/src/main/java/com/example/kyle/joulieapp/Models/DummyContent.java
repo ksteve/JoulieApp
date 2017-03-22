@@ -23,18 +23,11 @@ public class DummyContent {
     /**
      * An array of sample (dummy) items.
      */
-    public static final List<Device> MY_DEVICES = new ArrayList<>();
-    public static final List<Usage> MY_USAGES = new ArrayList<>();
-    public static final List<Rule> MY_RULES = new ArrayList<>();
+    public static List<Device> MY_DEVICES = new ArrayList<>();
+    public static List<Usage> MY_USAGES = new ArrayList<>();
+    public static List<Rule> MY_RULES = new ArrayList<>();
     private static Context mContext;
     public static boolean notify = false;
-
-    /**
-     * A map of sample (dummy) items, by ID.
-     */
-    public static final List<Device> DEVICE_OPTIONS = new ArrayList<>();
-    public static final List<Usage> USAGE_OPTIONS = new ArrayList<>();
-    public static final List<Rule> RULE_OPTIONS = new ArrayList<>();
 
     private static final int COUNT = 5;
     private static final String LOG_TAG = "DummyContent";
@@ -43,18 +36,13 @@ public class DummyContent {
         mContext = context;
     }
 
-    private static void addDeviceOptions(Device item) {
-        DEVICE_OPTIONS.add(item);
+    public static void setMyDevices(List<Device> devices) {
+        MY_DEVICES = devices;
     }
 
-    private static void addUsageOptions(Usage item) {
-        USAGE_OPTIONS.add(item);
+    public static void setMyRules(List<Rule> rules){
+        MY_RULES = rules;
     }
-
-    private static void addRuleOptions(Rule item) {
-        RULE_OPTIONS.add(item);
-    }
-
 
     public static void addDevice(Device item) {
         MY_DEVICES.add(item);

@@ -39,6 +39,8 @@ import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.Usage;
 import com.example.kyle.joulieapp.Models.Rule;
 import com.example.kyle.joulieapp.Models.DummyContent;
+import com.example.kyle.joulieapp.api.ApiClient;
+import com.example.kyle.joulieapp.api.ApiService;
 import com.example.kyle.joulieapp.utils.CredentialsManager;
 import com.example.kyle.joulieapp.utils.JoulieAPI;
 import com.example.kyle.joulieapp.utils.JoulieSocketIOAPI;
@@ -53,6 +55,9 @@ import com.google.gson.JsonObject;
 import org.json.JSONObject;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
