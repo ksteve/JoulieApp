@@ -107,7 +107,7 @@ public class NewDeviceActivity extends AppCompatActivity {
                             .getInstance(getApplicationContext())
                             .getApiService();
 
-                    Call<Device> call = apiService.createDevice("Test", device);
+                    Call<Device> call = apiService.createDevice(device);
                     call.enqueue(new Callback<Device>() {
                         @Override
                         public void onResponse(Call<Device> call, Response<Device> response) {

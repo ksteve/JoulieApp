@@ -94,7 +94,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
                     command = "setPowerState";
                 }
 
-                Call<String> call = apiService.sendCommand(robot_name,device_name, command, body);
+                Call<String> call = apiService.sendCommand(device_name, command, body);
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {

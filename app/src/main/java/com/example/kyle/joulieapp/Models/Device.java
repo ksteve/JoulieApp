@@ -10,17 +10,19 @@ import com.google.gson.annotations.SerializedName;
 
 public class Device {
 
-    @SerializedName("name")
+    public static final int WEMO_INSIGHT_SWITCH = 742;
+    public static final int TPLINK_HS110 = 752;
+    
+    @SerializedName("display_name")
     private String deviceName;
 
-    @SerializedName("id")
+    @SerializedName("uuid")
     private String id;
 
     @SerializedName("type")
     private String type;
 
     @SerializedName("state")
-
     private boolean powerState;
 
     @SerializedName("ip")
@@ -28,6 +30,13 @@ public class Device {
 
     @SerializedName("port")
     private String port;
+
+    @SerializedName("owner_user_id")
+    private String owner;
+
+    //@SerializedName("creation_date")
+
+    //@SerializedName("last_activity_date")
 
     public transient String status;
 

@@ -26,9 +26,9 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver {
         Log.v(tag, wifiManager.getConnectionInfo().getSSID());
         Log.v(tag, String.valueOf(wifiManager.getConnectionInfo().getIpAddress()));
         Log.v(tag, String.valueOf(wifiManager.getConnectionInfo().getNetworkId()));
-        for(WifiConfiguration w: wifiManager.getConfiguredNetworks()){
-            Log.v(tag, w.SSID);
-        }
+//        for(WifiConfiguration w: wifiManager.getConfiguredNetworks()){
+//            Log.v(tag, w.SSID);
+//        }
 
         Log.v(tag, "action: " + intent.getAction());
         Log.v(tag, "component: " + intent.getComponent());

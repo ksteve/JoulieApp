@@ -102,7 +102,7 @@ public class DeviceFragment extends Fragment {
                             .getInstance(getActivity().getApplicationContext())
                             .getApiService();
 
-                    Call<String> call = apiService.deleteDevice("Test", device.getDeviceName());
+                    Call<String> call = apiService.deleteDevice(device.getDeviceName());
                     call.enqueue(new Callback<String>() {
                         @Override
                         public void onResponse(Call<String> call, Response<String> response) {
