@@ -1,13 +1,10 @@
 package com.example.kyle.joulieapp;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +12,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BubbleChart;
+import com.example.kyle.joulieapp.utils.DateAxisValueFormatter;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -25,6 +22,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -40,6 +38,12 @@ public class UsageOverviewFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private static final int DAY_FORMAT = 0;
+    private static final int WEEK_FORMAT = 1;
+    private static final int MONTH_FORMAT = 2;
+    private static final int YEAR_FORMAT = 3;
+    private static final int MAX_FORMAT = 4;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -120,7 +124,7 @@ public class UsageOverviewFragment extends Fragment {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-
+                setChartFormatter(tab.getPosition());
             }
 
             @Override
@@ -141,21 +145,26 @@ public class UsageOverviewFragment extends Fragment {
 
         mLineChart.getXAxis().setDrawGridLines(false);
         mLineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        setChartFormatter(tabLayout.getSelectedTabPosition());
+        //mLineChart.getXAxis().setValueFormatter(new DateAxisValueFormatter(tabLayout.getSelectedTabPosition()));
+       // mLineChart.getXAxis().setGranularity(3600f);
+       // mLineChart.getXAxis().setAxisMaximum(1490327999f);
+       // mLineChart.getXAxis().setAxisMinimum(1490241600f);
 
         mLineChart.setDrawGridBackground(false);
 
         mLineChart.getLegend().setDrawInside(true);
-        mLineChart.getLegend().setYOffset(150);
+        mLineChart.getLegend().setYOffset(100);
 
         //populate some fake hardcoded data to test
         List<Entry> entriesKilowatt1 = new ArrayList<Entry>();
 
-        entriesKilowatt1.add(new Entry(0f, 0.125f));
-        entriesKilowatt1.add(new Entry(6f, 0.25f));
-        entriesKilowatt1.add(new Entry(12f, 0.50f));
-        entriesKilowatt1.add(new Entry(18f, 1.0f));
-        entriesKilowatt1.add(new Entry(23f, 1.2f));
-        entriesKilowatt1.add(new Entry(23.75f, 1.25f));
+        entriesKilowatt1.add(new Entry(1490349600f, 0.125f));
+        entriesKilowatt1.add(new Entry(1490353200f, 0.25f));
+        entriesKilowatt1.add(new Entry(1490356800f, 0.50f));
+        entriesKilowatt1.add(new Entry(1490360400f, 1.0f));
+        entriesKilowatt1.add(new Entry(1490364000f, 1.2f));
+        entriesKilowatt1.add(new Entry(1490367600f, 1.25f));
 
         fCost = 0.08f;
         List<Entry> entriesDollars1 = new ArrayList<>();
@@ -181,12 +190,12 @@ public class UsageOverviewFragment extends Fragment {
         //add 2nd line
         List<Entry> entriesKilowatt2 = new ArrayList<Entry>();
 
-        entriesKilowatt2.add(new Entry(0f, 0.15f));
-        entriesKilowatt2.add(new Entry(6f, 0.35f));
-        entriesKilowatt2.add(new Entry(12f, 0.70f));
-        entriesKilowatt2.add(new Entry(18f, 1.1f));
-        entriesKilowatt2.add(new Entry(23f, 1.3f));
-        entriesKilowatt2.add(new Entry(23.75f, 1.5f));
+        entriesKilowatt2.add(new Entry(1490349600f, 0.15f));
+        entriesKilowatt2.add(new Entry(1490353200f, 0.35f));
+        entriesKilowatt2.add(new Entry(1490356800f, 0.70f));
+        entriesKilowatt2.add(new Entry(1490360400f, 1.1f));
+        entriesKilowatt2.add(new Entry(1490364000f, 1.3f));
+        entriesKilowatt2.add(new Entry(1490367600f, 1.5f));
 
         List<Entry> entriesDollars2 = new ArrayList<>();
 
@@ -249,6 +258,82 @@ public class UsageOverviewFragment extends Fragment {
         mLineChart.setData(data);
         mLineChart.animateXY(500, 500);
         mLineChart.invalidate(); // refresh
+    }
+
+    private void setChartFormatter(int formatType){
+        Calendar cal = Calendar.getInstance();
+        long currentTime;
+        switch(formatType){
+            case DAY_FORMAT:
+                if(mLineChart.getData() != null) {
+                    mLineChart.getXAxis().setAxisMinimum(mLineChart.getData().getXMin());
+                    mLineChart.getXAxis().setAxisMaximum(mLineChart.getData().getXMax());
+                }
+
+                mLineChart.getXAxis().setValueFormatter(new DateAxisValueFormatter(DateAxisValueFormatter.DAY));
+                mLineChart.getXAxis().setGranularity(3600f);
+                mLineChart.fitScreen();
+                mLineChart.invalidate();
+                break;
+            case WEEK_FORMAT:
+                currentTime = cal.getTimeInMillis()/1000;
+
+                cal.set(Calendar.DAY_OF_WEEK, 1);
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                long beginningOfWeek = cal.getTimeInMillis()/1000;
+
+                mLineChart.getXAxis().setAxisMinimum(beginningOfWeek);
+                mLineChart.getXAxis().setAxisMaximum(currentTime);
+
+                mLineChart.getXAxis().setValueFormatter(new DateAxisValueFormatter(DateAxisValueFormatter.WEEK));
+                mLineChart.getXAxis().setGranularity(86400f);
+                mLineChart.fitScreen();
+                mLineChart.invalidate();
+                break;
+            case MONTH_FORMAT:
+                currentTime = cal.getTimeInMillis()/1000;
+                cal.set(Calendar.DAY_OF_MONTH, 1);
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                long beginningOfMonth = cal.getTimeInMillis()/1000;
+
+                mLineChart.getXAxis().setAxisMinimum(beginningOfMonth);
+                mLineChart.getXAxis().setAxisMaximum(currentTime);
+
+                mLineChart.getXAxis().setValueFormatter(new DateAxisValueFormatter(DateAxisValueFormatter.MONTH));
+                mLineChart.getXAxis().setGranularity(259200f);
+                mLineChart.fitScreen();
+                mLineChart.invalidate();
+                break;
+            case YEAR_FORMAT:
+                currentTime = cal.getTimeInMillis()/1000;
+                cal.set(Calendar.MONTH, Calendar.JANUARY);
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                long oneMonthAgo = cal.getTimeInMillis()/1000;
+
+                mLineChart.getXAxis().setAxisMinimum(oneMonthAgo);
+                mLineChart.getXAxis().setAxisMaximum(currentTime);
+
+                mLineChart.getXAxis().setValueFormatter(new DateAxisValueFormatter(DateAxisValueFormatter.YEAR));
+
+                mLineChart.getXAxis().setGranularity(2500000f);
+                mLineChart.fitScreen();
+                mLineChart.invalidate();
+                break;
+            case MAX_FORMAT:
+                break;
+            default:
+                break;
+
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event

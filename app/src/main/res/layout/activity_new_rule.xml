@@ -1,74 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:text="Rule Name"
+    <RelativeLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/ruleName_label" />
+        android:layout_height="150dp">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:id="@+id/ruleName_input" />
+    </RelativeLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/device_label"
-        android:text="Device" />
 
-    <Spinner
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/device_dropdown" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_below="@+id/header">
 
-    <TextView
-        android:text="Turn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/turnOnOff_label" />
+        <TextView
+            android:text="Rule Name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ruleName_label" />
 
-    <ToggleButton
-        android:text="ToggleButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/toggleButton" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="50dp"
+            android:ems="10"
+            android:id="@+id/ruleName_input" />
 
-    <TextView
-        android:text="Socket"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/socket_label" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/device_label"
+            android:text="Device" />
 
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/socket_dropdown" />
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/device_dropdown" />
 
-    <TextView
-        android:text="Time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/time_label" />
+        <TextView
+            android:text="Turn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/turnOnOff_label" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="time"
-        android:ems="10"
-        android:id="@+id/time_input" />
+        <ToggleButton
+            android:text="ToggleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/toggleButton" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:layout_marginBottom="48dp"
-        android:layout_gravity="bottom|right"
-        android:src="@drawable/ic_check_black_24dp"/>
+        <TextView
+            android:text="Socket"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/socket_label" />
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/socket_dropdown" />
+
+        <TextView
+            android:text="Time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/time_label" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="50dp"
+            android:inputType="time"
+            android:ems="10"
+            android:id="@+id/time_input" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:layout_marginBottom="48dp"
+            android:layout_gravity="bottom|right"
+            android:src="@drawable/ic_check_black_24dp"/>
 </LinearLayout>
+</RelativeLayout>

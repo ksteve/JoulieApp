@@ -129,7 +129,7 @@ public class DeviceFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getDevices();
+        //getDevices();
     }
 
     @Override

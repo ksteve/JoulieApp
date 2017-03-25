@@ -76,7 +76,6 @@ public class UsageFragment extends Fragment {
 
         recyclerView.setAdapter(new MyUsageRecyclerViewAdapter(DummyContent.MY_USAGES, mListener));
 
-
 //        if (DummyContent.MY_USAGES.isEmpty()) {
 //            recyclerView.setVisibility(View.GONE);
 //            emptyView.setVisibility(View.VISIBLE);

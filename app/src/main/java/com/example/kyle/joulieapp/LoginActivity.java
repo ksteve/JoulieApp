@@ -85,9 +85,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
         //aClient
-
         aClient.tokenInfo(CredentialsManager.getCredentials(this).getIdToken())
                 .start(new BaseCallback<UserProfile, AuthenticationException>() {
                     @Override

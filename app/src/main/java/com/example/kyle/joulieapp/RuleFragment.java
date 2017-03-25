@@ -2,6 +2,7 @@ package com.example.kyle.joulieapp;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -116,7 +117,17 @@ public class RuleFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getRules();
+        //getRules();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     @Override

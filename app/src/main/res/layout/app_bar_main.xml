@@ -20,21 +20,21 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
-            <LinearLayout
-                android:id="@+id/summary_contanier"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            <!--<LinearLayout-->
+                <!--android:id="@+id/summary_contanier"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical">-->
 
-            <TextView
-                android:id="@+id/current_usage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:textSize="8pt"
-                android:text="Current Usage: --"/>
+            <!--<TextView-->
+                <!--android:id="@+id/current_usage"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_marginStart="16dp"-->
+                <!--android:textSize="8pt"-->
+                <!--android:text="Current Usage: &#45;&#45;"/>-->
 
-            </LinearLayout>
+            <!--</LinearLayout>-->
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
