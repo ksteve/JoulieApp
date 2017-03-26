@@ -102,4 +102,14 @@
             android:text="$" />
     </RadioGroup>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabShare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:clickable="true"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/ic_menu_share" />
+
 </RelativeLayout>
