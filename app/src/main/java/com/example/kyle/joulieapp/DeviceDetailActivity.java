@@ -1,12 +1,15 @@
 package com.example.kyle.joulieapp;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -40,6 +43,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private List<ILineDataSet> dataSets;
     private LineDataSet dataSetKilowatt;
     private LineDataSet dataSetDollars;
+    private FloatingActionButton fabShare;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +77,15 @@ public class DeviceDetailActivity extends AppCompatActivity {
         rbDollars = (RadioButton) findViewById(R.id.rbDollars);
         rgChartDisplay = (RadioGroup) findViewById(R.id.rgChartDisplayType);
         rgChartDisplay.check(rbKilowatt.getId());
+
+        fabShare = (FloatingActionButton) findViewById(R.id.fabShare);
+        fabShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent shareIntent = new Intent(DeviceDetailActivity.this, ShareActivity.class);
+                startActivity(shareIntent);
+            }
+        });
     }
 
     private void setupChart(){
