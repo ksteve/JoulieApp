@@ -1,8 +1,10 @@
 package com.example.kyle.joulieapp;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -64,6 +66,7 @@ public class UsageOverviewFragment extends Fragment {
     private LineDataSet dataSetDollars1;
     private LineDataSet dataSetKilowatt2;
     private LineDataSet dataSetDollars2;
+    private SharedPreferences prefs;
 
     public UsageOverviewFragment() {
         // Required empty public constructor
@@ -107,6 +110,7 @@ public class UsageOverviewFragment extends Fragment {
         rgChartDisplay = (RadioGroup) view.findViewById(R.id.rgChartDisplayType);
         rgChartDisplay.check(rbKilowatt.getId());
 
+        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         //setup Tab layout
         tabLayout = (TabLayout) view.findViewById(R.id.graph_tabs);
         mLineChart = (LineChart) view.findViewById(R.id.chart);
@@ -166,7 +170,9 @@ public class UsageOverviewFragment extends Fragment {
         entriesKilowatt1.add(new Entry(1490364000f, 1.2f));
         entriesKilowatt1.add(new Entry(1490367600f, 1.25f));
 
-        fCost = 0.08f;
+        String sCost = "0";
+        sCost = prefs.getString("peak_cost", "0");
+        fCost = Float.parseFloat(sCost) / 100;
         List<Entry> entriesDollars1 = new ArrayList<>();
 
         for (int i = 0; i < entriesKilowatt1.size(); i++){

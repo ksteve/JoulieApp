@@ -1,6 +1,7 @@
 package com.example.kyle.joulieapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.preference.PreferenceManager;
 
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
@@ -44,6 +46,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private LineDataSet dataSetKilowatt;
     private LineDataSet dataSetDollars;
     private FloatingActionButton fabShare;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
         device_image.setImageDrawable(currentDevice.getImage());
 
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
         setupChart();
 
        // new getUsageData().execute(null, null, null);
@@ -110,7 +114,9 @@ public class DeviceDetailActivity extends AppCompatActivity {
         entriesKilowatt.add(new Entry(23f, 1.2f));
         entriesKilowatt.add(new Entry(23.75f, 1.25f));
 
-        fCost = 0.08f;
+        String sCost = "0";
+        sCost = prefs.getString("peak_cost", "0");
+        fCost = Float.parseFloat(sCost) / 100;
         List<Entry> entriesDollars = new ArrayList<>();
 
         for (int i = 0; i < entriesKilowatt.size(); i++){
