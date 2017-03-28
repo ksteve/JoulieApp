@@ -21,9 +21,21 @@ public class ShareActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
+        Bundle extras = getIntent().getExtras();
+        int device_index = -1;
+        if (extras != null) {
+            device_index = extras.getInt("index");
+            //The key argument here must match that used in the other activity
+        }
 
         ActionBar ab = getSupportActionBar();
-        ab.setTitle("Share");
+        if (device_index == -1){
+            ab.setTitle("Share");
+        }
+        else{
+            ab.setTitle("Share " + DummyContent.MY_DEVICES.get(device_index).getDeviceName());
+        }
+
         ab.setDisplayHomeAsUpEnabled(true);
 
         //populate permission dropdown

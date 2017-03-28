@@ -87,6 +87,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent shareIntent = new Intent(DeviceDetailActivity.this, ShareActivity.class);
+                shareIntent.putExtra("index",DummyContent.MY_DEVICES.indexOf(currentDevice));
                 startActivity(shareIntent);
             }
         });
