@@ -3,6 +3,7 @@ package com.example.kyle.joulieapp;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -35,5 +36,16 @@ public class ShareActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item, permissionList);
         permissionDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         permissionDropdown.setAdapter(permissionDataAdapter);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
