@@ -11,7 +11,8 @@ class Constants {
     final static String CREDENTIAL_TYPE = "AUTH0_CREDENTIAL_TYPE";
 
     //cylon server
-    final static String BASE_URL = "https://joulie-core.herokuapp.com";
+    final static String CLOUD_URL = "https://joulie-core.herokuapp.com";
+    final static String LOCAL_URL = "http://192.168.250.100:8000";
     final static String CREATE_DEVICE_ENDPOINT = "/api/robots/Test/commands/create_device";
     final static String REMOVE_DEVICE_ENDPOINT = "/api/robots/kyle/commands/remove_device";
     final static String DEVICE_COMMAND = "/api/robots/Test/devices/switch/commands/toggle_power";

@@ -8,6 +8,8 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.kyle.joulieapp.api.ApiClient;
+import com.example.kyle.joulieapp.api.ApiService;
 import com.example.kyle.joulieapp.utils.NetworkUtil;
 
 public class ConnectivityChangeReceiver extends BroadcastReceiver {
@@ -16,9 +18,16 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        ApiService apiService;
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
         int status = NetworkUtil.getConnectivityStatusString(context);
+
+        if(status == NetworkUtil.NETWORK_STAUS_WIFI){
+            ApiClient.getInstance(context.getApplicationContext()).changeApiBaseUrl(ApiClient.LOCAL);
+        } else if(status == NetworkUtil.NETWORK_STATUS_MOBILE){
+            ApiClient.getInstance(context.getApplicationContext()).changeApiBaseUrl(ApiClient.CLOUD);
+        }
 
         WifiManager wifiManager = NetworkUtil.getWifiStatus(context);
        //Log.v(tag, "wifi: " + wifiManager.getConnectionInfo());

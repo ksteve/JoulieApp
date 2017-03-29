@@ -20,8 +20,11 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ApiClient {
 
+    public static final int LOCAL = 0;
+    public static final int CLOUD = 1;
+
     private static ApiClient instance = null;
-    private String apiBaseUrl = Constants.BASE_URL;
+    private String apiBaseUrl = Constants.LOCAL_URL;
     private OkHttpClient mOkHttpClient;
     private Retrofit mRetrofit = null;
     private ApiService mApiService;
@@ -80,10 +83,22 @@ public class ApiClient {
         }
     }
 
-    public void changeApiBaseUrl(String newApiBaseUrl){
+    public void changeApiBaseUrl(int network){
+        if(network == LOCAL){
+            setApiBaseUrl(Constants.LOCAL_URL);
+        } else if(network == CLOUD) {
+            setApiBaseUrl(Constants.CLOUD_URL);
+        }
+    }
+
+    private void setApiBaseUrl(String newApiBaseUrl){
         apiBaseUrl = newApiBaseUrl;
         mRetrofit = null;
         buildClient();
+    }
+
+    private String getApiBaseUrl(){
+        return this.apiBaseUrl;
     }
 
     public ApiService getApiService(){
