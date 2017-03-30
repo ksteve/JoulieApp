@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="100dp"
         android:background="@color/colorAccent">
 
         <ImageView
@@ -20,12 +20,11 @@
     </RelativeLayout>
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="10dp"
         android:layout_marginBottom="5dp"
         android:layout_below="@+id/header">
 
@@ -33,63 +32,161 @@
             android:text="Rule Name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/ruleName_label" />
+            android:id="@+id/ruleName_label"
+            android:layout_alignParentStart="true" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="50dp"
             android:ems="10"
-            android:id="@+id/ruleName_input" />
+            android:id="@+id/ruleName_input"
+            android:layout_below="@+id/ruleName_label"
+            android:layout_alignStart="@+id/tbtnSn" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/device_label"
-            android:text="Device" />
+            android:text="Device"
+            android:layout_below="@+id/ruleName_input"
+            android:layout_alignParentStart="true" />
 
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/device_dropdown" />
+            android:id="@+id/device_dropdown"
+            android:layout_below="@+id/device_label"
+            android:layout_alignStart="@+id/time_input" />
 
         <TextView
             android:text="Turn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/turnOnOff_label" />
+            android:id="@+id/turnOnOff_label"
+            android:layout_above="@+id/toggleButton"
+            android:layout_alignParentStart="true" />
 
         <ToggleButton
-            android:text="ToggleButton"
+            android:id="@+id/toggleButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/toggleButton" />
+            android:layout_above="@+id/time_label"
+            android:layout_alignStart="@+id/time_input" />
 
         <TextView
             android:text="Socket"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/socket_label" />
+            android:id="@+id/socket_label"
+            android:layout_below="@+id/device_dropdown"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentStart="true" />
 
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/socket_dropdown" />
+            android:id="@+id/socket_dropdown"
+            android:layout_below="@+id/socket_label"
+            android:layout_alignStart="@+id/time_input" />
 
         <TextView
             android:text="Time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/time_label" />
+            android:id="@+id/time_label"
+            android:layout_above="@+id/time_input"
+            android:layout_alignParentStart="true" />
 
         <EditText
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="50dp"
             android:inputType="time"
             android:ems="10"
-            android:id="@+id/time_input" />
-</LinearLayout>
+            android:id="@+id/time_input"
+            android:layout_above="@+id/tbtnSn"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="7dp"
+            android:layout_marginBottom="6dp" />
+
+        <ToggleButton
+            android:id="@+id/tbtnSn"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="ToggleButton"
+            android:textOff="Sn"
+            android:textOn="Sn"
+            android:layout_alignBaseline="@+id/tbtnM"
+            android:layout_alignBottom="@+id/tbtnM"
+            android:layout_marginLeft="7dp"
+            android:layout_alignParentStart="true" />
+
+        <ToggleButton
+            android:id="@+id/tbtnM"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="ToggleButton"
+            android:textOff="M"
+            android:textOn="M"
+            android:layout_marginBottom="70dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@+id/tbtnSn" />
+
+        <ToggleButton
+            android:id="@+id/tbtnT"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="ToggleButton"
+            android:textOff="T"
+            android:textOn="T"
+            android:layout_marginBottom="70dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@+id/tbtnM" />
+
+        <ToggleButton
+            android:id="@+id/tbtnW"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="ToggleButton"
+            android:textOff="W"
+            android:textOn="W"
+            android:layout_marginBottom="70dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@+id/tbtnT" />
+
+        <ToggleButton
+            android:id="@+id/tbtnTh"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="ToggleButton"
+            android:textOff="Th"
+            android:textOn="Th"
+            android:layout_marginBottom="70dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@+id/tbtnW" />
+
+        <ToggleButton
+            android:id="@+id/tbtnF"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="ToggleButton"
+            android:textOff="F"
+            android:textOn="F"
+            android:layout_marginBottom="70dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@+id/tbtnTh" />
+
+        <ToggleButton
+            android:id="@+id/tbtnSt"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="ToggleButton"
+            android:textOff="St"
+            android:textOn="St"
+            android:layout_marginBottom="70dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@+id/tbtnF" />
+
+    </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
