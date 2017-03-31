@@ -84,15 +84,8 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
                 String state = (b) ? "1" : "0";
                 HashMap<String,String> body = new HashMap<>();
                 body.put("state", state);
-
-                String robot_name = "Test";
                 String device_name = holder.mItem.getDeviceName();
-                String command = "";
-                if(holder.mItem.getType() == "wemo"){
-                    command = "toggle_power";
-                } else if(holder.mItem.getType() == "tplink"){
-                    command = "setPowerState";
-                }
+                String command = "set_power_state";
 
                 Call<String> call = apiService.sendCommand(device_name, command, body);
                 call.enqueue(new Callback<String>() {
