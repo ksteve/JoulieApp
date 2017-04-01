@@ -15,14 +15,16 @@ public class Rule {
     public int turnOnOff;
     public String time;
     public int socket;
+    public String days;
 
-    public Rule(String id, String ruleName, Device device, int turnOnOff, String time, int socket) {
+    public Rule(String id, String ruleName, Device device, int turnOnOff, String time, int socket, String days) {
         this.id = id;
         this.ruleName = ruleName;
         this.device = device;
         this.turnOnOff = turnOnOff;
         this.time = time;
         this.socket = socket;
+        this.days = days;
     }
 
     public Rule(String id){
