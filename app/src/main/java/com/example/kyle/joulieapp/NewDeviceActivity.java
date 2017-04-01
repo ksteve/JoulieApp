@@ -96,7 +96,7 @@ public class NewDeviceActivity extends AppCompatActivity {
                     deviceNameView.setError("Device Name is Required");
                 } else {
 
-                    final Device device = new Device("1",
+                    final Device device = new Device(
                             deviceType.getSelectedItem().toString(),
                             deviceNameView.getText().toString(),
                             deviceIP.getText().toString(),
@@ -107,11 +107,13 @@ public class NewDeviceActivity extends AppCompatActivity {
                             .getInstance(getApplicationContext())
                             .getApiService();
 
+                    DummyContent.MY_DEVICES.add(device);
+
                     Call<Device> call = apiService.createDevice(device);
                     call.enqueue(new Callback<Device>() {
                         @Override
                         public void onResponse(Call<Device> call, Response<Device> response) {
-                            DummyContent.MY_DEVICES.add(device);
+
                             finish();
                         }
 
