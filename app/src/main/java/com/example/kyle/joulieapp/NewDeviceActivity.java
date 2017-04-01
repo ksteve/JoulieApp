@@ -108,13 +108,15 @@ public class NewDeviceActivity extends AppCompatActivity {
                             .getInstance(getApplicationContext())
                             .getApiService();
 
-                    DummyContent.MY_DEVICES.add(device);
+
 
                     Call<Device> call = apiService.createDevice(device);
                     call.enqueue(new Callback<Device>() {
                         @Override
                         public void onResponse(Call<Device> call, Response<Device> response) {
-
+                            /// TODO: 2017-04-01 check respsonse status
+                            // TODO: 2017-04-01 check if device has correct fields
+                            DummyContent.MY_DEVICES.add(response.body());
                             finish();
                         }
 

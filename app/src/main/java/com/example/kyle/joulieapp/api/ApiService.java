@@ -52,8 +52,8 @@ public interface ApiService {
     Call<String> deleteRule(@Path("rule_id") String ruleID);
 
     //send a command to a specific device
-    @POST("device/{device_name}/{command_name}")
-    Call<String> sendCommand(@Path("device_name") String deviceName, @Path("command_name") String commandName, @Body HashMap<String, String> body);
+    @POST("device/{device_id}/{command_name}")
+    Call<String> sendCommand(@Path("device_id") String deviceName, @Path("command_name") String commandName, @Body HashMap<String, String> body);
 
     @POST("newuser")
     Call<String> newUser(@Body HashMap<String, String> body);

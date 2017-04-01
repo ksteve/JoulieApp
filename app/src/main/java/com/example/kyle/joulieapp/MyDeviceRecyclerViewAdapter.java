@@ -85,10 +85,10 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
                 String state = (b) ? "1" : "0";
                 HashMap<String,String> body = new HashMap<>();
                 body.put("state", state);
-                String device_name = holder.mItem.getDeviceName();
+                String device_id = holder.mItem.getId();
                 String command = "set_power_state";
 
-                Call<String> call = apiService.sendCommand(device_name, command, body);
+                Call<String> call = apiService.sendCommand(device_id, command, body);
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
