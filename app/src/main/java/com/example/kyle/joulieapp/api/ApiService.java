@@ -6,6 +6,7 @@ import com.example.kyle.joulieapp.Models.Rule;
 import java.util.HashMap;
 import java.util.List;
 
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -21,6 +22,10 @@ import retrofit2.http.Path;
  */
 
 public interface ApiService {
+
+    //test connection to url
+    @GET(".")
+    Call<Void> ping();
 
     //Creating a new Robot
     @POST("robot/{robot_name}")
