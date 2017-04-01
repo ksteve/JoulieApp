@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.preference.PreferenceManager;
 
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
+import com.example.kyle.joulieapp.utils.DateAxisValueFormatter;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -27,6 +29,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class DeviceDetailActivity extends AppCompatActivity {
@@ -47,6 +50,12 @@ public class DeviceDetailActivity extends AppCompatActivity {
     private LineDataSet dataSetDollars;
     private FloatingActionButton fabShare;
     private SharedPreferences prefs;
+    private TabLayout tabLayout;
+    private static final int DAY_FORMAT = 0;
+    private static final int WEEK_FORMAT = 1;
+    private static final int MONTH_FORMAT = 2;
+    private static final int YEAR_FORMAT = 3;
+    private static final int MAX_FORMAT = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +82,9 @@ public class DeviceDetailActivity extends AppCompatActivity {
         device_image.setImageDrawable(currentDevice.getImage());
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //setup Tab layout
+        tabLayout = (TabLayout) findViewById(R.id.graph_tabs);
+        setupTabIcons();
         setupChart();
 
        // new getUsageData().execute(null, null, null);
@@ -93,12 +105,113 @@ public class DeviceDetailActivity extends AppCompatActivity {
         });
     }
 
+    private void setupTabIcons() {
+        tabLayout.addTab(tabLayout.newTab().setText("1D"), true);
+        tabLayout.addTab(tabLayout.newTab().setText("1W"));
+        tabLayout.addTab(tabLayout.newTab().setText("1M"));
+        tabLayout.addTab(tabLayout.newTab().setText("1Y"));
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                setChartFormatter(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
+    private void setChartFormatter(int formatType){
+        Calendar cal = Calendar.getInstance();
+        long currentTime;
+        switch(formatType){
+            case DAY_FORMAT:
+                if(mLineChart.getData() != null) {
+                    mLineChart.getXAxis().setAxisMinimum(mLineChart.getData().getXMin());
+                    mLineChart.getXAxis().setAxisMaximum(mLineChart.getData().getXMax());
+                }
+
+                mLineChart.getXAxis().setValueFormatter(new DateAxisValueFormatter(DateAxisValueFormatter.DAY));
+                mLineChart.getXAxis().setGranularity(3600f);
+                mLineChart.fitScreen();
+                mLineChart.invalidate();
+                break;
+            case WEEK_FORMAT:
+                currentTime = cal.getTimeInMillis()/1000;
+
+                cal.set(Calendar.DAY_OF_WEEK, 1);
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                long beginningOfWeek = cal.getTimeInMillis()/1000;
+
+                mLineChart.getXAxis().setAxisMinimum(beginningOfWeek);
+                mLineChart.getXAxis().setAxisMaximum(currentTime);
+
+                mLineChart.getXAxis().setValueFormatter(new DateAxisValueFormatter(DateAxisValueFormatter.WEEK));
+                mLineChart.getXAxis().setGranularity(86400f);
+                mLineChart.fitScreen();
+                mLineChart.invalidate();
+                break;
+            case MONTH_FORMAT:
+                currentTime = cal.getTimeInMillis()/1000;
+                cal.set(Calendar.DAY_OF_MONTH, 1);
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                long beginningOfMonth = cal.getTimeInMillis()/1000;
+
+                mLineChart.getXAxis().setAxisMinimum(beginningOfMonth);
+                mLineChart.getXAxis().setAxisMaximum(currentTime);
+
+                mLineChart.getXAxis().setValueFormatter(new DateAxisValueFormatter(DateAxisValueFormatter.MONTH));
+                mLineChart.getXAxis().setGranularity(259200f);
+                mLineChart.fitScreen();
+                mLineChart.invalidate();
+                break;
+            case YEAR_FORMAT:
+                currentTime = cal.getTimeInMillis()/1000;
+                cal.set(Calendar.MONTH, Calendar.JANUARY);
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                long oneMonthAgo = cal.getTimeInMillis()/1000;
+
+                mLineChart.getXAxis().setAxisMinimum(oneMonthAgo);
+                mLineChart.getXAxis().setAxisMaximum(currentTime);
+
+                mLineChart.getXAxis().setValueFormatter(new DateAxisValueFormatter(DateAxisValueFormatter.YEAR));
+
+                mLineChart.getXAxis().setGranularity(2500000f);
+                mLineChart.fitScreen();
+                mLineChart.invalidate();
+                break;
+            case MAX_FORMAT:
+                break;
+            default:
+                break;
+
+        }
+    }
+
     private void setupChart(){
         mLineChart.getAxis(YAxis.AxisDependency.LEFT).setEnabled(false);
         mLineChart.getAxisRight().disableGridDashedLine();
 
         mLineChart.getXAxis().setDrawGridLines(false);
         mLineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        setChartFormatter(tabLayout.getSelectedTabPosition());
 
         mLineChart.setDrawGridBackground(false);
 
