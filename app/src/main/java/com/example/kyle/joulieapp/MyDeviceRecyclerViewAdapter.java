@@ -61,6 +61,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
         holder.checkBox.setChecked(false);
         holder.mItem = mValues.get(position);
         holder.mDeviceImage.setImageDrawable(mValues.get(position).image);
+        holder.mIsShared.setVisibility(holder.mItem.getOwned() ? View.GONE : View.VISIBLE);
         holder.mDeviceName.setText(mValues.get(position).getDeviceName());
         holder.mDeviceType.setText(mValues.get(position).getType());
         holder.mSwitch.setChecked(mValues.get(position).getPowerState());
@@ -84,10 +85,10 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
                 String state = (b) ? "1" : "0";
                 HashMap<String,String> body = new HashMap<>();
                 body.put("state", state);
-                String device_name = holder.mItem.getDeviceName();
+                String device_id = holder.mItem.getId();
                 String command = "set_power_state";
 
-                Call<String> call = apiService.sendCommand(device_name, command, body);
+                Call<String> call = apiService.sendCommand(device_id, command, body);
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
@@ -125,6 +126,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
         public final View mView;
         public final ImageView mDeviceImage;
+        public final ImageView mIsShared;
         public final TextView mDeviceName;
         public final TextView mDeviceType;
         public final Switch mSwitch;
@@ -142,7 +144,8 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
                 }
             });
             mView.setOnLongClickListener(this);
-            mDeviceImage = (ImageView) view.findViewById(R.id.streamImage);
+            mDeviceImage = (ImageView) view.findViewById(R.id.deviceImage);
+            mIsShared = (ImageView) view.findViewById(R.id.isShared);
             mDeviceName = (TextView) view.findViewById(R.id.device_name);
             mDeviceType = (TextView) view.findViewById(R.id.device_type);
             mSwitch = (Switch) view.findViewById(R.id.power_switch);

@@ -17,10 +17,13 @@ public class Device {
     private String deviceName;
 
     @SerializedName("uuid")
-    private String id;
+    private String deviceId;
 
     @SerializedName("type")
-    private String type;
+    private String deviceType;
+
+    @SerializedName("owned")
+    private Boolean isOwned;
 
     @SerializedName("state")
     private boolean powerState;
@@ -31,54 +34,49 @@ public class Device {
     @SerializedName("port")
     private String port;
 
-    @SerializedName("owner_user_id")
-    private String owner;
+    @SerializedName("creation_date")
+    private String creationDate;
 
-    //@SerializedName("creation_date")
+    @SerializedName("last_activity_date")
+    private String lastActivityDate;
 
-    //@SerializedName("last_activity_date")
+//  @SerializedName("owner_user_id")
+//  private String owner;
 
     public transient String status;
 
     public transient Drawable image;
 
-    //@Bindable
-    //private transient int currentTemp;
-
-    public Device(String id, String deviceType,String deviceName, String deviceIP, String devicePort, Drawable image) {
-        setId(id);
+    public Device(String deviceType,String deviceName, String deviceIP, String devicePort, Drawable image) {
         setDeviceName(deviceName);
         setType(deviceType);
-        setImage(image);
+        setOwned(true);
         setPowerState(false);
         setIpAddress(deviceIP);
         setPort(devicePort);
+        setImage(image);
     }
 
-//    public Device(){
-//
-//    }
-
     public String getId() {
-        return id;
+        return this.deviceId;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.deviceId = id;
     }
 
     public String getType() {
-        return type;
+        return this.deviceType;
     }
 
     public void setType(String type) {
         switch (type){
             case "Wemo Insight Switch":
-                this.type = "wemo";
+                this.deviceType = "wemo";
                 break;
 
             case "TP-Link Smart Plug":
-                this.type = "tplink";
+                this.deviceType = "tplink";
                 break;
         }
     }
@@ -89,6 +87,14 @@ public class Device {
 
     public void setDeviceName(String deviceName) {
         this.deviceName = deviceName;
+    }
+
+    public Boolean getOwned() {
+        return isOwned;
+    }
+
+    public void setOwned(Boolean owned) {
+        isOwned = owned;
     }
 
     public boolean getPowerState() { return powerState;}
