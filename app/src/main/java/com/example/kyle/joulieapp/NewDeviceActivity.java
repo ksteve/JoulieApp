@@ -1,5 +1,6 @@
 package com.example.kyle.joulieapp;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -97,6 +98,7 @@ public class NewDeviceActivity extends AppCompatActivity {
                     deviceNameView.setError("Device Name is Required");
                 } else {
 
+
                     final Device device = new Device(
                             deviceType.getSelectedItem().toString(),
                             deviceNameView.getText().toString(),
@@ -116,12 +118,29 @@ public class NewDeviceActivity extends AppCompatActivity {
                         public void onResponse(Call<Device> call, Response<Device> response) {
                             /// TODO: 2017-04-01 check respsonse status
                             // TODO: 2017-04-01 check if device has correct fields
-                            DummyContent.MY_DEVICES.add(response.body());
+                            String message = "";
+                            int result;
+                            if(response.body() != null){
+                                DummyContent.MY_DEVICES.add(response.body());
+                                message = "Device Connected Succesfully";
+                                result = RESULT_OK;
+                            } else {
+                                message = "Error: Could not connect to Device";
+                                result = RESULT_CANCELED;
+                            }
+
+                            Intent data = new Intent();
+                            data.putExtra("message", message);
+                            setResult(result,data);
                             finish();
                         }
 
                         @Override
                         public void onFailure(Call<Device> call, Throwable t) {
+                            String message = t.getMessage();
+                            Intent data = new Intent();
+                            data.putExtra("message", message);
+                            setResult(RESULT_CANCELED,data);
                             finish();
                         }
                     });

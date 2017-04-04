@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +84,7 @@ public class DeviceFragment extends Fragment {
         }
         recyclerView.setAdapter(new MyDeviceRecyclerViewAdapter(getActivity(),DummyContent.MY_DEVICES, mListener));
 
-        if (DummyContent.MY_DEVICES.isEmpty()) {
+        if (recyclerView.getAdapter().getItemCount() == 0) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         }
@@ -129,7 +130,7 @@ public class DeviceFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //
+        getDevices();
     }
 
     @Override
@@ -137,7 +138,6 @@ public class DeviceFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
-            getDevices();
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -158,13 +158,23 @@ public class DeviceFragment extends Fragment {
             public void onResponse(Call<List<Device>> call, Response<List<Device>> response) {
                 MyDeviceRecyclerViewAdapter adapter = (MyDeviceRecyclerViewAdapter) recyclerView.getAdapter();
                 if(response.body() != null) {
-                    DummyContent.setMyDevices(response.body());
-                    adapter.notifyDataSetChanged();
+                   DummyContent.setMyDevices(response.body());
+                    adapter.setmValues(response.body());
+                    //adapter.notifyDataSetChanged();
+                    if (recyclerView.getAdapter().getItemCount() == 0) {
+                        recyclerView.setVisibility(View.GONE);
+                        emptyView.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        recyclerView.setVisibility(View.VISIBLE);
+                        emptyView.setVisibility(View.GONE);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<List<Device>> call, Throwable t) {
+                Log.d("getDevices", t.getMessage());
                 //// TODO: 2017-03-22 error hanlding
             }
         });

@@ -55,6 +55,10 @@ import com.google.gson.JsonObject;
 import org.json.JSONObject;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -218,8 +222,8 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(data != null && data.hasExtra("result")) {
-            String result = data.getStringExtra("result");
+        if(data != null && data.hasExtra("message")) {
+            String result = data.getStringExtra("message");
             Snackbar snackbar = Snackbar.make(coordinator, result, Snackbar.LENGTH_SHORT);
             snackbar.show();
         }
@@ -285,6 +289,8 @@ public class MainActivity extends AppCompatActivity
             vpPager.setCurrentItem(MYDEVICES_FRAGMENT, true);
         } else if (id == R.id.nav_settings) {
             openSettingsActivity();
+        } else if (id == R.id.nav_reset_server) {
+
         } else if (id == R.id.nav_logout) {
             logout();
         }
@@ -293,6 +299,25 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+//    private void resetLocalServer(){
+//        ApiService apiService = ApiClient
+//                .getInstance(getApplicationContext())
+//                .getApiService();
+//
+//        Call call = apiService.resetServer();
+//        call.enqueue(new Callback() {
+//            @Override
+//            public void onResponse(Call call, Response response) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call call, Throwable t) {
+//
+//            }
+//        }
+//    }
 
     private void logout() {
         CredentialsManager.deleteCredentials(getApplicationContext());

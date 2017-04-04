@@ -23,7 +23,7 @@ public class Device {
     private String deviceType;
 
     @SerializedName("owned")
-    private Boolean isOwned;
+    private int isOwned;
 
     @SerializedName("state")
     private boolean powerState;
@@ -50,7 +50,7 @@ public class Device {
     public Device(String deviceType,String deviceName, String deviceIP, String devicePort, Drawable image) {
         setDeviceName(deviceName);
         setType(deviceType);
-        setOwned(true);
+        setOwned(1);
         setPowerState(false);
         setIpAddress(deviceIP);
         setPort(devicePort);
@@ -89,11 +89,11 @@ public class Device {
         this.deviceName = deviceName;
     }
 
-    public Boolean getOwned() {
+    public int getOwned() {
         return isOwned;
     }
 
-    public void setOwned(Boolean owned) {
+    public void setOwned(int owned) {
         isOwned = owned;
     }
 

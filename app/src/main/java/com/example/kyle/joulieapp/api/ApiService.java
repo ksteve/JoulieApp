@@ -27,6 +27,9 @@ public interface ApiService {
     @GET(".")
     Call<Void> ping();
 
+    @POST("robot/reset")
+    Call<Void> resetServer();
+
     //Creating a new Robot
     @POST("robot/{robot_name}")
     Call createRobot(@Path("robot_name") String robotName);

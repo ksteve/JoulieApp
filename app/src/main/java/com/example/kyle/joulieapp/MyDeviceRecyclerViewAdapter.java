@@ -3,6 +3,7 @@ package com.example.kyle.joulieapp;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -35,11 +36,12 @@ import retrofit2.Response;
  */
 public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Device> mValues;
+    private List<Device> mValues;
     public final List<Device> selectedDevices;
     private final DeviceFragment.OnListFragmentInteractionListener mListener;
     private SparseBooleanArray selectedItems;
     private ApiService apiService;
+    private Context mContext;
 
     public MyDeviceRecyclerViewAdapter(Context context, List<Device> items, DeviceFragment.OnListFragmentInteractionListener listener) {
         selectedItems = new SparseBooleanArray();
@@ -47,6 +49,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
         mListener = listener;
         apiService = ApiClient.getInstance(context.getApplicationContext()).getApiService();
         selectedDevices = new ArrayList<>();
+        this.mContext = context;
     }
 
     @Override
@@ -61,7 +64,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
         holder.checkBox.setChecked(false);
         holder.mItem = mValues.get(position);
         holder.mDeviceImage.setImageDrawable(mValues.get(position).image);
-        holder.mIsShared.setVisibility(holder.mItem.getOwned() ? View.GONE : View.VISIBLE);
+        holder.mIsShared.setVisibility(holder.mItem.getOwned() == 1 ? View.GONE : View.VISIBLE);
         holder.mDeviceName.setText(mValues.get(position).getDeviceName());
         holder.mDeviceType.setText(mValues.get(position).getType());
         holder.mSwitch.setChecked(mValues.get(position).getPowerState());
@@ -80,7 +83,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
 
         holder.mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, final boolean b) {
+            public void onCheckedChanged(final CompoundButton compoundButton, final boolean b) {
 
                 String state = (b) ? "1" : "0";
                 HashMap<String,String> body = new HashMap<>();
@@ -93,11 +96,15 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
                         Log.d("tag", response.message());
+                        Snackbar snackbar = Snackbar.make(compoundButton.getRootView(), response.message(), Snackbar.LENGTH_SHORT);
+                        snackbar.show();
                     }
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
                         Log.d("tag", t.getMessage());
+                        Snackbar snackbar = Snackbar.make(compoundButton.getRootView(), t.getMessage(), Snackbar.LENGTH_SHORT);
+                        snackbar.show();
                     }
                 });
 
@@ -121,6 +128,24 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
     @Override
     public int getItemCount() {
         return mValues.size();
+    }
+
+    public void setmValues(List<Device> devices){
+
+        for(Device x: devices){
+            x.setImage( mContext.getResources().getDrawable(R.drawable.ic_smart_plug));
+            String type = x.getType();
+
+            if(type.equals("1")){
+                x.setType("Wemo Insight Switch");
+            }
+            if(type.equals("2")){
+                x.setType("TP-Link Smart Plug");
+            }
+        }
+
+        this.mValues = devices;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
