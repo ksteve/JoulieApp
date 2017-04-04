@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -40,7 +41,7 @@ import static com.example.kyle.joulieapp.R.styleable.CoordinatorLayout;
 
 public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.ResponseListener{
 
-    private EditText editTextTime;
+    private TimePicker timePicker;
     private EditText ruleName;
     private Spinner deviceDropdown;
     private ToggleButton turnOnOff;
@@ -62,10 +63,7 @@ public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.Resp
         ab.setDisplayHomeAsUpEnabled(true);
 
         ruleName = (EditText) findViewById(R.id.ruleName_input);
-        editTextTime = (EditText) findViewById(R.id.time_input);
-
-        //set input filter for time input so only valid input can be entered
-        initTimeInput();
+        timePicker = (TimePicker) findViewById(R.id.timePicker);
 
         //populate device dropdown with device names
         deviceDropdown = (Spinner) findViewById(R.id.device_dropdown);
@@ -86,16 +84,12 @@ public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.Resp
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (deviceList.size() == 0 || ruleName.getText().toString().trim().isEmpty() || editTextTime.getText().toString().trim().isEmpty()) {
+                if (deviceList.size() == 0 || ruleName.getText().toString().trim().isEmpty()) {
                     if (deviceList.size() == 0){
                         Toast.makeText(getApplicationContext(), "Error: no devices found", Toast.LENGTH_SHORT).show();
                     }
                     if (ruleName.getText().toString().trim().isEmpty()) {
                         ruleName.setError("Rule Name is Required");
-                    }
-                    if (editTextTime.getText().toString().trim().isEmpty()) {
-                        editTextTime.setError("Time is Required");
                     }
                 }
                 else {
@@ -126,76 +120,15 @@ public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.Resp
         return super.onOptionsItemSelected(item);
     }
 
-    private void initTimeInput(){
-        editTextTime = (EditText) findViewById(R.id.time_input);
-
-        //the following InputFilter related code was borrowed from
-        //http://stackoverflow.com/questions/13120947/how-to-restrict-to-input-time-for-edittext-in-android
-        //this code is used to filter input for the time so that only valid times can be entered
-        InputFilter[] timeFilter = new InputFilter[1];
-
-        timeFilter[0]   = new InputFilter() {
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest,
-                                       int dstart, int dend) {
-
-
-                if (source.length() == 0) {
-                    return null;// deleting, keep original editing
-                }
-                String result = "";
-                result += dest.toString().substring(0, dstart);
-                result += source.toString().substring(start, end);
-                result += dest.toString().substring(dend, dest.length());
-
-                if (result.length() > 5) {
-                    return "";// do not allow this edit
-                }
-                boolean allowEdit = true;
-                char c;
-
-                if (result.length() > 0) {
-                    c = result.charAt(0);
-                    allowEdit &= (c >= '0' && c <= '2' && !(Character.isLetter(c)));
-                }
-                if (result.length() > 1) {
-                    //modified borrowed code here to fix bug that allowed
-                    //invalid inputs like 24 to 29 for hour
-                    char ch;
-                    c = result.charAt(1);
-                    ch = result.charAt(0);
-                    if (ch == '2'){
-                        allowEdit &= (c >= '0' && c <= '3' && !(Character.isLetter(c)));
-                    }
-                    else{
-                        allowEdit &= (c >= '0' && c <= '9' && !(Character.isLetter(c)));
-                    }
-                }
-                if (result.length() > 2) {
-                    c = result.charAt(2);
-                    allowEdit &= (c == ':'&&!(Character.isLetter(c)));
-                }
-                if (result.length() > 3) {
-                    c = result.charAt(3);
-                    allowEdit &= (c >= '0' && c <= '5' && !(Character.isLetter(c)));
-                }
-                if (result.length() > 4) {
-                    c = result.charAt(4);
-                    allowEdit &= (c >= '0' && c <= '9'&& !(Character.isLetter(c)));
-                }
-                return allowEdit ? null : "";
-            }
-        };
-
-        editTextTime.setFilters(timeFilter);
-    }
 
     @Override
     public void onResSuccess(JSONObject response) {
         ruleName = (EditText) findViewById(R.id.ruleName_input);
-        editTextTime = (EditText) findViewById(R.id.time_input);
+        timePicker = (TimePicker) findViewById(R.id.timePicker);
         turnOnOff = (ToggleButton) findViewById(R.id.toggleButton);
         int nOnOff = 0;
         Device dev = null;
+        String time = timePicker.getCurrentHour().toString() + ":" + timePicker.getCurrentMinute().toString();
         String days = "";
         tbtnSn = (ToggleButton) findViewById(R.id.tbtnSn);
         tbtnM = (ToggleButton) findViewById(R.id.tbtnM);
@@ -251,12 +184,12 @@ public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.Resp
                 result = response.getString("error");
             } else if (response.has("result")) {
                 result = response.getString("result");
-                DummyContent.addRule(new Rule(UUID.randomUUID().toString(), ruleName.getText().toString(), dev, nOnOff, editTextTime.getText().toString(), days));
+                DummyContent.addRule(new Rule(UUID.randomUUID().toString(), ruleName.getText().toString(), dev, nOnOff, time, days));
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("result", result);
                 setResult(Activity.RESULT_OK, resultIntent);
             } else {
-                DummyContent.addRule(new Rule(UUID.randomUUID().toString(), ruleName.getText().toString(), dev, nOnOff, editTextTime.getText().toString(), days));
+                DummyContent.addRule(new Rule(UUID.randomUUID().toString(), ruleName.getText().toString(), dev, nOnOff, time, days));
             }
 
         } catch (JSONException e) {
