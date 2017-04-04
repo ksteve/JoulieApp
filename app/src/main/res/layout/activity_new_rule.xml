@@ -63,38 +63,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/turnOnOff_label"
-            android:layout_above="@+id/toggleButton"
-            android:layout_alignParentStart="true" />
+            android:layout_below="@+id/device_dropdown"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="12dp" />
 
         <ToggleButton
             android:id="@+id/toggleButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/time_label"
-            android:layout_alignStart="@+id/time_input" />
-
-        <TextView
-            android:text="Socket"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/socket_label"
-            android:layout_below="@+id/device_dropdown"
-            android:layout_marginTop="5dp"
-            android:layout_alignParentStart="true" />
-
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/socket_dropdown"
-            android:layout_below="@+id/socket_label"
-            android:layout_alignStart="@+id/time_input" />
+            android:layout_below="@+id/turnOnOff_label"
+            android:layout_alignStart="@+id/ruleName_input" />
 
         <TextView
             android:text="Time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/time_label"
-            android:layout_above="@+id/time_input"
+            android:layout_below="@+id/toggleButton"
             android:layout_alignParentStart="true" />
 
         <EditText
@@ -103,10 +88,9 @@
             android:inputType="time"
             android:ems="10"
             android:id="@+id/time_input"
-            android:layout_above="@+id/tbtnSn"
-            android:layout_alignParentStart="true"
             android:layout_marginLeft="7dp"
-            android:layout_marginBottom="6dp" />
+            android:layout_below="@+id/time_label"
+            android:layout_alignStart="@+id/tbtnSn" />
 
         <ToggleButton
             android:id="@+id/tbtnSn"
@@ -190,7 +174,7 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="14dp"
         android:layout_gravity="bottom|right"
