@@ -42,7 +42,6 @@ public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.Resp
 
     private EditText editTextTime;
     private EditText ruleName;
-    private Spinner socketDropdown;
     private Spinner deviceDropdown;
     private ToggleButton turnOnOff;
     private List<String> deviceList;
@@ -67,15 +66,6 @@ public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.Resp
 
         //set input filter for time input so only valid input can be entered
         initTimeInput();
-
-        //start socket dropdown with one entry for socket 1
-        socketDropdown = (Spinner) findViewById(R.id.socket_dropdown);
-        List<String> socketList = new ArrayList<String>();
-        socketList.add("1");
-        ArrayAdapter<String> socketDataAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, socketList);
-        socketDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        socketDropdown.setAdapter(socketDataAdapter);
 
         //populate device dropdown with device names
         deviceDropdown = (Spinner) findViewById(R.id.device_dropdown);
@@ -203,7 +193,6 @@ public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.Resp
     public void onResSuccess(JSONObject response) {
         ruleName = (EditText) findViewById(R.id.ruleName_input);
         editTextTime = (EditText) findViewById(R.id.time_input);
-        socketDropdown = (Spinner) findViewById(R.id.socket_dropdown);
         turnOnOff = (ToggleButton) findViewById(R.id.toggleButton);
         int nOnOff = 0;
         Device dev = null;
@@ -262,12 +251,12 @@ public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.Resp
                 result = response.getString("error");
             } else if (response.has("result")) {
                 result = response.getString("result");
-                DummyContent.addRule(new Rule(UUID.randomUUID().toString(), ruleName.getText().toString(), dev, nOnOff, editTextTime.getText().toString(), Integer.parseInt(socketDropdown.getSelectedItem().toString()), days));
+                DummyContent.addRule(new Rule(UUID.randomUUID().toString(), ruleName.getText().toString(), dev, nOnOff, editTextTime.getText().toString(), days));
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("result", result);
                 setResult(Activity.RESULT_OK, resultIntent);
             } else {
-                DummyContent.addRule(new Rule(UUID.randomUUID().toString(), ruleName.getText().toString(), dev, nOnOff, editTextTime.getText().toString(), Integer.parseInt(socketDropdown.getSelectedItem().toString()), days));
+                DummyContent.addRule(new Rule(UUID.randomUUID().toString(), ruleName.getText().toString(), dev, nOnOff, editTextTime.getText().toString(), days));
             }
 
         } catch (JSONException e) {
