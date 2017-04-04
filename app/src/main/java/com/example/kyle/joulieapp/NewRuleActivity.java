@@ -46,6 +46,13 @@ public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.Resp
     private Spinner deviceDropdown;
     private ToggleButton turnOnOff;
     private List<String> deviceList;
+    private ToggleButton tbtnSn;
+    private ToggleButton tbtnM;
+    private ToggleButton tbtnT;
+    private ToggleButton tbtnW;
+    private ToggleButton tbtnTh;
+    private ToggleButton tbtnF;
+    private ToggleButton tbtnSt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -200,6 +207,14 @@ public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.Resp
         turnOnOff = (ToggleButton) findViewById(R.id.toggleButton);
         int nOnOff = 0;
         Device dev = null;
+        String days = "";
+        tbtnSn = (ToggleButton) findViewById(R.id.tbtnSn);
+        tbtnM = (ToggleButton) findViewById(R.id.tbtnM);
+        tbtnT = (ToggleButton) findViewById(R.id.tbtnT);
+        tbtnW = (ToggleButton) findViewById(R.id.tbtnW);
+        tbtnTh = (ToggleButton) findViewById(R.id.tbtnTh);
+        tbtnF = (ToggleButton) findViewById(R.id.tbtnF);
+        tbtnSt = (ToggleButton) findViewById(R.id.tbtnSt);
 
         for (int i = 0; i < DummyContent.MY_DEVICES.size(); i++){
             if (deviceDropdown.getSelectedItem().toString() == DummyContent.MY_DEVICES.get(i).getDeviceName()){
@@ -212,18 +227,47 @@ public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.Resp
             nOnOff = 1;
         }
 
+        if (tbtnSn.isChecked()){
+            days += "Sn ";
+        }
+
+        if (tbtnM.isChecked()){
+            days += "M ";
+        }
+
+        if (tbtnT.isChecked()){
+            days += "T ";
+        }
+
+        if (tbtnW.isChecked()){
+            days += "W ";
+        }
+
+        if (tbtnTh.isChecked()){
+            days += "Th ";
+        }
+
+        if (tbtnF.isChecked()){
+            days += "F ";
+        }
+
+        if (tbtnSt.isChecked()){
+            days += "St ";
+        }
+        days = days.trim();
+
         try {
             String result;
             if(response.has("error")){
                 result = response.getString("error");
             } else if (response.has("result")) {
                 result = response.getString("result");
-                DummyContent.addRule(new Rule(UUID.randomUUID().toString(), ruleName.getText().toString(), dev, nOnOff, editTextTime.getText().toString(), Integer.parseInt(socketDropdown.getSelectedItem().toString())));
+                DummyContent.addRule(new Rule(UUID.randomUUID().toString(), ruleName.getText().toString(), dev, nOnOff, editTextTime.getText().toString(), Integer.parseInt(socketDropdown.getSelectedItem().toString()), days));
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("result", result);
                 setResult(Activity.RESULT_OK, resultIntent);
             } else {
-                DummyContent.addRule(new Rule(UUID.randomUUID().toString(), ruleName.getText().toString(), dev, nOnOff, editTextTime.getText().toString(), Integer.parseInt(socketDropdown.getSelectedItem().toString())));
+                DummyContent.addRule(new Rule(UUID.randomUUID().toString(), ruleName.getText().toString(), dev, nOnOff, editTextTime.getText().toString(), Integer.parseInt(socketDropdown.getSelectedItem().toString()), days));
             }
 
         } catch (JSONException e) {
