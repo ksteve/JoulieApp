@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import com.example.kyle.joulieapp.Models.Device;
@@ -16,6 +17,7 @@ import java.util.List;
 public class ShareActivity extends AppCompatActivity {
 
     private Spinner permissionDropdown;
+    private Button btnShare;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,11 @@ public class ShareActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item, permissionList);
         permissionDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         permissionDropdown.setAdapter(permissionDataAdapter);
+
+        //start with permission dropdown and share button as disabled
+        permissionDropdown.setEnabled(false);
+        btnShare = (Button) findViewById(R.id.btnShare);
+        btnShare.setEnabled(false);
     }
 
     @Override
