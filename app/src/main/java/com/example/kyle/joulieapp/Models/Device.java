@@ -9,9 +9,11 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Device {
+    public static final int TYPE_WEMO = 1;
+    public static final int TYPE_TPLINK = 2;
+    public static final String WEMO_DISPLAY = "Wemo Insight Switch";
+    public static final String TPLINK_DISPLAY = "TP-Link Smart Plug";
 
-    public static final int WEMO_INSIGHT_SWITCH = 742;
-    public static final int TPLINK_HS110 = 752;
     
     @SerializedName("display_name")
     private String deviceName;
@@ -20,7 +22,7 @@ public class Device {
     private String deviceId;
 
     @SerializedName("type")
-    private String deviceType;
+    private int deviceType;
 
     @SerializedName("owned")
     private int isOwned;
@@ -47,7 +49,7 @@ public class Device {
 
     public transient Drawable image;
 
-    public Device(String deviceType,String deviceName, String deviceIP, String devicePort, Drawable image) {
+    public Device(int deviceType,String deviceName, String deviceIP, String devicePort, Drawable image) {
         setDeviceName(deviceName);
         setType(deviceType);
         setOwned(1);
@@ -65,20 +67,12 @@ public class Device {
         this.deviceId = id;
     }
 
-    public String getType() {
+    public int getType() {
         return this.deviceType;
     }
 
-    public void setType(String type) {
-        switch (type){
-            case "Wemo Insight Switch":
-                this.deviceType = "wemo";
-                break;
-
-            case "TP-Link Smart Plug":
-                this.deviceType = "tplink";
-                break;
-        }
+    public void setType(int type) {
+        this.deviceType = type;
     }
 
     public String getDeviceName() {

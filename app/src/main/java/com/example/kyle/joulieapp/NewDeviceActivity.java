@@ -30,12 +30,12 @@ import retrofit2.Response;
 public class NewDeviceActivity extends AppCompatActivity {
 
     //controls
-    private Spinner deviceType;
     private EditText deviceNameView;
     private EditText deviceIP;
     private EditText devicePort;
     private ImageView deviceImageView;
     private Drawable defaultDeviceImage;
+    private int deviceType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +45,11 @@ public class NewDeviceActivity extends AppCompatActivity {
         ab.setTitle("Add Device");
         ab.setDisplayHomeAsUpEnabled(true);
 
+        Intent intent = getIntent();
+        deviceType = intent.getIntExtra(DeviceTypeActivity.DEVICE_TYPE, Constants.TYPE_WEMO);
+
         deviceImageView = (ImageView) findViewById(R.id.deviceImage);
         deviceNameView = (EditText) findViewById(R.id.device_name);
-        deviceType = (Spinner) findViewById(R.id.device_type);
 
         deviceIP = (EditText) findViewById(R.id.ip_address);
         InputFilter[] filters = new InputFilter[1];
@@ -75,19 +77,11 @@ public class NewDeviceActivity extends AppCompatActivity {
                 return null;
             }
         };
+
         deviceIP.setFilters(filters);
-
         devicePort = (EditText) findViewById(R.id.port);
-
         defaultDeviceImage = ContextCompat.getDrawable(NewDeviceActivity.this, R.drawable.ic_smart_plug);
-        deviceImageView.setImageDrawable(defaultDeviceImage);
-
-        ArrayAdapter spinnerArrayAdapter = new ArrayAdapter(this,
-                android.R.layout.simple_spinner_dropdown_item,
-                getResources().getStringArray(R.array.device_types));
-        deviceType.setAdapter(spinnerArrayAdapter);
-
-        //deviceType.setAdapter(new SpinnerAdapter() {
+        setUpDeviceImage();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +94,7 @@ public class NewDeviceActivity extends AppCompatActivity {
 
 
                     final Device device = new Device(
-                            deviceType.getSelectedItem().toString(),
+                            deviceType,
                             deviceNameView.getText().toString(),
                             deviceIP.getText().toString(),
                             devicePort.getText().toString(),
@@ -164,5 +158,13 @@ public class NewDeviceActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setUpDeviceImage(){
+        if(deviceType == Device.TYPE_WEMO){
+            deviceImageView.setImageDrawable(getResources().getDrawable(R.drawable.wemo_device));
+        } else if(deviceType == Device.TYPE_TPLINK){
+            deviceImageView.setImageDrawable(getResources().getDrawable(R.drawable.tplink_device));
+        }
     }
 }

@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity
                         startActivityForResult(newRuleIntent, 1);
                         break;
                     case MYDEVICES_FRAGMENT:
-                        Intent newDeviceIntent = new Intent(MainActivity.this, NewDeviceActivity.class);
+                        Intent newDeviceIntent = new Intent(MainActivity.this, DeviceTypeActivity.class);
                         startActivityForResult(newDeviceIntent, 1);
                         break;
                 }

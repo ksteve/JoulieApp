@@ -26,7 +26,8 @@
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:layout_marginBottom="5dp"
-        android:layout_below="@+id/header">
+        android:layout_below="@+id/header"
+        android:id="@+id/relativeLayout">
 
         <TextView
             android:text="Rule Name"
@@ -56,7 +57,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/device_dropdown"
             android:layout_below="@+id/device_label"
-            android:layout_alignStart="@+id/time_input" />
+            android:layout_alignStart="@+id/ruleName_input" />
 
         <TextView
             android:text="Turn"
@@ -82,16 +83,6 @@
             android:layout_below="@+id/toggleButton"
             android:layout_alignParentStart="true" />
 
-        <EditText
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:inputType="time"
-            android:ems="10"
-            android:id="@+id/time_input"
-            android:layout_marginLeft="7dp"
-            android:layout_below="@+id/time_label"
-            android:layout_alignStart="@+id/tbtnSn" />
-
         <ToggleButton
             android:id="@+id/tbtnSn"
             android:layout_width="50dp"
@@ -111,7 +102,7 @@
             android:text="ToggleButton"
             android:textOff="M"
             android:textOn="M"
-            android:layout_marginBottom="70dp"
+            android:layout_marginBottom="65dp"
             android:layout_alignParentBottom="true"
             android:layout_toEndOf="@+id/tbtnSn" />
 
@@ -122,7 +113,7 @@
             android:text="ToggleButton"
             android:textOff="T"
             android:textOn="T"
-            android:layout_marginBottom="70dp"
+            android:layout_marginBottom="65dp"
             android:layout_alignParentBottom="true"
             android:layout_toEndOf="@+id/tbtnM" />
 
@@ -133,7 +124,7 @@
             android:text="ToggleButton"
             android:textOff="W"
             android:textOn="W"
-            android:layout_marginBottom="70dp"
+            android:layout_marginBottom="65dp"
             android:layout_alignParentBottom="true"
             android:layout_toEndOf="@+id/tbtnT" />
 
@@ -144,7 +135,7 @@
             android:text="ToggleButton"
             android:textOff="Th"
             android:textOn="Th"
-            android:layout_marginBottom="70dp"
+            android:layout_marginBottom="65dp"
             android:layout_alignParentBottom="true"
             android:layout_toEndOf="@+id/tbtnW" />
 
@@ -155,7 +146,7 @@
             android:text="ToggleButton"
             android:textOff="F"
             android:textOn="F"
-            android:layout_marginBottom="70dp"
+            android:layout_marginBottom="65dp"
             android:layout_alignParentBottom="true"
             android:layout_toEndOf="@+id/tbtnTh" />
 
@@ -166,7 +157,7 @@
             android:text="ToggleButton"
             android:textOff="St"
             android:textOn="St"
-            android:layout_marginBottom="70dp"
+            android:layout_marginBottom="65dp"
             android:layout_alignParentBottom="true"
             android:layout_toEndOf="@+id/tbtnF" />
 
@@ -183,6 +174,16 @@
         android:layout_marginRight="@dimen/fab_margin"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"/>
+
+    <TimePicker
+        android:id="@+id/timePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_above="@+id/fab"
+        android:layout_alignStart="@+id/relativeLayout"
+        android:layout_marginBottom="57dp"
+        android:layout_marginStart="12dp"
+        android:timePickerMode="spinner" />
 
 
 </RelativeLayout>

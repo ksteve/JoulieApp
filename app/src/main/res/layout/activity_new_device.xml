@@ -14,11 +14,13 @@
         android:layout_height="150dp"
         android:background="@color/colorPrimaryLighter">
 
-    <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:id="@+id/deviceImage"
-        android:layout_centerInParent="true"/>
+        <ImageView
+            android:id="@+id/deviceImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"/>
 
     </RelativeLayout>
 
@@ -31,17 +33,6 @@
         android:layout_marginStart="5dp"
         android:layout_marginBottom="5dp"
         android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/type_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Device Type"/>
-
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/device_type"/>
 
         <TextView
             android:id="@+id/name_label"

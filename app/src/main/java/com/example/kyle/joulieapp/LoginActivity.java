@@ -50,7 +50,6 @@ public class LoginActivity extends AppCompatActivity {
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("scope", "openid offline_access");
-
         aClient = new AuthenticationAPIClient(auth0);
         gProvider = new GoogleAuthProvider(getString(R.string.google_server_client_id), aClient);
         fbProvider = new FacebookAuthProvider(aClient);
@@ -120,6 +119,7 @@ public class LoginActivity extends AppCompatActivity {
     private LockCallback callback = new AuthenticationCallback() {
         @Override
         public void onAuthentication(Credentials credentials) {
+
             // Login Success response
             CredentialsManager.saveCredentials(getApplicationContext(), credentials);
             aClient.tokenInfo(CredentialsManager.getCredentials(LoginActivity.this).getIdToken())
