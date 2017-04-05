@@ -61,8 +61,9 @@
                     android:scheme="https"/>
             </intent-filter>
         </activity>
-        <activity android:name=".SplashActivity"
-                  android:theme="@style/SplashTheme">
+        <activity
+            android:name=".SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -80,7 +81,7 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".NewDeviceActivity"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".DeviceTypeActivity"/>
         <activity
             android:name=".NewRuleActivity"
             android:parentActivityName=".MainActivity"/>
@@ -111,6 +112,9 @@
             android:exported="true"/>
 
         <activity android:name=".ShareActivity"/>
+        <activity android:name=".DeviceTypeActivity"
+            android:parentActivityName=".MainActivity">
+        </activity>
     </application>
 
 </manifest>

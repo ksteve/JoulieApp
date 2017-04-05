@@ -63,10 +63,17 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.checkBox.setChecked(false);
         holder.mItem = mValues.get(position);
-        holder.mDeviceImage.setImageDrawable(mValues.get(position).image);
+        if(holder.mItem.getType() == Device.TYPE_WEMO){
+            holder.mDeviceImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.wemo_device));
+            holder.mDeviceType.setText(Device.WEMO_DISPLAY);
+        } else if(holder.mItem.getType() == Device.TYPE_TPLINK){
+            holder.mDeviceImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.tplink_device));
+            holder.mDeviceType.setText(Device.TPLINK_DISPLAY);
+        }
+
         holder.mIsShared.setVisibility(holder.mItem.getOwned() == 1 ? View.GONE : View.VISIBLE);
         holder.mDeviceName.setText(mValues.get(position).getDeviceName());
-        holder.mDeviceType.setText(mValues.get(position).getType());
+
         holder.mSwitch.setChecked(mValues.get(position).getPowerState());
 
         holder.mView.setClickable(true);
@@ -131,19 +138,6 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
     }
 
     public void setmValues(List<Device> devices){
-
-        for(Device x: devices){
-            x.setImage( mContext.getResources().getDrawable(R.drawable.ic_smart_plug));
-            String type = x.getType();
-
-            if(type.equals("1")){
-                x.setType("Wemo Insight Switch");
-            }
-            if(type.equals("2")){
-                x.setType("TP-Link Smart Plug");
-            }
-        }
-
         this.mValues = devices;
         notifyDataSetChanged();
     }

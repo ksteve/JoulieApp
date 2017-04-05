@@ -28,7 +28,8 @@
             android:layout_below="@+id/checkBox"
             android:layout_gravity="center_vertical"
             android:layout_toEndOf="@+id/checkBox"
-            android:scaleType="fitCenter"/>
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"/>
 
         <TextView
             android:id="@+id/device_name"
@@ -71,9 +72,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:paddingEnd="16dp"
-            android:splitTrack="false"
-            android:text="Power"
-            android:textOn="On"/>
+            android:splitTrack="false"/>
 
         <ImageView
             android:id="@+id/isShared"

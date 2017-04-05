@@ -84,6 +84,10 @@ public class NetworkUtil {
                     NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
                     WifiManager wm = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
 
+                   // wm.startScan();
+
+                   // wm.getScanResults();
+
                     WifiInfo connectionInfo = wm.getConnectionInfo();
                     int ipAddress = connectionInfo.getIpAddress();
                     String ipString = Formatter.formatIpAddress(ipAddress);
@@ -99,7 +103,7 @@ public class NetworkUtil {
                         String testIp = prefix + String.valueOf(i);
 
                         InetAddress address = InetAddress.getByName(testIp);
-                        boolean reachable = address.isReachable(500);
+                        boolean reachable = address.isReachable(100);
                         String hostName = address.getHostName();
 
                         if (reachable)

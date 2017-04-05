@@ -28,6 +28,9 @@
         <item>TP-Link Smart Plug</item>
     </string-array>
 
+    <string name="type_wemo">wemo</string>
+    <string name="type_tplink">tplink</string>
+
     <!-- apis -->
     <string name="auth0_client_id">igP9wpK19wh9ri5DiXBNzNP4AbLw2vit</string>
     <string name="auth0_domain">joulie.auth0.com</string>
