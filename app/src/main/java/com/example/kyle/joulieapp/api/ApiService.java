@@ -2,11 +2,11 @@ package com.example.kyle.joulieapp.api;
 
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.Rule;
+import com.example.kyle.joulieapp.Models.Usage;
 
 import java.util.HashMap;
 import java.util.List;
 
-import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -69,6 +69,9 @@ public interface ApiService {
 
     @GET("rules")
     Call<List<Rule>> getRules();
+
+    @GET("Usages")
+    Call<List<Usage>> getUsages();
 
 
 

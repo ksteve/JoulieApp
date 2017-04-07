@@ -63,7 +63,8 @@
         </activity>
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -72,21 +73,33 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:parentActivityName=".LoginActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".NewDeviceActivity"
-            android:parentActivityName=".DeviceTypeActivity"/>
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".NewRuleActivity"
-            android:parentActivityName=".MainActivity"/>
-        <activity android:name=".SettingsActivity"/>
-        <activity android:name=".DeviceDetailActivity"/>
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".SettingsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".DeviceDetailActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".ShareActivity"
+            android:screenOrientation="portrait"/>
 
         <!-- [START firebase_service] -->
         <service
@@ -111,10 +124,6 @@
             android:enabled="true"
             android:exported="true"/>
 
-        <activity android:name=".ShareActivity"/>
-        <activity android:name=".DeviceTypeActivity"
-            android:parentActivityName=".MainActivity">
-        </activity>
     </application>
 
 </manifest>

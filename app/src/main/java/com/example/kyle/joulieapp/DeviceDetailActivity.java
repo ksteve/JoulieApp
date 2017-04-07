@@ -28,6 +28,9 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -35,12 +38,10 @@ import java.util.List;
 public class DeviceDetailActivity extends AppCompatActivity {
 
     private Device currentDevice;
-    private TextView deviceID;
-    private TextView avg_usage;
     private ImageView device_image;
-    //private GraphView graph;
+    private TextView deviceName;
+    private TextView deviceType;
     private LineChart mLineChart;
-    private String guid = "6b5e49b13c5148b7a50c6c29fd1f282f";
     private RadioGroup rgChartDisplay;
     private RadioButton rbKilowatt;
     private RadioButton rbDollars;
@@ -73,13 +74,15 @@ public class DeviceDetailActivity extends AppCompatActivity {
         ab.setTitle(currentDevice.getDeviceName());
         ab.setDisplayHomeAsUpEnabled(true);
 
-        avg_usage = (TextView) findViewById(R.id.avg_usage);
-        deviceID = (TextView) findViewById(R.id.deviceID);
-        deviceID.setText(currentDevice.getId());
-        device_image = (ImageView) findViewById(R.id.deviceImage);
+        deviceType = (TextView) findViewById(R.id.device_type);
+        deviceType.setText(currentDevice.getTypeName());
+        deviceName = (TextView) findViewById(R.id.device_name);
+        deviceName.setText(currentDevice.getDeviceName());
+
         mLineChart = (LineChart) findViewById(R.id.chart);
 
-        device_image.setImageDrawable(currentDevice.getImage());
+        device_image = (ImageView) findViewById(R.id.deviceImage);
+        setUpDeviceImage();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //setup Tab layout
@@ -103,6 +106,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
                 startActivity(shareIntent);
             }
         });
+    }
+    private void setUpDeviceImage(){
+        if(currentDevice.getType() == Device.TYPE_WEMO){
+            device_image.setImageDrawable(getResources().getDrawable(R.drawable.wemo_device));
+        } else if(currentDevice.getType() == Device.TYPE_TPLINK){
+            device_image.setImageDrawable(getResources().getDrawable(R.drawable.tplink_device));
+        }
     }
 
     private void setupTabIcons() {
@@ -297,118 +307,6 @@ public class DeviceDetailActivity extends AppCompatActivity {
         mLineChart.invalidate(); // refresh
     }
 
-    //subscribeClick event handler
-    //used to subscribe to a topic
-    private void subscribe(){
-        final String topic = "pi/sockets_status/" + guid;
-
-
-    }
-
-
-    private void publishSwitch(int number, boolean isOn){
-       // final String guid = currentDevice.id;
-        final String topic = "pi/sockets/" + guid;
-        String status = isOn ? "on" : "off";
-        final String msg = "{\"deviceID\" : \""+ guid +"\",\"socketNumber\" : " + number + ",\"status\" : \"" + status + "\"}";
-
-        try {
-
-        } catch (Exception e) {
-
-        }
-    }
-
-
-
-    private class getUsageData extends AsyncTask<Void, String, Integer> {
-
-        private int[] colours = new int[]{Color.GREEN, Color.RED, Color.BLUE, Color.BLACK};
-       // Map<String, ArrayList<DataPoint>> deviceData = new HashMap<>();
-        float totalUsage = 0;
-        int numDataPoints = 0;
-
-        @Override
-        protected Integer doInBackground(Void... voids) {
-
-            //PaginatedScanList<PiElectricity> result = DynamoDBManager.getInstance().getUsageData();
-
-//            for (PiElectricity x:result) {
-//                try {
-//
-//                    JSONObject jObject = new JSONObject(x.getDeviceID());
-//
-//                    String deviceID = jObject.getString("DeviceID");
-//                    int timestamp = jObject.getInt("timestamp");
-//                    int value = jObject.getInt("value") / 1000;
-//
-//                    if(deviceID.equals(currentDevice.id)) {
-//
-//                        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
-//                        cal.setTimeInMillis(timestamp);
-//                        Date date = cal.getTime();
-//                        //String date = DateFormat.format("dd-MM-yyyy", cal).toString();
-//                        // return date;
-//
-//
-//                        if (deviceData.containsKey(deviceID)) {
-//                            deviceData.get(deviceID).add(new DataPoint(deviceData.get(deviceID).size(), value));
-//                        } else {
-//                            ArrayList<DataPoint> data = new ArrayList<>();
-//                            data.add(new DataPoint(data.size(), value));
-//                            deviceData.put(deviceID, data);
-//                        }
-//                        totalUsage += value;
-//                        numDataPoints++;
-//                    }
-//                }
-//                catch (JSONException e){
-//                    Log.e(LOG_TAG,
-//                            "Json parsing exception",
-//                            e);
-//                }
-//            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Integer value) {
-            super.onPostExecute(value);
-            //int i = 0;
-            //graph.removeAllSeries();
-
-            // TODO: 2017-03-10 test this code with actual received data
-            mLineChart.clearValues();
-
-//            for(Map.Entry<String, ArrayList<DataPoint>> entry: deviceData.entrySet()){
-//               // Collections.sort(entry.getValue(), new UsageOverviewFragment.TimeStampComparator());
-//                //LineGraphSeries<DataPoint> series = new LineGraphSeries<>(entry.getValue().toArray(new DataPoint[entry.getValue().size()]));
-//                //series.setColor(Color.GREEN);
-//                //series.setTitle(entry.getKey());
-//                //graph.addSeries(series);
-//                //i++;
-//
-//                //populate data
-//                List<Entry> entries = new ArrayList<Entry>();
-//                for (DataPoint dp: entry.getValue().toArray(new DataPoint[entry.getValue().size()])) {
-//                    entries.add(new Entry((float) dp.getX(), (float) dp.getY()));
-//                }
-//
-//                LineDataSet dataSet = new LineDataSet(entries, "Device1"); // add entries to dataset
-//                dataSet.setColors(new int[] { R.color.red1}, getApplicationContext());
-//
-//                // use the interface ILineDataSet
-//                List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
-//                dataSets.add(dataSet);
-//                LineData data = new LineData(dataSets);
-//                chart.setData(data);
-//                chart.invalidate(); // refresh
-//            }
-//            float avgUsage = (totalUsage/numDataPoints);
-//            avg_usage.setText(String.valueOf(avgUsage) + " kWatts");
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -425,7 +323,6 @@ public class DeviceDetailActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_refresh:
-                publishSwitch(0, true);
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -6,10 +6,14 @@ package com.example.kyle.joulieapp.Models;
 
 public class Usage {
 
-    public final String id;
+    public String id;
     public Device device;
+    public int energy;
 
     public Usage(String id) {
         this.id = id;
     }
+
+
+
 }

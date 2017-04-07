@@ -18,6 +18,7 @@ import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.Rule;
 import com.example.kyle.joulieapp.api.ApiClient;
 import com.example.kyle.joulieapp.api.ApiService;
+import com.example.kyle.joulieapp.presenter.DevicePresenter;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ import retrofit2.Response;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class DeviceFragment extends Fragment {
+public class DeviceFragment extends Fragment implements DevicePresenter.DevicePresenterListener {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -41,6 +42,7 @@ public class DeviceFragment extends Fragment {
     private  RecyclerView recyclerView;
     private TextView emptyView;
     private FloatingActionButton fabRemove;
+    private DevicePresenter devicePresenter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -65,6 +67,11 @@ public class DeviceFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
+        devicePresenter = new DevicePresenter(this, getActivity());
+        devicePresenter.subscribe();
+        devicePresenter.getDevices();
+
     }
 
     @Override
@@ -130,7 +137,6 @@ public class DeviceFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getDevices();
     }
 
     @Override
@@ -148,6 +154,12 @@ public class DeviceFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        devicePresenter.unsubscribe();
     }
 
     public void getDevices() {
@@ -191,6 +203,20 @@ public class DeviceFragment extends Fragment {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void devicesReady(List<Device> devices) {
+        MyDeviceRecyclerViewAdapter adapter = (MyDeviceRecyclerViewAdapter) recyclerView.getAdapter();
+        DummyContent.setMyDevices(devices);
+        adapter.setmValues(devices);
+        notifyAdapter();
+    }
+
+
+    @Override
+    public void deviceRemoved() {
+
     }
 
     /**

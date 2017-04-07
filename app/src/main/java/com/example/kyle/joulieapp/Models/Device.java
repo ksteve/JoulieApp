@@ -67,6 +67,16 @@ public class Device {
         this.deviceId = id;
     }
 
+    public String getTypeName(){
+        if(this.getType() == TYPE_WEMO){
+            return WEMO_DISPLAY;
+        } else if (this.getType() == TYPE_TPLINK) {
+            return TPLINK_DISPLAY;
+        } else {
+            return "Unknown Type";
+        }
+    }
+
     public int getType() {
         return this.deviceType;
     }

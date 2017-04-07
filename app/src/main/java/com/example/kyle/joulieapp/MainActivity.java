@@ -6,12 +6,14 @@
 
 package com.example.kyle.joulieapp;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.provider.SyncStateContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -21,6 +23,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -30,7 +33,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -41,27 +43,14 @@ import com.example.kyle.joulieapp.Models.Rule;
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.api.ApiClient;
 import com.example.kyle.joulieapp.api.ApiService;
+import com.example.kyle.joulieapp.presenter.MainPresenter;
 import com.example.kyle.joulieapp.utils.CredentialsManager;
-import com.example.kyle.joulieapp.utils.JoulieAPI;
 import com.example.kyle.joulieapp.utils.JoulieSocketIOAPI;
+import com.example.kyle.joulieapp.utils.NetworkUtil;
 import com.example.kyle.joulieapp.utils.Tools;
-import com.example.kyle.joulieapp.utils.VolleyRequestQueue;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.gson.JsonObject;
 
-
-import org.json.JSONObject;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.reactivex.Observable;
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -70,11 +59,13 @@ public class MainActivity extends AppCompatActivity
         UsageFragment.OnListFragmentInteractionListener,
         UsageOverviewFragment.OnFragmentInteractionListener,
         RuleFragment.OnListFragmentInteractionListener,
-        JoulieSocketIOAPI.ResponseListener{
+        MainPresenter.MainPresenterListener{
 
     private FragmentPagerAdapter adapterViewPager;
+    private MainPresenter mainPresenter;
     private ViewPager vpPager;
     private Toolbar toolbar;
+    private TextView connection;
     private TabLayout tabLayout;
     private FloatingActionButton fab;
     private View coordinator;
@@ -96,11 +87,14 @@ public class MainActivity extends AppCompatActivity
 
         //setup token for firebase cloud messaging
        // String token = FirebaseInstanceId.getInstance().getToken();
+        mainPresenter = new MainPresenter(this, this);
 
         coordinator = findViewById(R.id.coordinator);
         //setup toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        connection = (TextView) findViewById(R.id.connection);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +111,7 @@ public class MainActivity extends AppCompatActivity
                         startActivityForResult(newRuleIntent, 1);
                         break;
                     case MYDEVICES_FRAGMENT:
-                        Intent newDeviceIntent = new Intent(MainActivity.this, DeviceTypeActivity.class);
+                        Intent newDeviceIntent = new Intent(MainActivity.this, NewDeviceActivity.class);
                         startActivityForResult(newDeviceIntent, 1);
                         break;
                 }
@@ -187,10 +181,56 @@ public class MainActivity extends AppCompatActivity
 
     private void registerNetworkChanges(){
 
+        BroadcastReceiver asdf = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                ApiService apiService;
+                // TODO: This method is called when the BroadcastReceiver is receiving
+                // an Intent broadcast.
+                int status = NetworkUtil.getConnectivityStatusString(context);
+
+                if(status == NetworkUtil.NETWORK_STAUS_WIFI){
+                    ApiClient.getInstance(context.getApplicationContext()).changeApiBaseUrl(ApiClient.LOCAL);
+                    mainPresenter.testConnection();
+
+                } else if(status == NetworkUtil.NETWORK_STATUS_MOBILE){
+                    ApiClient.getInstance(context.getApplicationContext()).changeApiBaseUrl(ApiClient.CLOUD);
+                    mainPresenter.testConnection();
+                }
+
+               // WifiManager wifiManager = NetworkUtil.getWifiStatus(context);
+                //Log.v(tag, "wifi: " + wifiManager.getConnectionInfo());
+//        Log.v(tag, wifiManager.getConnectionInfo().getBSSID());
+//        Log.v(tag, wifiManager.getConnectionInfo().getSSID());
+//        Log.v(tag, String.valueOf(wifiManager.getConnectionInfo().getIpAddress()));
+//        Log.v(tag, String.valueOf(wifiManager.getConnectionInfo().getNetworkId()));
+//        for(WifiConfiguration w: wifiManager.getConfiguredNetworks()){
+//            Log.v(tag, w.SSID);
+//        }
+
+//                Log.v(tag, "action: " + intent.getAction());
+//                Log.v(tag, "component: " + intent.getComponent());
+//                Bundle extras = intent.getExtras();
+//                if(extras != null){
+//                    for (String key: extras.keySet()) {
+//                        Log.v(tag, "key [" + key + "]: " +
+//                                extras.get(key));
+//                    }
+//                }
+//                else {
+//                    Log.v(tag, "no extras");
+//                }
+            }
+        };
+
+
         //setup the main activity to be notified when network changes occur
         MainActivity.this.registerReceiver(
-                new ConnectivityChangeReceiver(),
+                asdf,
                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
+
+
     }
 
     //Method Name: toggleFab
@@ -220,14 +260,14 @@ public class MainActivity extends AppCompatActivity
     //Description: called upon adding a device
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+      //  super.onActivityResult(requestCode, resultCode, data);
 
         if(data != null && data.hasExtra("message")) {
             String result = data.getStringExtra("message");
             Snackbar snackbar = Snackbar.make(coordinator, result, Snackbar.LENGTH_SHORT);
             snackbar.show();
         }
-        notifyFragment();
+      //  notifyFragment();
     }
 
     //Method Name: onBackPressed
@@ -444,13 +484,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onResSuccess(String response) {
-
-    }
-
-    @Override
-    public void onResError(String errorMessage) {
-
+    public void onConnectionChanged(String connectionText) {
+        connection.setText(connectionText);
     }
 
     public static class MyPagerAdapter extends FragmentPagerAdapter {

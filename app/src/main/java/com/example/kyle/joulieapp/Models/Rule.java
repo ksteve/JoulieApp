@@ -1,6 +1,7 @@
 package com.example.kyle.joulieapp.Models;
 
 
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Kyle on 2016-10-30.
@@ -16,6 +17,9 @@ public class Rule {
     public String time;
     public String days;
 
+    @SerializedName("uuid")
+    private String ruleId;
+
     public Rule(String id, String ruleName, Device device, int turnOnOff, String time, String days) {
         this.id = id;
         this.ruleName = ruleName;
@@ -28,6 +32,16 @@ public class Rule {
     public Rule(String id){
         this.id = id;
     }
+
+    public String getId() {
+        return this.ruleId;
+    }
+
+    public void setId(String id) {
+        this.ruleId = id;
+    }
+
+
 
 
 }

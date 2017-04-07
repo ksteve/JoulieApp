@@ -4,13 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputFilter;
-import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,9 +19,6 @@ import android.widget.ToggleButton;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.Models.Rule;
-import com.example.kyle.joulieapp.utils.CredentialsManager;
-import com.example.kyle.joulieapp.utils.JoulieAPI;
-import com.example.kyle.joulieapp.utils.VolleyRequestQueue;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,9 +29,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-import static com.example.kyle.joulieapp.R.styleable.CoordinatorLayout;
-
-public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.ResponseListener{
+public class NewRuleActivity extends AppCompatActivity {
 
     private TimePicker timePicker;
     private EditText ruleName;
@@ -93,10 +83,7 @@ public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.Resp
                     }
                 }
                 else {
-                    JoulieAPI.getInstance().registerListener(NewRuleActivity.this);
-                    JoulieAPI.getInstance().restRequest(
-                            VolleyRequestQueue.getInstance(getApplicationContext()).getRequestQueue(),
-                            CredentialsManager.getCredentials(getApplicationContext()).getIdToken());
+
                 }
             }
         });
@@ -121,7 +108,6 @@ public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.Resp
     }
 
 
-    @Override
     public void onResSuccess(JSONObject response) {
         ruleName = (EditText) findViewById(R.id.ruleName_input);
         timePicker = (TimePicker) findViewById(R.id.timePicker);
@@ -208,7 +194,6 @@ public class NewRuleActivity extends AppCompatActivity implements JoulieAPI.Resp
         finish();
     }
 
-    @Override
     public void onResError(String errorMessage) {
         finish();
     }

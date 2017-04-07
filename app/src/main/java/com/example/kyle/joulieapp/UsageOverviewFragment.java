@@ -14,6 +14,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.example.kyle.joulieapp.Models.Usage;
+import com.example.kyle.joulieapp.presenter.UsagePresenter;
 import com.example.kyle.joulieapp.utils.DateAxisValueFormatter;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -35,7 +37,7 @@ import java.util.List;
  * Use the {@link UsageOverviewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UsageOverviewFragment extends Fragment {
+public class UsageOverviewFragment extends Fragment implements UsagePresenter.UsagePresenterListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -51,6 +53,7 @@ public class UsageOverviewFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private UsagePresenter usagePresenter;
     private OnFragmentInteractionListener mListener;
     //private GraphView graph;
     private LineChart mLineChart;
@@ -97,6 +100,10 @@ public class UsageOverviewFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        usagePresenter = new UsagePresenter(this, getActivity());
+        usagePresenter.getUsages();
+
     }
 
     @Override
@@ -364,6 +371,11 @@ public class UsageOverviewFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void UsagesReady(List<Usage> Usages) {
+
     }
 
     /**

@@ -19,6 +19,8 @@ import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.Models.Rule;
 import com.example.kyle.joulieapp.api.ApiClient;
 import com.example.kyle.joulieapp.api.ApiService;
+import com.example.kyle.joulieapp.presenter.DevicePresenter;
+import com.example.kyle.joulieapp.presenter.RulePresenter;
 
 import java.util.List;
 
@@ -34,7 +36,7 @@ import static com.example.kyle.joulieapp.R.id.fabRemove;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class RuleFragment extends Fragment {
+public class RuleFragment extends Fragment implements RulePresenter.RulePresenterListener {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -44,6 +46,7 @@ public class RuleFragment extends Fragment {
     private RecyclerView recyclerView;
     private TextView emptyView;
     private FloatingActionButton fabRemove;
+    private RulePresenter rulePresenter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -69,6 +72,9 @@ public class RuleFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
+        rulePresenter = new RulePresenter(this, getActivity());
+        rulePresenter.getRules();
 
     }
 
@@ -177,6 +183,23 @@ public class RuleFragment extends Fragment {
             emptyView.setVisibility(View.GONE);
         }
         recyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void rulesReady(List<Rule> rules) {
+        MyRuleRecyclerViewAdapter adapter = (MyRuleRecyclerViewAdapter) recyclerView.getAdapter();
+        DummyContent.setMyRules(rules);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void ruleReady(Rule rule) {
+
+    }
+
+    @Override
+    public void ruleRemoved() {
+
     }
 
     /**

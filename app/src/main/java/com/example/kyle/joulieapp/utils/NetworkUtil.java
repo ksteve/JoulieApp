@@ -10,7 +10,12 @@ import android.text.format.Formatter;
 import android.util.Log;
 
 import java.lang.ref.WeakReference;
+import java.math.BigInteger;
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.UnknownHostException;
+import java.nio.ByteOrder;
 
 /**
  * Created by Kyle on 2017-03-17.
@@ -56,6 +61,7 @@ public class NetworkUtil {
     public static WifiManager getWifiStatus(Context context) {
         new NetworkSniffTask(context).execute();
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        wifiManager.getConnectionInfo().getIpAddress();
         return wifiManager;
     }
 
@@ -79,41 +85,68 @@ public class NetworkUtil {
             try {
 
                 if (mContext != null) {
+                    // Fetch local host
 
-                    ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-                    WifiManager wm = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
-
-                   // wm.startScan();
-
-                   // wm.getScanResults();
-
-                    WifiInfo connectionInfo = wm.getConnectionInfo();
-                    int ipAddress = connectionInfo.getIpAddress();
-                    String ipString = Formatter.formatIpAddress(ipAddress);
+                    WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+                   // InetAddress localhost =  wifiManager.getConnectionInfo().getIpAddress();
 
 
-                    Log.d(TAG, "activeNetwork: " + String.valueOf(activeNetwork));
-                    Log.d(TAG, "ipString: " + String.valueOf(ipString));
 
-                    String prefix = ipString.substring(0, ipString.lastIndexOf(".") + 1);
-                    Log.d(TAG, "prefix: " + prefix);
+                    int ip = wifiManager.getConnectionInfo().getIpAddress();
 
-                    for (int i = 0; i < 255; i++) {
-                        String testIp = prefix + String.valueOf(i);
+                    // Convert little-endian to big-endianif needed
+                    if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
+                        ip = Integer.reverseBytes(ip);
+                    }
 
-                        InetAddress address = InetAddress.getByName(testIp);
-                        boolean reachable = address.isReachable(100);
-                        String hostName = address.getHostName();
+                    byte[] ipByteArray = BigInteger.valueOf(ip).toByteArray();
 
-                        if (reachable)
-                            Log.i(TAG, "Host: " + String.valueOf(hostName) + "(" + String.valueOf(testIp) + ") is reachable!");
+                    // IPv4 usage
+                    String ipAddressString;
+                    try {
+                        ipAddressString = InetAddress.getByAddress(ipByteArray).getHostAddress();
+                    } catch (UnknownHostException ex) {
+                        Log.e("WIFIIP", "Unable to get host address.");
+                        ipAddressString = null;
+                    }
+
+                    // looping
+                    for (int i = 1; i <= 254; i++)
+                    {
+                        ipByteArray[3] = (byte)i;
+                        InetAddress address = InetAddress.getByAddress(ipByteArray);
+
+
+                        if (address.isReachable(10))
+                        {
+                            NetworkInterface asdf = NetworkInterface.getByInetAddress(address);
+                            if(asdf != null) {
+                                Log.d(TAG, asdf.getDisplayName());
+                                Log.d(TAG, asdf.getName());
+                                Log.d(TAG, asdf.getHardwareAddress().toString());
+                            }
+                           //System.out.println(address + " - Pinging... Pinging");
+                            Log.d(TAG, address + " - Pinging... Pinging");
+                            Log.d(TAG, address.getHostName());
+                            Log.d(TAG, address.getCanonicalHostName());
+                            Log.d(TAG, address.getHostAddress());
+
+                        }
+                        else if (!address.getHostAddress().equals(address.getHostName()))
+                        {
+                           // System.out.println(address + " - DNS lookup known..");
+                            Log.d(TAG, address + " - DNS lookup known..");
+                        }
+                        else
+                        {
+                           // System.out.println(address + " - the host address and the host name are same");
+                            Log.d(TAG, address + " - the host address and the host name are same");
+                        }
                     }
                 }
             } catch (Throwable t) {
                 Log.e(TAG, "Well that's not good.", t);
             }
-
 
             return null;
         }

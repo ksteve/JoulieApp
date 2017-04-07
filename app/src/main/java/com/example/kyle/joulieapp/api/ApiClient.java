@@ -1,12 +1,12 @@
 package com.example.kyle.joulieapp.api;
 
 import android.content.Context;
+import android.provider.SyncStateContract;
 import android.util.Log;
 
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.utils.CredentialsManager;
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -37,6 +37,7 @@ public class ApiClient {
 
     private static ApiClient instance = null;
     private String apiBaseUrl = Constants.LOCAL_URL;
+    private int connectionType;
     private OkHttpClient mOkHttpClient;
     private Retrofit mRetrofit = null;
     private ApiService mApiService;
@@ -95,7 +96,6 @@ public class ApiClient {
             mRetrofit = new Retrofit.Builder()
                     .baseUrl(apiBaseUrl)
                     //.baseUrl("http://192.168.2.14:3000/")
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(mOkHttpClient)
@@ -106,8 +106,10 @@ public class ApiClient {
     public void changeApiBaseUrl(int network){
         if(network == LOCAL){
             setApiBaseUrl(Constants.LOCAL_URL);
+            setConnectionType(LOCAL);
         } else if(network == CLOUD) {
             setApiBaseUrl(Constants.CLOUD_URL);
+            setConnectionType(CLOUD);
         }
     }
 
@@ -115,37 +117,21 @@ public class ApiClient {
         apiBaseUrl = newApiBaseUrl;
         Log.d(TAG, "Setting Api URL -> " + apiBaseUrl);
 
-
-//        try {
-//           // InetAddress localHost = InetAddress.
-//            //Log.d(TAG, localHost.getHostAddress());
-//
-//        } catch (UnknownHostException e) {
-//            e.printStackTrace();
-//        }
-
-
         mRetrofit = null;
         buildClient();
-
-        if(apiBaseUrl == Constants.LOCAL_URL) {
-            Call call = getApiService().ping();
-            call.enqueue(new Callback() {
-                @Override
-                public void onResponse(Call call, retrofit2.Response response) {
-
-                }
-
-                @Override
-                public void onFailure(Call call, Throwable t) {
-                    setApiBaseUrl(Constants.CLOUD_URL);
-                }
-            });
-        }
-
     }
 
-    private String getApiBaseUrl(){
+    private void setConnectionType(int type){
+        connectionType = type;
+    }
+
+    public int getConnectionType(){
+        return this.connectionType;
+    }
+
+
+
+    public String getApiBaseUrl(){
         return this.apiBaseUrl;
     }
 

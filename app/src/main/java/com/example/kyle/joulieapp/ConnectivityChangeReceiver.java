@@ -25,6 +25,7 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver {
 
         if(status == NetworkUtil.NETWORK_STAUS_WIFI){
             ApiClient.getInstance(context.getApplicationContext()).changeApiBaseUrl(ApiClient.LOCAL);
+
         } else if(status == NetworkUtil.NETWORK_STATUS_MOBILE){
             ApiClient.getInstance(context.getApplicationContext()).changeApiBaseUrl(ApiClient.CLOUD);
         }
