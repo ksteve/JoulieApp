@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="100dp"
         android:background="@color/colorAccent">
 
         <ImageView
@@ -85,11 +85,12 @@
         <TimePicker
             android:id="@+id/timePicker"
             android:layout_width="wrap_content"
-            android:layout_height="100dp"
+            android:layout_height="120dp"
             android:layout_below="@+id/time_label"
             android:layout_alignParentStart="true"
             android:layout_marginStart="12dp"
-            android:timePickerMode="spinner" />
+            android:timePickerMode="spinner"
+            android:layout_above="@+id/tbtnSn" />
 
         <ToggleButton
             android:id="@+id/tbtnSn"
