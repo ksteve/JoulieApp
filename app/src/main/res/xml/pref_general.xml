@@ -27,7 +27,7 @@
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:title="On Peak Cost"/>
+        android:title="On Peak Cost (cents/kWh)"/>
 
     <EditTextPreference
         android:capitalize="none"
@@ -36,7 +36,7 @@
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:title="Off Peak Cost"/>
+        android:title="Off Peak Cost (cents/kWh)"/>
 
 
     <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
