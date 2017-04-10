@@ -7,6 +7,7 @@ import android.util.Log;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.utils.CredentialsManager;
+import com.example.kyle.joulieapp.utils.NetworkUtil;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -36,8 +37,9 @@ public class ApiClient {
 
 
     private static ApiClient instance = null;
-    private String apiBaseUrl = Constants.LOCAL_URL;
-    private int connectionType;
+    private String apiBaseUrl = Constants.CLOUD_URL;
+    private String localUrl;
+    private int connectionType = CLOUD;
     private OkHttpClient mOkHttpClient;
     private Retrofit mRetrofit = null;
     private ApiService mApiService;
@@ -105,7 +107,7 @@ public class ApiClient {
 
     public void changeApiBaseUrl(int network){
         if(network == LOCAL){
-            setApiBaseUrl(Constants.LOCAL_URL);
+            setApiBaseUrl(localUrl);
             setConnectionType(LOCAL);
         } else if(network == CLOUD) {
             setApiBaseUrl(Constants.CLOUD_URL);
@@ -121,6 +123,11 @@ public class ApiClient {
         buildClient();
     }
 
+    public void setLocalUrl(String ip, String port) {
+        String localUrl = "http://" + ip + ":" + port;
+        this.localUrl = localUrl;
+    }
+
     private void setConnectionType(int type){
         connectionType = type;
     }
@@ -128,8 +135,6 @@ public class ApiClient {
     public int getConnectionType(){
         return this.connectionType;
     }
-
-
 
     public String getApiBaseUrl(){
         return this.apiBaseUrl;

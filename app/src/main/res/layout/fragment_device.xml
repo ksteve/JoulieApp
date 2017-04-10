@@ -39,7 +39,7 @@
             android:layout_below="@+id/device_type"
             android:layout_gravity="center_vertical"
             android:text="name"
-            android:textAppearance="?attr/textAppearanceListItem"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textSize="18sp"/>
 
         <TextView
@@ -51,7 +51,7 @@
             android:layout_marginStart="12dp"
             android:layout_toEndOf="@+id/deviceImage"
             android:text="type"
-            android:textAppearance="?attr/textAppearanceListItem"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textSize="18sp"/>
 
         <TextView

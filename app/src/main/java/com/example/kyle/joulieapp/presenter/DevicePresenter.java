@@ -23,8 +23,10 @@ public class DevicePresenter {
     private final DevicePresenterListener mListener;
     private final ApiService apiService;
 
+    private boolean mFirstLoad = true;
+
     public interface DevicePresenterListener{
-        void devicesReady(List<Device> devices);
+        void showDevices(List<Device> devices);
         void deviceRemoved();
     }
 
@@ -41,6 +43,14 @@ public class DevicePresenter {
     public void unsubscribe(){
      //   RxBus.get().unregister(this);
     }
+
+    public void loadDevices(boolean forceUpdate) {
+        // Simplification for sample: a network reload will be forced on first load.
+        getDevices(forceUpdate || mFirstLoad, true);
+        mFirstLoad = false;
+    }
+
+
 
 
     public void removeDevice(Device device){
@@ -60,13 +70,22 @@ public class DevicePresenter {
 
     }
 
-    public void getDevices(){
+    public void getDevices(boolean forceUpdate, final boolean showLoadingUI){
+
+        if (showLoadingUI) {
+       //     mTasksView.setLoadingIndicator(true);
+        }
+        if (forceUpdate) {
+          //  mTasksRepository.refreshTasks();
+        }
+
+
         apiService
                 .getDevices()
                 .enqueue(new Callback<List<Device>>() {
                     @Override
                     public void onResponse(Call<List<Device>> call, Response<List<Device>> response) {
-                        mListener.devicesReady(response.body());
+                        processDevices(response.body());
                     }
 
                     @Override
@@ -75,4 +94,18 @@ public class DevicePresenter {
                     }
                 });
     }
+
+
+    private void processDevices(List<Device> devices) {
+        if (devices.isEmpty()) {
+            // Show a message indicating there are no tasks for that filter type.
+           // processEmptyTasks();
+        } else {
+            // Show the list of tasks
+            mListener.showDevices(devices);
+            // Set the filter label's text.
+            //showFilterLabel();
+        }
+    }
+
 }

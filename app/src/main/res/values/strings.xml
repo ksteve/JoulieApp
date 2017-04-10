@@ -23,6 +23,11 @@
         <item>heavy</item>
     </string-array>
 
+    <string-array name="usage_display">
+        <item>Total</item>
+        <item>Each Device</item>
+    </string-array>
+
     <string-array name="device_types">
         <item>Wemo Insight Switch</item>
         <item>TP-Link Smart Plug</item>

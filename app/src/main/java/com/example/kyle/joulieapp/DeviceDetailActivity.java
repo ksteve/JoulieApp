@@ -22,6 +22,7 @@ import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.utils.DateAxisValueFormatter;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -216,17 +217,29 @@ public class DeviceDetailActivity extends AppCompatActivity {
     }
 
     private void setupChart(){
+
+        mLineChart.setNoDataText("No Usage Data Available");
+        mLineChart.setDrawGridBackground(false);
+        mLineChart.setDrawBorders(false);
+        mLineChart.getLegend().setEnabled(false);
+        mLineChart.setDragEnabled(false);
+        mLineChart.setScaleEnabled(false);
+        mLineChart.setPinchZoom(false);
+        mLineChart.setContentDescription("");
+        Description ds = new Description();
+        ds.setEnabled(false);
+        mLineChart.setDescription(ds);
+        mLineChart.setDoubleTapToZoomEnabled(false);
+
+        //setup y axis
         mLineChart.getAxis(YAxis.AxisDependency.LEFT).setEnabled(false);
         mLineChart.getAxisRight().disableGridDashedLine();
 
+        //setup x axis
         mLineChart.getXAxis().setDrawGridLines(false);
         mLineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         setChartFormatter(tabLayout.getSelectedTabPosition());
 
-        mLineChart.setDrawGridBackground(false);
-
-        mLineChart.getLegend().setDrawInside(true);
-        mLineChart.getLegend().setYOffset(150);
 
         //populate some fake hardcoded data to test
         List<Entry> entriesKilowatt = new ArrayList<Entry>();
@@ -247,13 +260,18 @@ public class DeviceDetailActivity extends AppCompatActivity {
             entriesDollars.add(new Entry(entriesKilowatt.get(i).getX(), entriesKilowatt.get(i).getY() * fCost));
         }
 
-
         dataSetKilowatt = new LineDataSet(entriesKilowatt, "Device1"); // add entries to dataset
-        dataSetKilowatt.setColors(new int[] { R.color.red1}, DeviceDetailActivity.this);
+        dataSetKilowatt.setColors(new int[] { R.color.colorPrimaryLighter}, DeviceDetailActivity.this);
         dataSetKilowatt.setLineWidth(4);
+        dataSetKilowatt.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        //dataSetKilowatt.setFillAlpha(255);
+        dataSetKilowatt.setDrawFilled(true);
+       // dataSetKilowatt.setFillDrawable();
+       // dataSetKilowatt.setFillColor(R.color.transparent);
+        dataSetKilowatt.setHighLightColor(R.color.white);
 
         dataSetDollars = new LineDataSet(entriesDollars, "Device1"); // add entries to dataset
-        dataSetDollars.setColors(new int[] { R.color.red1}, DeviceDetailActivity.this);
+        dataSetDollars.setColors(new int[] { R.color.colorPrimaryLighter}, DeviceDetailActivity.this);
         dataSetDollars.setLineWidth(4);
         //for one line on chart then just use these next 3 lines
         //LineData lineData = new LineData(dataSet);

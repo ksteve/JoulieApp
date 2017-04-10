@@ -88,6 +88,8 @@ public class MainActivity extends AppCompatActivity
         //setup token for firebase cloud messaging
        // String token = FirebaseInstanceId.getInstance().getToken();
         mainPresenter = new MainPresenter(this, this);
+        mainPresenter.onStart();
+        registerNetworkChanges();
 
         coordinator = findViewById(R.id.coordinator);
         //setup toolbar
@@ -146,9 +148,6 @@ public class MainActivity extends AppCompatActivity
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(vpPager);
         setupTabIcons();
-
-        registerNetworkChanges();
-
     }
 
     //Method Name: setupViewPager
@@ -180,57 +179,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void registerNetworkChanges(){
-
-        BroadcastReceiver asdf = new BroadcastReceiver() {
+        // TODO: 2017-04-08 maybe move this to presenter
+        BroadcastReceiver connectivityChangedReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                ApiService apiService;
-                // TODO: This method is called when the BroadcastReceiver is receiving
-                // an Intent broadcast.
                 int status = NetworkUtil.getConnectivityStatusString(context);
-
-                if(status == NetworkUtil.NETWORK_STAUS_WIFI){
-                    ApiClient.getInstance(context.getApplicationContext()).changeApiBaseUrl(ApiClient.LOCAL);
-                    mainPresenter.testConnection();
-
-                } else if(status == NetworkUtil.NETWORK_STATUS_MOBILE){
-                    ApiClient.getInstance(context.getApplicationContext()).changeApiBaseUrl(ApiClient.CLOUD);
-                    mainPresenter.testConnection();
-                }
-
-               // WifiManager wifiManager = NetworkUtil.getWifiStatus(context);
-                //Log.v(tag, "wifi: " + wifiManager.getConnectionInfo());
-//        Log.v(tag, wifiManager.getConnectionInfo().getBSSID());
-//        Log.v(tag, wifiManager.getConnectionInfo().getSSID());
-//        Log.v(tag, String.valueOf(wifiManager.getConnectionInfo().getIpAddress()));
-//        Log.v(tag, String.valueOf(wifiManager.getConnectionInfo().getNetworkId()));
-//        for(WifiConfiguration w: wifiManager.getConfiguredNetworks()){
-//            Log.v(tag, w.SSID);
-//        }
-
-//                Log.v(tag, "action: " + intent.getAction());
-//                Log.v(tag, "component: " + intent.getComponent());
-//                Bundle extras = intent.getExtras();
-//                if(extras != null){
-//                    for (String key: extras.keySet()) {
-//                        Log.v(tag, "key [" + key + "]: " +
-//                                extras.get(key));
-//                    }
-//                }
-//                else {
-//                    Log.v(tag, "no extras");
-//                }
+                //mainPresenter.testConnection(status);
             }
         };
 
-
         //setup the main activity to be notified when network changes occur
         MainActivity.this.registerReceiver(
-                asdf,
+                connectivityChangedReceiver,
                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-
-
-
     }
 
     //Method Name: toggleFab
@@ -370,15 +331,15 @@ public class MainActivity extends AppCompatActivity
     //Parameters: void
     //Return: void
     //Description: notifies fragment
-    public void notifyFragment(){
+    public void notifyFragments(){
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         for (Fragment x: fragments) {
-            if (x instanceof UsageFragment){
-                ((UsageFragment) x).notifyAdapter();
+            if (x instanceof UsageOverviewFragment){
+                //((UsageOverviewFragment) x).notifyAdapter();
             } else if (x instanceof RuleFragment) {
                 ((RuleFragment) x).notifyAdapter();
             } else if (x instanceof DeviceFragment){
-                ((DeviceFragment) x).notifyAdapter();
+                ((DeviceFragment) x).refreshList();
             }
         }
     }
@@ -404,9 +365,16 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         if(DummyContent.notify){
-            notifyFragment();
+            notifyFragments();
             DummyContent.notify = false;
         }
+     //   mainPresenter.onStart();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mainPresenter.onPause();
     }
 
     @Override
@@ -486,6 +454,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onConnectionChanged(String connectionText) {
         connection.setText(connectionText);
+    }
+
+    @Override
+    public void refreshLists() {
+        notifyFragments();
     }
 
     public static class MyPagerAdapter extends FragmentPagerAdapter {

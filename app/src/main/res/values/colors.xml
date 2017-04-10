@@ -9,6 +9,7 @@
     <color name="text_border_default">#303232</color>
 
     <color name="colorPrimaryLighter">#4fc3f7</color>
+    <color name="transparent">#00ffffff</color>
 
     <color name="toolbar_background">#404142</color>
     <color name="success">#37A51C</color>

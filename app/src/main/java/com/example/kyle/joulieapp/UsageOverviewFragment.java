@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.kyle.joulieapp.Models.Usage;
@@ -60,6 +61,7 @@ public class UsageOverviewFragment extends Fragment implements UsagePresenter.Us
     private TabLayout tabLayout;
 
     private TextView totalUsageView;
+    private Spinner spChartDisplay;
     private RadioGroup rgChartDisplay;
     private RadioButton rbKilowatt;
     private RadioButton rbDollars;
@@ -115,14 +117,18 @@ public class UsageOverviewFragment extends Fragment implements UsagePresenter.Us
         rbKilowatt = (RadioButton) view.findViewById(R.id.rbKilowatt);
         rbDollars = (RadioButton) view.findViewById(R.id.rbDollars);
         rgChartDisplay = (RadioGroup) view.findViewById(R.id.rgChartDisplayType);
+        rbKilowatt = (RadioButton) view.findViewById(R.id.rbKilowatt);
+        rbDollars = (RadioButton) view.findViewById(R.id.rbDollars);
         rgChartDisplay.check(rbKilowatt.getId());
+
+
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         //setup Tab layout
         tabLayout = (TabLayout) view.findViewById(R.id.graph_tabs);
         mLineChart = (LineChart) view.findViewById(R.id.chart);
         setupTabIcons();
-        setupChart(view);
+        setupChart();
         return  view;
     }
 
@@ -150,7 +156,7 @@ public class UsageOverviewFragment extends Fragment implements UsagePresenter.Us
         });
     }
 
-    private void setupChart(View view){
+    private void setupChart(){
         mLineChart.getAxis(YAxis.AxisDependency.LEFT).setEnabled(false);
         mLineChart.getAxisRight().disableGridDashedLine();
 
@@ -234,9 +240,7 @@ public class UsageOverviewFragment extends Fragment implements UsagePresenter.Us
         mLineChart.animateXY(1200, 1200);
         mLineChart.invalidate(); // refresh
 
-        rbKilowatt = (RadioButton) view.findViewById(R.id.rbKilowatt);
-        rbDollars = (RadioButton) view.findViewById(R.id.rbDollars);
-        rgChartDisplay = (RadioGroup) view.findViewById(R.id.rgChartDisplayType);
+
 
         rgChartDisplay.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {

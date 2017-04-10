@@ -131,24 +131,43 @@
 
     </LinearLayout>
 
+    <android.support.design.widget.TabLayout
+        android:id="@+id/graph_tabs"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:background="#d7d7d7"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"/>
+
     <android.support.v7.widget.CardView
         android:id="@+id/chart_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="2dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="2dp"
         app:cardElevation="1dp"
         app:layout_constraintBottom_toTopOf="@+id/graph_tabs"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.0">
 
         <RelativeLayout
+            android:id="@+id/chart_relative_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="2dp">
+            android:layout_gravity="top"
+            android:gravity="fill"
+            android:padding="1dp">
 
             <RadioGroup
                 android:id="@+id/rgChartDisplayType"
@@ -173,29 +192,26 @@
                     android:text="$"/>
             </RadioGroup>
 
+            <Spinner
+                android:id="@+id/spChartDisplay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/chart"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:entries="@array/usage_display"
+                android:spinnerMode="dialog"/>
+
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/rgChartDisplayType"/>
+                android:layout_below="@+id/rgChartDisplayType"
+                />
 
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/graph_tabs"
-        android:layout_width="0dp"
-        android:layout_height="32dp"
-        android:background="#d7d7d7"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        app:tabGravity="fill"
-        app:tabMode="fixed"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"/>
 
 </android.support.constraint.ConstraintLayout>
 
