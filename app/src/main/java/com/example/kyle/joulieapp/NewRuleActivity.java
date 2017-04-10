@@ -19,6 +19,8 @@ import android.widget.ToggleButton;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.Models.Rule;
+import com.example.kyle.joulieapp.presenter.NewDevicePresenter;
+import com.example.kyle.joulieapp.presenter.NewRulePresenter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +31,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-public class NewRuleActivity extends AppCompatActivity {
+public class NewRuleActivity extends AppCompatActivity implements NewRulePresenter.NewRulePresenterListener{
 
     private TimePicker timePicker;
     private EditText ruleName;
@@ -43,6 +45,7 @@ public class NewRuleActivity extends AppCompatActivity {
     private ToggleButton tbtnTh;
     private ToggleButton tbtnF;
     private ToggleButton tbtnSt;
+    private NewRulePresenter newRulePresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class NewRuleActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setTitle("Create New Rule");
         ab.setDisplayHomeAsUpEnabled(true);
+        newRulePresenter = new NewRulePresenter(this, this);
 
         ruleName = (EditText) findViewById(R.id.ruleName_input);
         timePicker = (TimePicker) findViewById(R.id.timePicker);
@@ -83,7 +87,61 @@ public class NewRuleActivity extends AppCompatActivity {
                     }
                 }
                 else {
+                    ruleName = (EditText) findViewById(R.id.ruleName_input);
+                    timePicker = (TimePicker) findViewById(R.id.timePicker);
+                    turnOnOff = (ToggleButton) findViewById(R.id.toggleButton);
+                    int nOnOff = 0;
+                    Device dev = null;
+                    String time = timePicker.getCurrentHour().toString() + ":" + timePicker.getCurrentMinute().toString();
+                    String days = "";
+                    tbtnSn = (ToggleButton) findViewById(R.id.tbtnSn);
+                    tbtnM = (ToggleButton) findViewById(R.id.tbtnM);
+                    tbtnT = (ToggleButton) findViewById(R.id.tbtnT);
+                    tbtnW = (ToggleButton) findViewById(R.id.tbtnW);
+                    tbtnTh = (ToggleButton) findViewById(R.id.tbtnTh);
+                    tbtnF = (ToggleButton) findViewById(R.id.tbtnF);
+                    tbtnSt = (ToggleButton) findViewById(R.id.tbtnSt);
 
+                    for (int i = 0; i < DummyContent.MY_DEVICES.size(); i++){
+                        if (deviceDropdown.getSelectedItem().toString() == DummyContent.MY_DEVICES.get(i).getDeviceName()){
+                            dev = DummyContent.MY_DEVICES.get(i);
+                        }
+                    }
+
+
+                    if (turnOnOff.isChecked()){
+                        nOnOff = 1;
+                    }
+
+                    if (tbtnSn.isChecked()){
+                        days += "Sn ";
+                    }
+
+                    if (tbtnM.isChecked()){
+                        days += "M ";
+                    }
+
+                    if (tbtnT.isChecked()){
+                        days += "T ";
+                    }
+
+                    if (tbtnW.isChecked()){
+                        days += "W ";
+                    }
+
+                    if (tbtnTh.isChecked()){
+                        days += "Th ";
+                    }
+
+                    if (tbtnF.isChecked()){
+                        days += "F ";
+                    }
+
+                    if (tbtnSt.isChecked()){
+                        days += "St ";
+                    }
+                    days = days.trim();
+                    newRulePresenter.createRule(UUID.randomUUID().toString(), ruleName.getText().toString(), dev, nOnOff, time, days);
                 }
             }
         });
@@ -198,4 +256,14 @@ public class NewRuleActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void ruleReady(Rule rule) {
+        finish();
+    }
+
+    @Override
+    public void onError(String message) {
+        //TODO: display error
+        finish();
+    }
 }
