@@ -57,7 +57,9 @@ public class NewDevicePresenter {
                 .enqueue(new Callback<Device>() {
                     @Override
                     public void onResponse(Call<Device> call, Response<Device> response) {
-                        DummyContent.MY_DEVICES.add(response.body());
+                        if (response.body() != null){
+                            DummyContent.MY_DEVICES.add(response.body());
+                        }
                         mListener.deviceReady(response.body());
                     }
 
