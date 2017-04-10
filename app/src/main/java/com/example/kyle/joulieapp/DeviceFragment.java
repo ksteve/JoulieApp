@@ -69,8 +69,7 @@ public class DeviceFragment extends Fragment implements DevicePresenter.DevicePr
         }
 
         devicePresenter = new DevicePresenter(this, getActivity());
-        devicePresenter.subscribe();
-        devicePresenter.getDevices();
+
 
     }
 
@@ -137,6 +136,7 @@ public class DeviceFragment extends Fragment implements DevicePresenter.DevicePr
     @Override
     public void onResume() {
         super.onResume();
+        devicePresenter.loadDevices(false);
     }
 
     @Override
@@ -192,6 +192,10 @@ public class DeviceFragment extends Fragment implements DevicePresenter.DevicePr
         });
     }
 
+    public void refreshList(){
+        devicePresenter.loadDevices(true);
+    }
+
     public void notifyAdapter(){
         recyclerView.getAdapter().notifyDataSetChanged();
 
@@ -206,13 +210,12 @@ public class DeviceFragment extends Fragment implements DevicePresenter.DevicePr
     }
 
     @Override
-    public void devicesReady(List<Device> devices) {
-        MyDeviceRecyclerViewAdapter adapter = (MyDeviceRecyclerViewAdapter) recyclerView.getAdapter();
+    public void showDevices(List<Device> devices) {
         DummyContent.setMyDevices(devices);
+        MyDeviceRecyclerViewAdapter adapter = (MyDeviceRecyclerViewAdapter) recyclerView.getAdapter();
         adapter.setmValues(devices);
         notifyAdapter();
     }
-
 
     @Override
     public void deviceRemoved() {
