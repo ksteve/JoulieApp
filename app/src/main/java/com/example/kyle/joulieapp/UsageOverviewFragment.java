@@ -185,7 +185,12 @@ public class UsageOverviewFragment extends Fragment implements UsagePresenter.Us
 
         String sCost = "0";
         sCost = prefs.getString("peak_cost", "0");
+        if(sCost.isEmpty()) {
+            sCost = "0";
+        }
+
         fCost = Float.parseFloat(sCost) / 100;
+
         List<Entry> entriesDollars1 = new ArrayList<>();
 
         for (int i = 0; i < entriesKilowatt1.size(); i++){

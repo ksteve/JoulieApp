@@ -88,8 +88,8 @@ public class MainActivity extends AppCompatActivity
         //setup token for firebase cloud messaging
        // String token = FirebaseInstanceId.getInstance().getToken();
         mainPresenter = new MainPresenter(this, this);
-        mainPresenter.onStart();
-        registerNetworkChanges();
+       // mainPresenter.onStart();
+       // registerNetworkChanges();
 
         coordinator = findViewById(R.id.coordinator);
         //setup toolbar
@@ -374,7 +374,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-        mainPresenter.onPause();
+        //mainPresenter.onPause();
     }
 
     @Override
