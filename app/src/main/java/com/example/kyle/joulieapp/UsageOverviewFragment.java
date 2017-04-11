@@ -128,7 +128,7 @@ public class UsageOverviewFragment extends Fragment implements UsagePresenter.Us
         tabLayout = (TabLayout) view.findViewById(R.id.graph_tabs);
         mLineChart = (LineChart) view.findViewById(R.id.chart);
         setupTabIcons();
-        setupChart();
+        //setupChart();
         return  view;
     }
 
@@ -245,6 +245,12 @@ public class UsageOverviewFragment extends Fragment implements UsagePresenter.Us
         mLineChart.animateXY(1200, 1200);
         mLineChart.invalidate(); // refresh
 
+        if (rbDollars.isChecked()){
+            setChartData(true);
+        }
+        else {
+            setChartData(false);
+        }
 
 
         rgChartDisplay.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
@@ -404,5 +410,11 @@ public class UsageOverviewFragment extends Fragment implements UsagePresenter.Us
 
     public void updateUsageData(){
        // new getUsageData().execute();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupChart();
     }
 }
