@@ -69,9 +69,41 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key) {
         Preference pref = findPreference(key);
+
         if (pref instanceof EditTextPreference) {
             EditTextPreference etp = (EditTextPreference) pref;
-            pref.setSummary(etp.getText());
+            if (key.contains("time")){
+
+                if (etp.getText().length() == 1){
+                    etp.setText("0" + etp.getText());
+                }
+
+                if (etp.getText().endsWith(":")){
+                    etp.setText(etp.getText() + "00");
+                }
+
+                if (etp.getText().contains(":")){
+                    String beforeColon = etp.getText().substring(0, etp.getText().indexOf(':'));
+                    String afterColon = etp.getText().substring(etp.getText().indexOf(':') + 1);
+                    if (beforeColon.length() < 2){
+                        etp.setText("0" + etp.getText());
+                    }
+                    if (afterColon.length() < 2){
+                        etp.setText(etp.getText() + "0");
+                    }
+                    if (afterColon.length() > 2){
+                        etp.setText(etp.getText().substring(0, etp.getText().length() - 2));
+                    }
+                }
+                else{
+                    etp.setText(etp.getText() + ":00");
+                }
+
+                pref.setSummary(etp.getText());
+            }
+            else{
+                pref.setSummary(etp.getText());
+            }
         }
     }
 
@@ -105,7 +137,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
                 if (result.length() > 0) {
                     c = result.charAt(0);
-                    allowEdit &= (c >= '0' && c <= '2' && !(Character.isLetter(c)));
+                    allowEdit &= (c >= '0' && c <= '9' && !(Character.isLetter(c)));
                 }
                 if (result.length() > 1) {
                     //modified borrowed code here to fix bug that allowed
@@ -114,23 +146,48 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
                     c = result.charAt(1);
                     ch = result.charAt(0);
                     if (ch == '2'){
-                        allowEdit &= (c >= '0' && c <= '3' && !(Character.isLetter(c)));
+                        allowEdit &= ((c >= '0' && c <= '3' && !(Character.isLetter(c))) || c == ':');
+                    }
+                    else if (ch > '2'){
+                        allowEdit &= (!(Character.isDigit(c)) && !(Character.isLetter(c)));
                     }
                     else{
-                        allowEdit &= (c >= '0' && c <= '9' && !(Character.isLetter(c)));
+                        allowEdit &= ((c >= '0' && c <= '9' && !(Character.isLetter(c))) || c == ':');
                     }
                 }
                 if (result.length() > 2) {
+                    char ch;
+                    ch = result.charAt(1);
                     c = result.charAt(2);
-                    allowEdit &= (c == ':'&&!(Character.isLetter(c)));
+                    if (ch == ':'){
+                        allowEdit &= (c >= '0' && c <= '5' && !(Character.isLetter(c)));
+                    }
+                    else{
+                        allowEdit &= (c == ':'&&!(Character.isLetter(c)));
+                    }
+
                 }
                 if (result.length() > 3) {
+                    char ch;
+                    ch = result.charAt(1);
                     c = result.charAt(3);
-                    allowEdit &= (c >= '0' && c <= '5' && !(Character.isLetter(c)));
+                    if (ch == ':'){
+                        allowEdit &= (c >= '0' && c <= '9'&& !(Character.isLetter(c)));
+                    }
+                    else{
+                        allowEdit &= (c >= '0' && c <= '5' && !(Character.isLetter(c)));
+                    }
                 }
                 if (result.length() > 4) {
+                    char ch;
+                    ch = result.charAt(1);
                     c = result.charAt(4);
-                    allowEdit &= (c >= '0' && c <= '9'&& !(Character.isLetter(c)));
+                    if (ch == ':'){
+                        allowEdit &= (!(Character.isDigit(c)) && !(Character.isLetter(c)));
+                    }
+                    else{
+                        allowEdit &= (c >= '0' && c <= '9'&& !(Character.isLetter(c)));
+                    }
                 }
                 return allowEdit ? null : "";
             }
