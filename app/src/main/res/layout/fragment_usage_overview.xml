@@ -192,15 +192,15 @@
                     android:text="$"/>
             </RadioGroup>
 
-            <Spinner
-                android:id="@+id/spChartDisplay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/chart"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
-                android:entries="@array/usage_display"
-                android:spinnerMode="dialog"/>
+            <!--<Spinner-->
+                <!--android:id="@+id/spChartDisplay"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_above="@+id/chart"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:layout_alignParentTop="true"-->
+                <!--android:entries="@array/usage_display"-->
+                <!--android:spinnerMode="dialog"/>-->
 
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/chart"
