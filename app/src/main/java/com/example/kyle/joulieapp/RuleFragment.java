@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
@@ -109,11 +110,16 @@ public class RuleFragment extends Fragment implements RulePresenter.RulePresente
         fabRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (Rule rule: ((MyRuleRecyclerViewAdapter) recyclerView.getAdapter()).selectedRules){
-                    DummyContent.MY_RULES.remove(rule);
+                if (((MyRuleRecyclerViewAdapter) recyclerView.getAdapter()).selectedRules.size() == 0){
+                    Toast.makeText(getActivity(), "Error: no rule(s) selected to remove", Toast.LENGTH_SHORT).show();
                 }
-                ((MyRuleRecyclerViewAdapter) recyclerView.getAdapter()).selectedRules.clear();
-                recyclerView.getAdapter().notifyDataSetChanged();
+                else{
+                    for (Rule rule: ((MyRuleRecyclerViewAdapter) recyclerView.getAdapter()).selectedRules){
+                        DummyContent.MY_RULES.remove(rule);
+                    }
+                    ((MyRuleRecyclerViewAdapter) recyclerView.getAdapter()).selectedRules.clear();
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                }
             }
         });
 
