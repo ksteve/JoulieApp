@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.Models.Device;
@@ -25,6 +26,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * A fragment representing a list of Items.
@@ -104,29 +107,33 @@ public class DeviceFragment extends Fragment implements DevicePresenter.DevicePr
         fabRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (final Device device: ((MyDeviceRecyclerViewAdapter) recyclerView.getAdapter()).selectedDevices){
-                    ApiService apiService = ApiClient
-                            .getInstance(getActivity().getApplicationContext())
-                            .getApiService();
-
-                    Call<String> call = apiService.deleteDevice(device.getDeviceName());
-                    call.enqueue(new Callback<String>() {
-                        @Override
-                        public void onResponse(Call<String> call, Response<String> response) {
-                            DummyContent.MY_DEVICES.remove(device);
-                            ((MyDeviceRecyclerViewAdapter) recyclerView.getAdapter()).selectedDevices.remove(device);
-                            recyclerView.getAdapter().notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onFailure(Call<String> call, Throwable t) {
-                            //TODO: show error msg in toast
-                        }
-                    });
-                   // ((MyDeviceRecyclerViewAdapter) recyclerView.getAdapter()).selectedDevices.clear();
-
+                if (((MyDeviceRecyclerViewAdapter) recyclerView.getAdapter()).selectedDevices.size() == 0){
+                    Toast.makeText(getActivity(), "Error: no device(s) selected to remove", Toast.LENGTH_SHORT).show();
                 }
+                else{
+                    for (final Device device: ((MyDeviceRecyclerViewAdapter) recyclerView.getAdapter()).selectedDevices){
+                        ApiService apiService = ApiClient
+                                .getInstance(getActivity().getApplicationContext())
+                                .getApiService();
 
+                        Call<String> call = apiService.deleteDevice(device.getDeviceName());
+                        call.enqueue(new Callback<String>() {
+                            @Override
+                            public void onResponse(Call<String> call, Response<String> response) {
+                                DummyContent.MY_DEVICES.remove(device);
+                                ((MyDeviceRecyclerViewAdapter) recyclerView.getAdapter()).selectedDevices.remove(device);
+                                recyclerView.getAdapter().notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onFailure(Call<String> call, Throwable t) {
+                                //TODO: show error msg in toast
+                            }
+                        });
+                        // ((MyDeviceRecyclerViewAdapter) recyclerView.getAdapter()).selectedDevices.clear();
+
+                    }
+                }
             }
         });
 

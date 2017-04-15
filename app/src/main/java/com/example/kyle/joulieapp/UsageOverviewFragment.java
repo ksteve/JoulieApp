@@ -73,6 +73,8 @@ public class UsageOverviewFragment extends Fragment implements UsagePresenter.Us
     private LineDataSet dataSetDollars1;
     private LineDataSet dataSetKilowatt2;
     private LineDataSet dataSetDollars2;
+    private LineDataSet dataSetKilowatt3;
+    private LineDataSet dataSetDollars3;
     private SharedPreferences prefs;
 
     public UsageOverviewFragment() {
@@ -246,10 +248,35 @@ public class UsageOverviewFragment extends Fragment implements UsagePresenter.Us
         dataSetDollars2.setColors(new int[] { R.color.blue1}, getActivity().getApplicationContext());
         dataSetDollars2.setLineWidth(4);
 
+        //add total line as third line
+        List<Entry> entriesKilowatt3 = new ArrayList<Entry>();
+
+        entriesKilowatt3.add(new Entry(1490349600f, entriesKilowatt1.get(0).getY() + entriesKilowatt2.get(0).getY()));
+        entriesKilowatt3.add(new Entry(1490353200f, entriesKilowatt1.get(1).getY() + entriesKilowatt2.get(1).getY()));
+        entriesKilowatt3.add(new Entry(1490356800f, entriesKilowatt1.get(2).getY() + entriesKilowatt2.get(2).getY()));
+        entriesKilowatt3.add(new Entry(1490360400f, entriesKilowatt1.get(3).getY() + entriesKilowatt2.get(3).getY()));
+        entriesKilowatt3.add(new Entry(1490364000f, entriesKilowatt1.get(4).getY() + entriesKilowatt2.get(4).getY()));
+        entriesKilowatt3.add(new Entry(1490367600f, entriesKilowatt1.get(5).getY() + entriesKilowatt2.get(5).getY()));
+
+        List<Entry> entriesDollars3 = new ArrayList<>();
+
+        for (int i = 0; i < entriesKilowatt3.size(); i++){
+            entriesDollars3.add(new Entry(entriesKilowatt3.get(i).getX(), entriesKilowatt3.get(i).getY() * fCost));
+        }
+
+        dataSetKilowatt3 = new LineDataSet(entriesKilowatt3, "Total"); // add entries to dataset
+        dataSetKilowatt3.setColors(new int[] { R.color.colorAccent}, getActivity().getApplicationContext());
+        dataSetKilowatt3.setLineWidth(4);
+
+        dataSetDollars3 = new LineDataSet(entriesDollars3, "Total"); // add entries to dataset
+        dataSetDollars3.setColors(new int[] { R.color.colorAccent}, getActivity().getApplicationContext());
+        dataSetDollars3.setLineWidth(4);
+
         // use the interface ILineDataSet
         dataSets = new ArrayList<ILineDataSet>();
         dataSets.add(dataSetKilowatt1);
         dataSets.add(dataSetKilowatt2);
+        dataSets.add(dataSetKilowatt3);
 
         LineData data = new LineData(dataSets);
         mLineChart.setData(data);
@@ -286,10 +313,12 @@ public class UsageOverviewFragment extends Fragment implements UsagePresenter.Us
         if (dollars){
             dataSets.add(dataSetDollars1);
             dataSets.add(dataSetDollars2);
+            dataSets.add(dataSetDollars3);
         }
         else{
             dataSets.add(dataSetKilowatt1);
             dataSets.add(dataSetKilowatt2);
+            dataSets.add(dataSetKilowatt3);
         }
 
         mLineChart.clear();
