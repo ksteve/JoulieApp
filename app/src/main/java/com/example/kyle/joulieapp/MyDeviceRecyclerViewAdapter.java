@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -75,6 +76,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
         holder.mDeviceName.setText(mValues.get(position).getDeviceName());
 
         holder.mSwitch.setChecked(mValues.get(position).getPowerState());
+        holder.mColor.setBackgroundColor(holder.mItem.getColor());
 
         holder.mView.setClickable(true);
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -148,6 +150,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
         public final ImageView mIsShared;
         public final TextView mDeviceName;
         public final TextView mDeviceType;
+        public final CardView mColor;
         public final Switch mSwitch;
         //public final ImageButton mRemoveStream;
         public Device mItem;
@@ -169,6 +172,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
             mDeviceType = (TextView) view.findViewById(R.id.device_type);
             mSwitch = (Switch) view.findViewById(R.id.power_switch);
             checkBox = (CheckBox) view.findViewById(R.id.checkBox);
+            mColor = (CardView) view.findViewById(R.id.v_color);
             //mRemoveStream = (ImageButton) view.findViewById(R.id.remove_btn);
             //mRemoveStream.setOnClickListener(this);
 

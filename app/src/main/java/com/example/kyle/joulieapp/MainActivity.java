@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity
         //setup token for firebase cloud messaging
        // String token = FirebaseInstanceId.getInstance().getToken();
         mainPresenter = new MainPresenter(this, this);
-       // mainPresenter.onStart();
+     //   mainPresenter.testConnection();
        // registerNetworkChanges();
 
         coordinator = findViewById(R.id.coordinator);
@@ -148,6 +149,8 @@ public class MainActivity extends AppCompatActivity
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(vpPager);
         setupTabIcons();
+        mainPresenter.onStart();
+        registerNetworkChanges();
     }
 
     //Method Name: setupViewPager
@@ -183,8 +186,8 @@ public class MainActivity extends AppCompatActivity
         BroadcastReceiver connectivityChangedReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                int status = NetworkUtil.getConnectivityStatusString(context);
-                //mainPresenter.testConnection(status);
+               // int status = NetworkUtil.getConnectivityStatusString(context);
+           //     mainPresenter.checkConnection();
             }
         };
 
@@ -452,8 +455,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onConnectionChanged(String connectionText) {
-        connection.setText(connectionText);
+    public void onConnectionChanged(final int connectionType) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(connectionType == ApiClient.CLOUD) {
+                    connection.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLighter));
+                    connection.setText("Cloud");                }
+                else if(connectionType == ApiClient.LOCAL){
+                    connection.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+                    connection.setText("Local");
+                }
+                else{
+                    connection.setBackgroundColor(getResources().getColor(R.color.no_connection));
+                    connection.setText("No Connection");
+                }
+            }
+        });
     }
 
     @Override

@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -65,6 +66,7 @@ public class UsageOverviewFragment extends Fragment implements UsagePresenter.Us
     private RadioGroup rgChartDisplay;
     private RadioButton rbKilowatt;
     private RadioButton rbDollars;
+    private ImageButton btnFilter;
     private float fCost;
     private List<ILineDataSet> dataSets;
     private LineDataSet dataSetKilowatt1;
@@ -120,7 +122,16 @@ public class UsageOverviewFragment extends Fragment implements UsagePresenter.Us
         rbKilowatt = (RadioButton) view.findViewById(R.id.rbKilowatt);
         rbDollars = (RadioButton) view.findViewById(R.id.rbDollars);
         rgChartDisplay.check(rbKilowatt.getId());
+        btnFilter = (ImageButton) view.findViewById(R.id.filterBtn);
 
+        btnFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LayoutInflater inflater = getLayoutInflater(null);
+                View listView = (View) inflater.inflate(R.layout.filter_list, null);
+                usagePresenter.openFilterDialog(listView);
+            }
+        });
 
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -243,7 +254,7 @@ public class UsageOverviewFragment extends Fragment implements UsagePresenter.Us
         LineData data = new LineData(dataSets);
         mLineChart.setData(data);
         mLineChart.animateXY(1200, 1200);
-        mLineChart.invalidate(); // refresh
+     //   mLineChart.invalidate(); // refresh
 
         if (rbDollars.isChecked()){
             setChartData(true);

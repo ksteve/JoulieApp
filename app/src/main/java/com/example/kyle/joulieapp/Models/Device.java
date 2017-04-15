@@ -1,5 +1,6 @@
 package com.example.kyle.joulieapp.Models;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 
 import com.google.gson.annotations.SerializedName;
@@ -44,6 +45,8 @@ public class Device {
 
 //  @SerializedName("owner_user_id")
 //  private String owner;
+
+    public transient int color;
 
     public transient String status;
 
@@ -131,4 +134,11 @@ public class Device {
         this.image = image;
     }
 
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public int getColor() {
+        return color;
+    }
 }

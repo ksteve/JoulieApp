@@ -58,7 +58,7 @@ public class NewDevicePresenter {
                     @Override
                     public void onResponse(Call<Device> call, Response<Device> response) {
                         if (response.body() != null){
-                            DummyContent.MY_DEVICES.add(response.body());
+                            DummyContent.addDevice(response.body());
                         }
                         mListener.deviceReady(response.body());
                     }

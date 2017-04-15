@@ -19,6 +19,7 @@ import com.auth0.android.lock.Lock;
 import com.auth0.android.lock.LockCallback;
 import com.auth0.android.lock.utils.LockException;
 import com.auth0.android.result.Credentials;
+import com.auth0.android.result.Delegation;
 import com.auth0.android.result.UserProfile;
 import com.example.kyle.joulieapp.api.ApiClient;
 import com.example.kyle.joulieapp.api.ApiService;
@@ -57,10 +58,11 @@ public class LoginActivity extends AppCompatActivity {
 
         GoogleAuthHandler googleAuthHandler = new GoogleAuthHandler(gProvider);
         FacebookAuthHandler facebookAuthHandler = new FacebookAuthHandler(fbProvider);
+
         lock = Lock.newBuilder(auth0, callback)
-                .withAuthenticationParameters(parameters)
+               .withAuthenticationParameters(parameters)
                 .withAuthHandlers(googleAuthHandler)
-                .withAuthHandlers(facebookAuthHandler)
+               .withAuthHandlers(facebookAuthHandler)
                 // Add parameters to the Lock Builder
                 .build(this);
 
@@ -96,6 +98,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(AuthenticationException error) {
+                        Log.d("FAILED", error.getMessage());
                         LoginActivity.this.runOnUiThread(new Runnable() {
                             public void run() {
                                 Snackbar.make(findViewById(R.id.activity_login), "Session Expired, please Log In", Snackbar.LENGTH_SHORT).show();
@@ -106,6 +109,10 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(lock.newIntent(LoginActivity.this));
                     }
                 });
+
+
+
+
     }
 
     @Override

@@ -50,9 +50,6 @@ public class DevicePresenter {
         mFirstLoad = false;
     }
 
-
-
-
     public void removeDevice(Device device){
         apiService
                 .deleteDevice(device.getId())
@@ -78,7 +75,6 @@ public class DevicePresenter {
         if (forceUpdate) {
           //  mTasksRepository.refreshTasks();
         }
-
 
         apiService
                 .getDevices()

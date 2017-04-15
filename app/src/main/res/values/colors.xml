@@ -26,4 +26,7 @@
     <color name="grey_700">#1D1E1E</color>
     <color name="red1">#B00003</color>
     <color name="blue1">#0000FF</color>
+
+    <color name="no_connection">#FFD750</color>
+
 </resources>

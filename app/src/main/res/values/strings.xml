@@ -51,4 +51,22 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string-array name="colors">
+        <item>#008744</item>
+        <item>#0057e7</item>
+        <item>#d62d20</item>
+        <item>#ffa700</item>
+        <item>#00ff83</item>
+        <item>#845422</item>
+        <item>#ead61c</item>
+        <item>#011f4b</item>
+        <item>#222224</item>
+        <item>#f00000</item>
+        <item>#00ffff</item>
+        <item>#bf8bff</item>
+        <item>#969696</item>
+        <item>#e9630a</item>
+        <item>#ff0074</item>
+    </string-array>
+
 </resources>
