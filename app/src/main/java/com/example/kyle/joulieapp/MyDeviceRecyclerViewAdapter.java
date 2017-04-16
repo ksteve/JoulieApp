@@ -21,6 +21,7 @@ import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.api.ApiClient;
 import com.example.kyle.joulieapp.api.ApiService;
+import com.example.kyle.joulieapp.presenter.DevicePresenter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,14 +42,12 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
     public final List<Device> selectedDevices;
     private final DeviceFragment.OnListFragmentInteractionListener mListener;
     private SparseBooleanArray selectedItems;
-    private ApiService apiService;
     private Context mContext;
 
     public MyDeviceRecyclerViewAdapter(Context context, List<Device> items, DeviceFragment.OnListFragmentInteractionListener listener) {
-        selectedItems = new SparseBooleanArray();
-        mValues = items;
-        mListener = listener;
-        apiService = ApiClient.getInstance(context.getApplicationContext()).getApiService();
+        this.selectedItems = new SparseBooleanArray();
+        this.mValues = items;
+        this.mListener = listener;
         selectedDevices = new ArrayList<>();
         this.mContext = context;
     }
@@ -100,7 +99,7 @@ public class MyDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MyDeviceRe
                 String device_id = holder.mItem.getId();
                 String command = "set_power_state";
 
-                Call<String> call = apiService.sendCommand(device_id, command, body);
+                Call<String> call = ApiClient.getInstance(mContext.getApplicationContext()).getApiService().sendCommand(device_id, command, body);
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
