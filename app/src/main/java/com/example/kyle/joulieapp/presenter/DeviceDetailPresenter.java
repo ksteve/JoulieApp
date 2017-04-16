@@ -21,7 +21,6 @@ public class DeviceDetailPresenter {
 
     private final Context context;
     private final DeviceDetailPresenterListener mListener;
-    private final ApiService apiService;
 
     public interface DeviceDetailPresenterListener{
         void DeviceEdited();
@@ -32,7 +31,6 @@ public class DeviceDetailPresenter {
     public DeviceDetailPresenter(DeviceDetailPresenterListener listener, Context context){
         this.mListener = listener;
         this.context = context;
-        this.apiService = ApiClient.getInstance(this.context).getApiService();
     }
 
     public void subscribe(){

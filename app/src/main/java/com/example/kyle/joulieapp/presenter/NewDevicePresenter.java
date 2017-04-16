@@ -20,7 +20,6 @@ public class NewDevicePresenter {
 
     private final Context context;
     private final NewDevicePresenterListener mListener;
-    private final ApiService apiService;
 
     public interface NewDevicePresenterListener{
         void deviceReady(Device device);
@@ -38,7 +37,6 @@ public class NewDevicePresenter {
     public NewDevicePresenter(NewDevicePresenterListener listener, Context context){
         this.mListener = listener;
         this.context = context;
-        this.apiService = ApiClient.getInstance(this.context).getApiService();
     }
 
     public void createDevice(int deviceType, String deviceName, String deviceIP,
@@ -52,7 +50,7 @@ public class NewDevicePresenter {
                 deviceImage
                 );
 
-        apiService
+        ApiClient.getInstance(context.getApplicationContext()).getApiService()
                 .createDevice(device)
                 .enqueue(new Callback<Device>() {
                     @Override

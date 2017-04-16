@@ -35,7 +35,6 @@ public class UsagePresenter {
 
     private final Context context;
     private final UsagePresenterListener mListener;
-    private final ApiService apiService;
     private FilterListAdapter adapter;
 
 
@@ -46,12 +45,11 @@ public class UsagePresenter {
     public UsagePresenter(UsagePresenterListener listener, Context context){
         this.mListener = listener;
         this.context = context;
-        this.apiService = ApiClient.getInstance(this.context).getApiService();
         this.adapter = new FilterListAdapter(context, R.layout.filter_list_item , DummyContent.MY_DEVICES);
     }
 
     public void getUsages(){
-        apiService
+        ApiClient.getInstance(context.getApplicationContext()).getApiService()
                 .getUsages()
                 .enqueue(new Callback<List<Usage>>() {
                     @Override

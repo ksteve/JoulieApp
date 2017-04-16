@@ -21,7 +21,6 @@ public class DevicePresenter {
 
     private final Context context;
     private final DevicePresenterListener mListener;
-    private final ApiService apiService;
 
     private boolean mFirstLoad = true;
 
@@ -33,7 +32,6 @@ public class DevicePresenter {
     public DevicePresenter(DevicePresenterListener listener, Context context){
         this.mListener = listener;
         this.context = context;
-        this.apiService = ApiClient.getInstance(this.context).getApiService();
     }
 
     public void subscribe(){
@@ -51,7 +49,7 @@ public class DevicePresenter {
     }
 
     public void removeDevice(Device device){
-        apiService
+        ApiClient.getInstance(context.getApplicationContext()).getApiService()
                 .deleteDevice(device.getId())
                 .enqueue(new Callback<String>() {
                     @Override
@@ -76,7 +74,7 @@ public class DevicePresenter {
           //  mTasksRepository.refreshTasks();
         }
 
-        apiService
+        ApiClient.getInstance(context.getApplicationContext()).getApiService()
                 .getDevices()
                 .enqueue(new Callback<List<Device>>() {
                     @Override

@@ -21,7 +21,6 @@ public class RulePresenter {
 
     private final Context context;
     private final RulePresenterListener mListener;
-    private final ApiService apiService;
 
     public interface RulePresenterListener{
         void rulesReady(List<Rule> rules);
@@ -32,11 +31,10 @@ public class RulePresenter {
     public RulePresenter(RulePresenterListener listener, Context context){
         this.mListener = listener;
         this.context = context;
-        this.apiService = ApiClient.getInstance(this.context).getApiService();
     }
 
     public void createRule(Rule rule){
-        apiService
+        ApiClient.getInstance(context.getApplicationContext()).getApiService()
                 .createRule(rule)
                 .enqueue(new Callback<Rule>() {
                     @Override
@@ -52,7 +50,7 @@ public class RulePresenter {
     }
 
     public void removeRule(Rule rule){
-        apiService
+        ApiClient.getInstance(context.getApplicationContext()).getApiService()
                 .deleteRule(rule.getId())
                 .enqueue(new Callback<String>() {
                     @Override
@@ -68,7 +66,7 @@ public class RulePresenter {
     }
 
     public void getRules(){
-        apiService
+        ApiClient.getInstance(context.getApplicationContext()).getApiService()
                 .getRules()
                 .enqueue(new Callback<List<Rule>>() {
                     @Override

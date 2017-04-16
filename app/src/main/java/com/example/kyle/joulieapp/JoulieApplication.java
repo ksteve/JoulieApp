@@ -18,7 +18,7 @@ public class JoulieApplication extends Application {
         super.onCreate();
         DummyContent.init(getApplicationContext());
         DummyContent.addDevice(new Device(1, "adsfa", "saddfa", "asdfasd", null ));
-     //   ApiClient.getInstance(getApplicationContext());
+        ApiClient.getInstance(getApplicationContext());
 
     }
 

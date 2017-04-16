@@ -27,7 +27,6 @@ public class MainPresenter implements NsdManager.DiscoveryListener {
 
     private final Context context;
     private final MainPresenterListener mListener;
-    private final ApiService apiService;
     private final NetworkServiceDisc mNsd;
     private static final String TAG = "Main Presenter";
 
@@ -41,8 +40,7 @@ public class MainPresenter implements NsdManager.DiscoveryListener {
     public MainPresenter(MainPresenterListener listener, Context context){
         this.mListener = listener;
         this.context = context;
-        this.apiService = ApiClient.getInstance(this.context).getApiService();
-        this.mNsd = new NetworkServiceDisc(this.context);
+        this.mNsd = new NetworkServiceDisc(this.context.getApplicationContext());
        // this.mNsd.initializeNsd(this);
     }
 
@@ -174,10 +172,10 @@ public class MainPresenter implements NsdManager.DiscoveryListener {
                 public void onServiceResolved(NsdServiceInfo serviceInfo) {
                     Log.e(TAG, "Resolve Succeeded. " + serviceInfo);
 
-                    String ip = serviceInfo.getHost().toString();
+                    String ip = serviceInfo.getHost().getHostAddress();
                     String port = String.valueOf(serviceInfo.getPort());
 
-                    ApiClient.getInstance(context.getApplicationContext()).setLocalUrl(ip, port);
+                    ApiClient.getInstance(context.getApplicationContext()).setLocalUrl(ip, "8000");
                     apiConnectionChanged(ApiClient.LOCAL);
                     mNsd.mService = serviceInfo;
                 }

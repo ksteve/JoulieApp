@@ -21,7 +21,6 @@ public class NewRulePresenter {
 
     private final Context context;
     private final NewRulePresenterListener mListener;
-    private final ApiService apiService;
 
     public interface NewRulePresenterListener{
         void ruleReady(Rule rule);
@@ -39,7 +38,6 @@ public class NewRulePresenter {
     public NewRulePresenter(NewRulePresenterListener listener, Context context){
         this.mListener = listener;
         this.context = context;
-        this.apiService = ApiClient.getInstance(this.context).getApiService();
     }
 
     public void createRule(String id, String ruleName, Device device, int turnOnOff, String time, String days){
@@ -53,7 +51,7 @@ public class NewRulePresenter {
                 days
                 );
 
-        apiService
+        ApiClient.getInstance(context.getApplicationContext()).getApiService()
                 .createRule(rule)
                 .enqueue(new Callback<Rule>() {
                     @Override

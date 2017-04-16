@@ -107,11 +107,11 @@ public class ApiClient {
 
     public void changeApiBaseUrl(int network){
         if(network == LOCAL){
-            setApiBaseUrl(localUrl);
             setConnectionType(LOCAL);
+            setApiBaseUrl(localUrl);
         } else if(network == CLOUD) {
-            setApiBaseUrl(Constants.CLOUD_URL);
             setConnectionType(CLOUD);
+            setApiBaseUrl(Constants.CLOUD_URL);
         }
     }
 
