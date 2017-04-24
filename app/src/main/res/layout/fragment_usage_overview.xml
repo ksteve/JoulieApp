@@ -143,7 +143,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:text="kWh"/>
+                    android:text="kW"/>
 
                 <RadioButton
                     android:id="@+id/rbDollars"
@@ -178,10 +178,19 @@
         android:layout_width="match_parent"
         android:layout_height="32dp"
         android:layout_alignParentBottom="true"
-        android:background="#d7d7d7"
+        android:layout_marginBottom="8dp"
+        android:background="@color/white"
         app:tabGravity="fill"
-        app:tabMode="fixed"
-        android:layout_marginBottom="8dp"/>
+        app:tabMode="fixed"/>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/chart_card"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp"
+        android:text="kW"/>
 
 </RelativeLayout>
 

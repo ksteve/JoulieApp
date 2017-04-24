@@ -29,6 +29,8 @@ public interface UsageContract {
 
         void refreshList();
 
+        void setChartFormatter(int format);
+
         void showRequestFailed(String message);
 
         void showRequestSuccess(String message);
@@ -39,6 +41,8 @@ public interface UsageContract {
         void loadUsages(boolean forceUpdate);
 
         void openFilter(android.view.View view);
+
+        void setChartTimeSpan(int timeSpan);
 
     }
 }

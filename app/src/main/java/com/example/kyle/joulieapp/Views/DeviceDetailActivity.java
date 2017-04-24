@@ -20,6 +20,7 @@ import com.example.kyle.joulieapp.Contracts.DeviceDetailContract;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.Presenters.DeviceDetailPresenter;
+import com.example.kyle.joulieapp.Presenters.UsagePresenter;
 import com.example.kyle.joulieapp.R;
 import com.example.kyle.joulieapp.Utils.DateAxisValueFormatter;
 import com.github.mikephil.charting.charts.LineChart;
@@ -51,21 +52,10 @@ public class DeviceDetailActivity extends AppCompatActivity implements DeviceDet
     private TextView tvCostTrend;
 
     private LineChart mLineChart;
-    private RadioGroup rgChartDisplay;
-    private RadioButton rbKilowatt;
-    private RadioButton rbDollars;
-    private float fCost;
-    private List<ILineDataSet> dataSets;
-    private LineDataSet dataSetKilowatt;
-    private LineDataSet dataSetDollars;
+
     private FloatingActionButton fabShare;
     private SharedPreferences prefs;
     private TabLayout tabLayout;
-    private static final int DAY_FORMAT = 0;
-    private static final int WEEK_FORMAT = 1;
-    private static final int MONTH_FORMAT = 2;
-    private static final int YEAR_FORMAT = 3;
-    private static final int MAX_FORMAT = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,11 +100,6 @@ public class DeviceDetailActivity extends AppCompatActivity implements DeviceDet
         setupChart();
 
        // new getUsageData().execute(null, null, null);
-
-        rbKilowatt = (RadioButton) findViewById(R.id.rbKilowatt);
-        rbDollars = (RadioButton) findViewById(R.id.rbDollars);
-        rgChartDisplay = (RadioGroup) findViewById(R.id.rgChartDisplayType);
-        rgChartDisplay.check(rbKilowatt.getId());
 
         fabShare = (FloatingActionButton) findViewById(R.id.fabShare);
         fabShare.setOnClickListener(new View.OnClickListener() {
@@ -173,15 +158,15 @@ public class DeviceDetailActivity extends AppCompatActivity implements DeviceDet
         });
     }
 
-    private void setChartFormatter(int formatType){
+    @Override
+    public void setChartFormatter(int formatType){
         Calendar cal = Calendar.getInstance();
         long currentTime;
         switch(formatType){
-            case DAY_FORMAT:
+            case UsagePresenter.DAY_FORMAT:
 
                 lblTotalUsage.setText("Usage Today");
                 lblTotalCost.setText("Estimated Cost Today");
-
 
                 currentTime = cal.getTimeInMillis()/1000;
                 cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -199,13 +184,12 @@ public class DeviceDetailActivity extends AppCompatActivity implements DeviceDet
                 mLineChart.fitScreen();
                 mLineChart.invalidate();
                 break;
-            case WEEK_FORMAT:
+            case UsagePresenter.WEEK_FORMAT:
 
                 lblTotalUsage.setText("Usage This Week");
                 lblTotalCost.setText("Estimated Cost This Week");
 
                 currentTime = cal.getTimeInMillis()/1000;
-
                 cal.set(Calendar.DAY_OF_WEEK, 1);
                 cal.set(Calendar.HOUR_OF_DAY, 0);
                 cal.set(Calendar.MINUTE, 0);
@@ -217,11 +201,11 @@ public class DeviceDetailActivity extends AppCompatActivity implements DeviceDet
                 mLineChart.getXAxis().setAxisMaximum(currentTime);
 
                 mLineChart.getXAxis().setValueFormatter(new DateAxisValueFormatter(DateAxisValueFormatter.WEEK));
-                mLineChart.getXAxis().setGranularity(86400f);
+                mLineChart.getXAxis().setGranularity(55000f);
                 mLineChart.fitScreen();
                 mLineChart.invalidate();
                 break;
-            case MONTH_FORMAT:
+            case UsagePresenter.MONTH_FORMAT:
 
                 lblTotalUsage.setText("Usage This Month");
                 lblTotalCost.setText("Estimated Cost This Month");
@@ -242,29 +226,28 @@ public class DeviceDetailActivity extends AppCompatActivity implements DeviceDet
                 mLineChart.fitScreen();
                 mLineChart.invalidate();
                 break;
-            case YEAR_FORMAT:
+            case UsagePresenter.YEAR_FORMAT:
 
                 lblTotalUsage.setText("Average Usage");
                 lblTotalCost.setText("Estimated Cost");
 
                 currentTime = cal.getTimeInMillis()/1000;
                 cal.set(Calendar.MONTH, Calendar.JANUARY);
+                cal.set(Calendar.DAY_OF_MONTH, 1);
                 cal.set(Calendar.HOUR_OF_DAY, 0);
                 cal.set(Calendar.MINUTE, 0);
                 cal.set(Calendar.SECOND, 0);
                 cal.set(Calendar.MILLISECOND, 0);
-                long oneMonthAgo = cal.getTimeInMillis()/1000;
+                long beginningOfYear = cal.getTimeInMillis()/1000;
 
-                mLineChart.getXAxis().setAxisMinimum(oneMonthAgo);
+                mLineChart.getXAxis().setAxisMinimum(beginningOfYear);
                 mLineChart.getXAxis().setAxisMaximum(currentTime);
-
                 mLineChart.getXAxis().setValueFormatter(new DateAxisValueFormatter(DateAxisValueFormatter.YEAR));
-
                 mLineChart.getXAxis().setGranularity(2500000f);
                 mLineChart.fitScreen();
                 mLineChart.invalidate();
                 break;
-            case MAX_FORMAT:
+            case UsagePresenter.MAX_FORMAT:
                 break;
             default:
                 break;
@@ -294,24 +277,6 @@ public class DeviceDetailActivity extends AppCompatActivity implements DeviceDet
         mLineChart.getXAxis().setDrawGridLines(false);
         mLineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         setChartFormatter(tabLayout.getSelectedTabPosition());
-
-        rbKilowatt = (RadioButton) findViewById(R.id.rbKilowatt);
-        rbDollars = (RadioButton) findViewById(R.id.rbDollars);
-        rgChartDisplay = (RadioGroup) findViewById(R.id.rgChartDisplayType);
-
-        rgChartDisplay.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // checkedId is the RadioButton selected
-                if (checkedId == rbDollars.getId()){
-                    setChartData(true);
-                }
-                else {
-                    setChartData(false);
-                }
-            }
-        });
 
     }
 

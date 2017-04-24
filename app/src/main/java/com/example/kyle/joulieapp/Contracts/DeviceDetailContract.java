@@ -16,6 +16,8 @@ public interface DeviceDetailContract {
 
         void showShareUI();
 
+        void setChartFormatter(int formatType);
+
         void showUsage(LineData data);
 
         void showRequestFailed(String message);

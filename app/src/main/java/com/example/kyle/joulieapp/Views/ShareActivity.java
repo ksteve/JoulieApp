@@ -4,10 +4,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.example.kyle.joulieapp.Contracts.ShareContract;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.R;
@@ -15,10 +17,12 @@ import com.example.kyle.joulieapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShareActivity extends AppCompatActivity {
+public class ShareActivity extends AppCompatActivity implements ShareContract.View{
 
+    private ShareContract.Presenter mSharePresenter;
     private Spinner permissionDropdown;
     private Button btnShare;
+    private Button btnSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +58,24 @@ public class ShareActivity extends AppCompatActivity {
 
         //start with permission dropdown and share button as disabled
         permissionDropdown.setEnabled(false);
+
+        btnSearch = (Button) findViewById(R.id.btnSearch);
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                
+            }
+        });
+
         btnShare = (Button) findViewById(R.id.btnShare);
         btnShare.setEnabled(false);
+
+
+    }
+
+    @Override
+    public void setPresenter(ShareContract.Presenter presenter) {
+        mSharePresenter = presenter;
     }
 
     @Override
@@ -67,5 +87,20 @@ public class ShareActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void showFoundUser() {
+
+    }
+
+    @Override
+    public void showRequestFailed(String message) {
+
+    }
+
+    @Override
+    public void showDeviceShared() {
+
     }
 }

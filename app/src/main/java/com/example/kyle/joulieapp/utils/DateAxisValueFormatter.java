@@ -53,21 +53,21 @@ public class DateAxisValueFormatter implements IAxisValueFormatter
     @Override
     public String getFormattedValue(float value, AxisBase axis) {
         // convertedTimestamp = originalTimestamp - referenceTimestamp
-        long convertedTimestamp = (long) value;
+        long originalTimestamp = (long) value;
 
         // Retrieve original timestamp
-        long originalTimestamp = convertedTimestamp;
+        long convertedTimestamp = originalTimestamp * 1000;
 
         // Convert timestamp to hour:minute
         switch(mDateType){
             case DAY:
-                return getHour(originalTimestamp);
+                return getHour(convertedTimestamp);
             case WEEK:
-                return getDayOfWeek(originalTimestamp);
+                return getDayOfWeek(convertedTimestamp);
             case MONTH:
-                return getDayOfMonth(originalTimestamp);
+                return getDayOfMonth(convertedTimestamp);
             case YEAR:
-                return getMonth(originalTimestamp);
+                return getMonth(convertedTimestamp);
             default:
                 return null;
 
@@ -81,7 +81,7 @@ public class DateAxisValueFormatter implements IAxisValueFormatter
         try{
 
             cal = Calendar.getInstance();
-            cal.setTimeInMillis(timestamp*1000);
+            cal.setTimeInMillis(timestamp);
             cal.get(Calendar.HOUR_OF_DAY);
            // Date d = new Date(timestamp*1000);
             //Log.d("HOURS",String.valueOf(d.getHours()));
@@ -99,8 +99,8 @@ public class DateAxisValueFormatter implements IAxisValueFormatter
     private String getDayOfWeek(long timestamp){
         try{
             cal = Calendar.getInstance();
-            cal.setTimeInMillis(timestamp*1000);
-            String mDay = daysOfWeek[cal.get(Calendar.DAY_OF_WEEK)];
+            cal.setTimeInMillis(timestamp);
+            String mDay = daysOfWeek[cal.get(Calendar.DAY_OF_WEEK) - 1];
             return mDay;
         }
         catch(Exception ex){
@@ -111,7 +111,7 @@ public class DateAxisValueFormatter implements IAxisValueFormatter
     private String getDayOfMonth(long timestamp) {
         try {
             cal = Calendar.getInstance();
-            cal.setTimeInMillis(timestamp * 1000);
+            cal.setTimeInMillis(timestamp);
             String mDay = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
             String mDate = new SimpleDateFormat("dd/MMM").format(cal.getTime());
             return mDate;
@@ -123,7 +123,8 @@ public class DateAxisValueFormatter implements IAxisValueFormatter
     private String getMonth(long timestamp){
         try {
             cal = Calendar.getInstance();
-            cal.setTimeInMillis(timestamp * 1000);
+            cal.setTimeInMillis(timestamp);
+          //  String mMonth = daysOfWeek[]
             String mDate = new SimpleDateFormat("MMM").format(cal.getTime());
             return mDate;
         } catch (Exception ex) {

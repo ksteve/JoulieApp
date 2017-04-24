@@ -39,6 +39,18 @@ import retrofit2.Response;
 
 public class UsagePresenter implements UsageContract.Presenter {
 
+    private static final int HOURS_IN_DAY = 24;
+    private static final int HOURS_IN_WEEK = 24;
+    private static final int HOURS_IN_MONTHS = 24;
+    private static final int HOURS_IN_YEAR = 24;
+
+    public static final int DAY_FORMAT = 0;
+    public static final int WEEK_FORMAT = 1;
+    public static final int MONTH_FORMAT = 2;
+    public static final int YEAR_FORMAT = 3;
+    public static final int MAX_FORMAT = 4;
+
+
     private final Context context;
     private final UsageContract.View mUsageView;
     private final SharedPreferences mSharedPreferences;
@@ -46,6 +58,7 @@ public class UsagePresenter implements UsageContract.Presenter {
     private boolean mFirstLoad = true;
     private float estimatedCost;
     private float totalUsage;
+    private int numHours;
 
     @Override
     public void start() {
@@ -91,19 +104,17 @@ public class UsagePresenter implements UsageContract.Presenter {
     }
 
     private void processUsages(List<UsageResponse> usageDataSet){
-
         List<ILineDataSet> chartDataSets = new ArrayList<>();
         float totalUsage = 0;
         float totalKwh = 0;
         float estimatedCost = 0;
-        String mid_peak_cost;
         float cost = 0;
+        String mid_peak_cost;
 
         mid_peak_cost = mSharedPreferences.getString("mid_peak_cost", "");
         if(!mid_peak_cost.isEmpty()){
             cost = Float.valueOf(mid_peak_cost);
         }
-
 
         if(usageDataSet != null && !usageDataSet.isEmpty()) {
             List<Entry> usageData = new ArrayList<>();
@@ -134,13 +145,11 @@ public class UsagePresenter implements UsageContract.Presenter {
                         totalUsage += ux.getValue(); // * diffHours;
                       //  }
 
-
-
                         usageData.add(new Entry(ux.getTimestamp(), ux.getValue()));
                     }
 
                     totalKwh = totalUsage / u.getUsages().size();
-                    totalKwh = totalKwh * 24;
+                    totalKwh = totalKwh * numHours;
 
                     totalKwh = (float)(Math.round(totalKwh * 100d) / 100d);
                     estimatedCost = ((totalKwh * cost) / 100);
@@ -148,8 +157,6 @@ public class UsagePresenter implements UsageContract.Presenter {
 
                     device.totalKwh = totalKwh;
                     device.estimatedCost = estimatedCost;
-
-                  //  context.getSharedPreferences()
 
                     mUsageView.showTotals(totalKwh, estimatedCost);
 
@@ -205,6 +212,30 @@ public class UsagePresenter implements UsageContract.Presenter {
                 }).create();
 
         dialog.show();
+    }
+
+    @Override
+    public void setChartTimeSpan(int timeSpan) {
+        switch (timeSpan){
+            case DAY_FORMAT:
+                numHours = HOURS_IN_DAY;
+                mUsageView.setChartFormatter(DAY_FORMAT);
+                break;
+            case WEEK_FORMAT:
+                numHours = HOURS_IN_WEEK;
+                mUsageView.setChartFormatter(WEEK_FORMAT);
+                break;
+            case MONTH_FORMAT:
+                numHours = HOURS_IN_MONTHS;
+                mUsageView.setChartFormatter(MONTH_FORMAT);
+                break;
+            case YEAR_FORMAT:
+                numHours = HOURS_IN_YEAR;
+                mUsageView.setChartFormatter(YEAR_FORMAT);
+                break;
+            case MAX_FORMAT:
+                break;
+        }
     }
 
 

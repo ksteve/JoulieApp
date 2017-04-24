@@ -77,6 +77,12 @@ public interface ApiService {
     @GET("user/current/data")
     Call<List<UsageResponse>> getUsages();
 
+    @GET("search/user/{user_email}")
+    Call<String> userSearch(@Path("user_email") String userEmail);
+
+    @POST("device/{device_id}/share/{user_id}")
+    Call<String> shareDevice(@Path("device_id") String deviceId, @Path("user_id") String userId);
+
     // TODO: 2017-03-17 get usage data endpoint
     // TODO: 2017-03-17 create new rule endpoint
 

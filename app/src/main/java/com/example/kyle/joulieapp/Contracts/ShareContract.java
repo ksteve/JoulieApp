@@ -10,40 +10,18 @@ import com.example.kyle.joulieapp.Base.BaseView;
 public interface ShareContract {
 
     interface View extends BaseView<Presenter> {
+        void showFoundUser();
 
-        void setLoadingIndicator(boolean active);
+        void showRequestFailed(String message);
 
-        void showMissingTask();
-
-        void hideTitle();
-
-        void showTitle(String title);
-
-        void hideDescription();
-
-        void showDescription(String description);
-
-        void showCompletionStatus(boolean complete);
-
-        void showEditTask(String taskId);
-
-        void showTaskDeleted();
-
-        void showTaskMarkedComplete();
-
-        void showTaskMarkedActive();
-
-        boolean isActive();
+        void showDeviceShared();
     }
 
     interface Presenter extends BasePresenter {
 
-        void editTask();
+        void findUserByEmail(String email);
 
-        void deleteTask();
+        void shareDeviceWithUser(String deviceID, String userID);
 
-        void completeTask();
-
-        void activateTask();
     }
 }

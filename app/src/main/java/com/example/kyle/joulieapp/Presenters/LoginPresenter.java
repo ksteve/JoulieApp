@@ -82,7 +82,6 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void createNewUser(final Credentials credentials) {
-      //  Log.d("TOKEN: ", CredentialsManager.getCredentials(this).getIdToken());
         HashMap<String,String> body = new HashMap<>();
         ApiClient.getInstance(mContext.getApplicationContext()).getCloudApiService()
             .newUser(body)

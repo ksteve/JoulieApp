@@ -47,12 +47,6 @@ public class UsageOverviewFragment extends Fragment implements UsageContract.Vie
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private static final int DAY_FORMAT = 0;
-    private static final int WEEK_FORMAT = 1;
-    private static final int MONTH_FORMAT = 2;
-    private static final int YEAR_FORMAT = 3;
-    private static final int MAX_FORMAT = 4;
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -70,21 +64,7 @@ public class UsageOverviewFragment extends Fragment implements UsageContract.Vie
     private TextView tvUsageTrend;
     private TextView tvCostTrend;
 
-
-
-    private Spinner spChartDisplay;
-    private RadioGroup rgChartDisplay;
-    private RadioButton rbKilowatt;
-    private RadioButton rbDollars;
     private ImageButton btnFilter;
-    private float fCost;
-    private List<ILineDataSet> dataSets;
-    private LineDataSet dataSetKilowatt1;
-    private LineDataSet dataSetDollars1;
-    private LineDataSet dataSetKilowatt2;
-    private LineDataSet dataSetDollars2;
-    private LineDataSet dataSetKilowatt3;
-    private LineDataSet dataSetDollars3;
     private SharedPreferences prefs;
 
     public UsageOverviewFragment() {
@@ -118,12 +98,7 @@ public class UsageOverviewFragment extends Fragment implements UsageContract.Vie
         }
 
         SharedPreferences sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(getActivity());
-     //  float tests =  sharedPreferences.getFloat("");
-
-
-
         new UsagePresenter(this, sharedPreferences, getContext());
-
     }
 
     @Override
@@ -138,15 +113,7 @@ public class UsageOverviewFragment extends Fragment implements UsageContract.Vie
         lblTotalUsage = (TextView) view.findViewById(R.id.avg_usage_label);
         lblTotalCost = (TextView) view.findViewById(R.id.avg_cost_label);
 
-
-        rbKilowatt = (RadioButton) view.findViewById(R.id.rbKilowatt);
-        rbDollars = (RadioButton) view.findViewById(R.id.rbDollars);
-        rgChartDisplay = (RadioGroup) view.findViewById(R.id.rgChartDisplayType);
-        rbKilowatt = (RadioButton) view.findViewById(R.id.rbKilowatt);
-        rbDollars = (RadioButton) view.findViewById(R.id.rbDollars);
-        rgChartDisplay.check(rbKilowatt.getId());
         btnFilter = (ImageButton) view.findViewById(R.id.filterBtn);
-
         btnFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -155,7 +122,6 @@ public class UsageOverviewFragment extends Fragment implements UsageContract.Vie
                 mUsagePresenter.openFilter(listView);
             }
         });
-
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         //setup Tab layout
@@ -170,12 +136,12 @@ public class UsageOverviewFragment extends Fragment implements UsageContract.Vie
         tabLayout.addTab(tabLayout.newTab().setText("1D"), true);
         tabLayout.addTab(tabLayout.newTab().setText("1W"));
         tabLayout.addTab(tabLayout.newTab().setText("1M"));
-        tabLayout.addTab(tabLayout.newTab().setText("1Y"));
+        tabLayout.addTab(tabLayout.newTab().setText("MAX"));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                setChartFormatter(tab.getPosition());
+                mUsagePresenter.setChartTimeSpan(tab.getPosition());
             }
 
             @Override
@@ -196,64 +162,25 @@ public class UsageOverviewFragment extends Fragment implements UsageContract.Vie
         mLineChart.setDrawBorders(false);
         mLineChart.getXAxis().setDrawGridLines(false);
         mLineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        setChartFormatter(tabLayout.getSelectedTabPosition());
         mLineChart.setDrawGridBackground(false);
         mLineChart.getLegend().setEnabled(false);
         mLineChart.getLegend().setDrawInside(true);
         mLineChart.getLegend().setYOffset(100);
-//        mLineChart.setContentDescription("");
         Description ds = new Description();
         ds.setEnabled(false);
         mLineChart.setDescription(ds);
-//        // use the interface ILineDataSet
-        //  dataSets = new ArrayList<>();
-
-        rgChartDisplay.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // checkedId is the RadioButton selected
-                if (checkedId == rbDollars.getId()){
-                    setChartData(true);
-                }
-                else {
-                    setChartData(false);
-                }
-            }
-        });
-
+        mUsagePresenter.setChartTimeSpan(tabLayout.getSelectedTabPosition());
     }
 
-    private void setChartData(boolean dollars){
-//        dataSets.clear();
-//
-//        if (dollars){
-//            dataSets.add(dataSetDollars1);
-//            dataSets.add(dataSetDollars2);
-//            dataSets.add(dataSetDollars3);
-//        }
-//        else{
-//            dataSets.add(dataSetKilowatt1);
-//            dataSets.add(dataSetKilowatt2);
-//            dataSets.add(dataSetKilowatt3);
-//        }
-//
-//        mLineChart.clear();
-//        LineData data = new LineData(dataSets);
-//        mLineChart.setData(data);
-//        mLineChart.animateXY(500, 500);
-//        mLineChart.invalidate(); // refresh
-    }
-
-    private void setChartFormatter(int formatType){
+    @Override
+    public void setChartFormatter(int formatType){
         Calendar cal = Calendar.getInstance();
         long currentTime;
         switch(formatType){
-            case DAY_FORMAT:
+            case UsagePresenter.DAY_FORMAT:
 
                 lblTotalUsage.setText("Usage Today");
                 lblTotalCost.setText("Estimated Cost Today");
-
 
                 currentTime = cal.getTimeInMillis()/1000;
                 cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -271,13 +198,12 @@ public class UsageOverviewFragment extends Fragment implements UsageContract.Vie
                 mLineChart.fitScreen();
                 mLineChart.invalidate();
                 break;
-            case WEEK_FORMAT:
+            case UsagePresenter.WEEK_FORMAT:
 
                 lblTotalUsage.setText("Usage This Week");
                 lblTotalCost.setText("Estimated Cost This Week");
 
                 currentTime = cal.getTimeInMillis()/1000;
-
                 cal.set(Calendar.DAY_OF_WEEK, 1);
                 cal.set(Calendar.HOUR_OF_DAY, 0);
                 cal.set(Calendar.MINUTE, 0);
@@ -289,11 +215,11 @@ public class UsageOverviewFragment extends Fragment implements UsageContract.Vie
                 mLineChart.getXAxis().setAxisMaximum(currentTime);
 
                 mLineChart.getXAxis().setValueFormatter(new DateAxisValueFormatter(DateAxisValueFormatter.WEEK));
-                mLineChart.getXAxis().setGranularity(86400f);
+                mLineChart.getXAxis().setGranularity(55000f);
                 mLineChart.fitScreen();
                 mLineChart.invalidate();
                 break;
-            case MONTH_FORMAT:
+            case UsagePresenter.MONTH_FORMAT:
 
                 lblTotalUsage.setText("Usage This Month");
                 lblTotalCost.setText("Estimated Cost This Month");
@@ -314,29 +240,28 @@ public class UsageOverviewFragment extends Fragment implements UsageContract.Vie
                 mLineChart.fitScreen();
                 mLineChart.invalidate();
                 break;
-            case YEAR_FORMAT:
+            case UsagePresenter.YEAR_FORMAT:
 
                 lblTotalUsage.setText("Average Usage");
                 lblTotalCost.setText("Estimated Cost");
 
                 currentTime = cal.getTimeInMillis()/1000;
                 cal.set(Calendar.MONTH, Calendar.JANUARY);
+                cal.set(Calendar.DAY_OF_MONTH, 1);
                 cal.set(Calendar.HOUR_OF_DAY, 0);
                 cal.set(Calendar.MINUTE, 0);
                 cal.set(Calendar.SECOND, 0);
                 cal.set(Calendar.MILLISECOND, 0);
-                long oneMonthAgo = cal.getTimeInMillis()/1000;
+                long beginningOfYear = cal.getTimeInMillis()/1000;
 
-                mLineChart.getXAxis().setAxisMinimum(oneMonthAgo);
+                mLineChart.getXAxis().setAxisMinimum(beginningOfYear);
                 mLineChart.getXAxis().setAxisMaximum(currentTime);
-
                 mLineChart.getXAxis().setValueFormatter(new DateAxisValueFormatter(DateAxisValueFormatter.YEAR));
-
                 mLineChart.getXAxis().setGranularity(2500000f);
                 mLineChart.fitScreen();
                 mLineChart.invalidate();
                 break;
-            case MAX_FORMAT:
+            case UsagePresenter.MAX_FORMAT:
                 break;
             default:
                 break;

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.kyle.joulieapp.Contracts.ShareContract;
 import com.example.kyle.joulieapp.Views.LoginActivity;
 
 public class SplashActivity extends AppCompatActivity {
