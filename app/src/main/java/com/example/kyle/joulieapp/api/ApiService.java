@@ -1,16 +1,14 @@
-package com.example.kyle.joulieapp.api;
+package com.example.kyle.joulieapp.Api;
 
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.Rule;
 import com.example.kyle.joulieapp.Models.Usage;
+import com.example.kyle.joulieapp.Models.UsageResponse;
 
 import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -27,8 +25,14 @@ public interface ApiService {
     @GET(".")
     Call<Void> ping();
 
-    @POST("robot/reset")
-    Call<Void> resetServer();
+    @GET("ngrok")
+    Call<String> getNgrokUrl();
+
+    @POST("robots/reset")
+    Call<String> resetRobot();
+
+    @POST("user/{user_token}/devices/reset")
+    Call<String> resetDevices(@Path("user_token") String userToken);
 
     //Creating a new Robot
     @POST("robot/{robot_name}")
@@ -70,10 +74,8 @@ public interface ApiService {
     @GET("rules")
     Call<List<Rule>> getRules();
 
-    @GET("Usages")
-    Call<List<Usage>> getUsages();
-
-
+    @GET("user/current/data")
+    Call<List<UsageResponse>> getUsages();
 
     // TODO: 2017-03-17 get usage data endpoint
     // TODO: 2017-03-17 create new rule endpoint

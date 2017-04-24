@@ -1,9 +1,7 @@
-package com.example.kyle.joulieapp.utils;
+package com.example.kyle.joulieapp.Utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.wifi.p2p.WifiP2pManager;
-import android.provider.SyncStateContract;
 
 import com.auth0.android.result.Credentials;
 import com.auth0.android.result.UserProfile;

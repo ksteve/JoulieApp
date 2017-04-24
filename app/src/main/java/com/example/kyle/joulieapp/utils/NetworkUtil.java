@@ -1,17 +1,14 @@
-package com.example.kyle.joulieapp.utils;
+package com.example.kyle.joulieapp.Utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
-import android.text.format.Formatter;
 import android.util.Log;
 
 import java.lang.ref.WeakReference;
 import java.math.BigInteger;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.UnknownHostException;

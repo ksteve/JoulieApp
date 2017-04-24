@@ -1,4 +1,4 @@
-package com.example.kyle.joulieapp.utils;
+package com.example.kyle.joulieapp.Utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -6,9 +6,11 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.example.kyle.joulieapp.Models.Device;
+import com.example.kyle.joulieapp.Models.DummyContent;
+
 import java.io.InputStream;
 import java.net.URL;
-import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -50,6 +52,15 @@ public class Tools {
         protected void onPostExecute(Bitmap result) {
             bmImage.setImageBitmap(result);
         }
+    }
+
+    public static Device findDeviceByID(String id){
+        for (Device d: DummyContent.MY_DEVICES) {
+            if(d.getId().equals(id)){
+                return d;
+            }
+        }
+        return null;
     }
 
 }

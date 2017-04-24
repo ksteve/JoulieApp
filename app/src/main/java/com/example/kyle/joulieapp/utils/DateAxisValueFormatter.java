@@ -1,22 +1,16 @@
-package com.example.kyle.joulieapp.utils;
+package com.example.kyle.joulieapp.Utils;
 
 /**
  * Created by Kyle on 2017-03-24.
  */
 
-import android.util.Log;
-
 import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.IValueFormatter;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by Yasir on 02/06/16.
@@ -88,6 +82,7 @@ public class DateAxisValueFormatter implements IAxisValueFormatter
 
             cal = Calendar.getInstance();
             cal.setTimeInMillis(timestamp*1000);
+            cal.get(Calendar.HOUR_OF_DAY);
            // Date d = new Date(timestamp*1000);
             //Log.d("HOURS",String.valueOf(d.getHours()));
             //Log.d("TIME BEFORE", String.valueOf(d.getTime()));

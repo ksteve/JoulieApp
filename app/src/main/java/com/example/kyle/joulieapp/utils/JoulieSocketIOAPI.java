@@ -1,4 +1,4 @@
-package com.example.kyle.joulieapp.utils;
+package com.example.kyle.joulieapp.Utils;
 
 import android.util.Log;
 import org.json.JSONException;

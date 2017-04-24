@@ -1,25 +1,17 @@
-package com.example.kyle.joulieapp.api;
+package com.example.kyle.joulieapp.Api;
 
 import android.content.Context;
-import android.provider.SyncStateContract;
 import android.util.Log;
 
-import com.example.kyle.joulieapp.Models.Device;
-import com.example.kyle.joulieapp.Models.DummyContent;
-import com.example.kyle.joulieapp.utils.CredentialsManager;
-import com.example.kyle.joulieapp.utils.NetworkUtil;
+import com.example.kyle.joulieapp.Utils.CredentialsManager;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -35,14 +27,13 @@ public class ApiClient {
     public static final int LOCAL = 0;
     public static final int CLOUD = 1;
 
-
     private static ApiClient instance = null;
-    private String apiBaseUrl = Constants.CLOUD_URL;
     private String localUrl;
-    private int connectionType = CLOUD;
+    private int currentConnection;
     private OkHttpClient mOkHttpClient;
-    private Retrofit mRetrofit = null;
-    private ApiService mApiService;
+    private ApiService mCloudApiService;
+    private ApiService mLocalApiService;
+
     private Context mContext;
 
     public static synchronized ApiClient getInstance(Context context){
@@ -55,13 +46,9 @@ public class ApiClient {
 
     private ApiClient(Context context){
         this.mContext = context.getApplicationContext();
-        buildClient();
-    }
-
-    private void buildClient(){
         buildOkHttp();
-        buildRetroFit();
-        this.mApiService = mRetrofit.create(ApiService.class);
+        setCurrentConnection(CLOUD);
+        buildCloudRetroFit();
     }
 
     public void buildOkHttp(){
@@ -93,55 +80,62 @@ public class ApiClient {
         }
     }
 
-    public void buildRetroFit(){
-        if(mRetrofit == null) {
-            mRetrofit = new Retrofit.Builder()
-                    .baseUrl(apiBaseUrl)
+    public void buildCloudRetroFit(){
+           Retrofit mRetrofit = new Retrofit.Builder()
+                    .baseUrl(Constants.CLOUD_URL)
                     //.baseUrl("http://192.168.2.14:3000/")
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(mOkHttpClient)
                     .build();
-        }
+
+        this.mCloudApiService = mRetrofit.create(ApiService.class);
     }
 
-    public void changeApiBaseUrl(int network){
-        if(network == LOCAL){
-            setConnectionType(LOCAL);
-            setApiBaseUrl(localUrl);
-        } else if(network == CLOUD) {
-            setConnectionType(CLOUD);
-            setApiBaseUrl(Constants.CLOUD_URL);
-        }
+    public void buildLocalRetroFit(){
+            Retrofit mRetrofit = new Retrofit.Builder()
+                    .baseUrl(localUrl)
+                    //.baseUrl("http://192.168.2.14:3000/")
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(mOkHttpClient)
+                    .build();
+
+        this.mLocalApiService = mRetrofit.create(ApiService.class);
     }
 
-    private void setApiBaseUrl(String newApiBaseUrl){
-        apiBaseUrl = newApiBaseUrl;
-        Log.d(TAG, "Setting Api URL -> " + apiBaseUrl);
+    public void setCurrentConnection(int endpoint){
+        currentConnection = endpoint;
+    }
 
-        mRetrofit = null;
-        buildClient();
+    public int getCurrentConnection(){
+        return this.currentConnection;
     }
 
     public void setLocalUrl(String ip, String port) {
         String localUrl = "http://" + ip + ":" + port;
         this.localUrl = localUrl;
+        buildLocalRetroFit();
     }
 
-    private void setConnectionType(int type){
-        connectionType = type;
+    public ApiService getApiService() {
+        switch (currentConnection){
+            case LOCAL:
+                return getLocalApiService();
+
+            case CLOUD:
+                return getCloudApiService();
+        }
+
+        return  null;
     }
 
-    public int getConnectionType(){
-        return this.connectionType;
+    public ApiService getCloudApiService(){
+        return this.mCloudApiService;
     }
 
-    public String getApiBaseUrl(){
-        return this.apiBaseUrl;
-    }
-
-    public ApiService getApiService(){
-        return this.mApiService;
+    public ApiService getLocalApiService(){
+        return this.mLocalApiService;
     }
 
 }

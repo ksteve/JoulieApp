@@ -1,4 +1,4 @@
-package com.example.kyle.joulieapp.utils;
+package com.example.kyle.joulieapp.Utils;
 
 /**
  * Created by Kyle on 2017-04-09.
@@ -7,9 +7,6 @@ package com.example.kyle.joulieapp.utils;
 import android.content.Context;
 import android.net.nsd.NsdServiceInfo;
 import android.net.nsd.NsdManager;
-import android.util.Log;
-
-import com.example.kyle.joulieapp.api.ApiClient;
 
 import static android.net.nsd.NsdManager.*;
 

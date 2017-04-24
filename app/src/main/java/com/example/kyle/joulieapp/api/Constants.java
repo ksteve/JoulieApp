@@ -1,4 +1,4 @@
-package com.example.kyle.joulieapp.api;
+package com.example.kyle.joulieapp.Api;
 
 /**
  * Created by Kyle on 2017-01-20.
