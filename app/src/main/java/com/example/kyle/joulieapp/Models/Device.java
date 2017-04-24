@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -68,6 +69,7 @@ public class Device {
         setPort(devicePort);
         setImage(image);
         color = Color.BLUE;
+        deviceUsage = new ArrayList<>();
     }
 
     public String getId() {

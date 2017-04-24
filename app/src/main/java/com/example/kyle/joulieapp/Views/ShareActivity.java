@@ -1,5 +1,7 @@
 package com.example.kyle.joulieapp.Views;
 
+import android.graphics.Color;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,11 +10,15 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.kyle.joulieapp.Contracts.ShareContract;
 import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.DummyContent;
+import com.example.kyle.joulieapp.Presenters.SharePresenter;
 import com.example.kyle.joulieapp.R;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +29,8 @@ public class ShareActivity extends AppCompatActivity implements ShareContract.Vi
     private Spinner permissionDropdown;
     private Button btnShare;
     private Button btnSearch;
+    private TextView tvEmail;
+    private Device mCurrentDevice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +40,11 @@ public class ShareActivity extends AppCompatActivity implements ShareContract.Vi
         int device_index = -1;
         if (extras != null) {
             device_index = extras.getInt("index");
+            mCurrentDevice = DummyContent.MY_DEVICES.get(device_index);
             //The key argument here must match that used in the other activity
         }
+
+        new SharePresenter(this, this);
 
         ActionBar ab = getSupportActionBar();
         if (device_index == -1){
@@ -63,13 +74,30 @@ public class ShareActivity extends AppCompatActivity implements ShareContract.Vi
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                
+                mSharePresenter.findUserByEmail(tvEmail.getText().toString());
             }
         });
+
+        tvEmail = (TextView) findViewById(R.id.email_input);
 
         btnShare = (Button) findViewById(R.id.btnShare);
         btnShare.setEnabled(false);
 
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSharePresenter.shareDeviceWithUser(mCurrentDevice.getId(), "");
+            }
+        });
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSharePresenter.start();
+        btnShare.setEnabled(false);
 
     }
 
@@ -77,6 +105,27 @@ public class ShareActivity extends AppCompatActivity implements ShareContract.Vi
     public void setPresenter(ShareContract.Presenter presenter) {
         mSharePresenter = presenter;
     }
+
+    @Override
+    public void showFoundUser() {
+        btnShare.setEnabled(true);
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.parent), "User Found", Snackbar.LENGTH_SHORT);
+        snackbar.show();
+    }
+
+    @Override
+    public void showRequestFailed(String message) {
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.parent), message, Snackbar.LENGTH_SHORT);
+        snackbar.setActionTextColor(Color.RED);
+        snackbar.show();
+    }
+
+    @Override
+    public void showDeviceShared() {
+        finish();
+    }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -87,20 +136,5 @@ public class ShareActivity extends AppCompatActivity implements ShareContract.Vi
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void showFoundUser() {
-
-    }
-
-    @Override
-    public void showRequestFailed(String message) {
-
-    }
-
-    @Override
-    public void showDeviceShared() {
-
     }
 }
