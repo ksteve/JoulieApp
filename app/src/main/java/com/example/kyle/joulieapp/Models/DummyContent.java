@@ -26,7 +26,7 @@ public class DummyContent {
      * An array of sample (dummy) items.
      */
     public static List<Device> MY_DEVICES = new ArrayList<>();
-    public static List<Usage> MY_USAGES = new ArrayList<>();
+    public static List<UsageResponse> MY_USAGES = new ArrayList<>();
     public static List<Rule> MY_RULES = new ArrayList<>();
     public static List<String> colors = new ArrayList<>();
     private static Context mContext;
@@ -34,7 +34,6 @@ public class DummyContent {
 
     private static final int COUNT = 5;
     private static final String LOG_TAG = "DummyContent";
-
 
     public static void init(Context context){
         mContext = context;
@@ -53,8 +52,8 @@ public class DummyContent {
     }
 
     public static void addDevice(Device item) {
-        MY_DEVICES.add(item);
 
+        MY_DEVICES.add(item);
         //set device color for charts
         int i = MY_DEVICES.indexOf(item);
 
@@ -66,10 +65,20 @@ public class DummyContent {
             i = (i % colors.size()) - 1;
         }
 
+        if(item.getType() == "1") {
+            item.setType(Device.TYPE_WEMO);
+        }
+
+        if(item.getType() == "2") {
+            item.setType(Device.TYPE_TPLINK);
+        }
+
         item.setColor(Color.parseColor(colors.get(i)));
+
+
     }
 
-    public static void addUsage(Usage item) {
+    public static void addUsage(UsageResponse item) {
         MY_USAGES.add(item);
     }
 
@@ -77,18 +86,16 @@ public class DummyContent {
         MY_RULES.add(item);
     }
 
-
     public static void removeDevice(Device item) {
         MY_DEVICES.remove(item);
     }
 
-    public static void removeUsage(Usage item) {
+    public static void removeUsage(UsageResponse item) {
         MY_USAGES.remove(item);
     }
 
     public static void removeRule(Rule item) {
         MY_RULES.remove(item);
     }
-
 
 }

@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="8dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.kyle.joulieapp.MainActivity"
+    tools:context="com.example.kyle.joulieapp.Views.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
     <android.support.v4.view.ViewPager

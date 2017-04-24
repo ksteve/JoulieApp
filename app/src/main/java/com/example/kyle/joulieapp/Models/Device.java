@@ -5,13 +5,15 @@ import android.graphics.drawable.Drawable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by Kyle on 2016-10-30.
  */
 
 public class Device {
-    public static final int TYPE_WEMO = 1;
-    public static final int TYPE_TPLINK = 2;
+    public static final String TYPE_WEMO = "wemo";
+    public static final String TYPE_TPLINK = "tplink";
     public static final String WEMO_DISPLAY = "Wemo Insight Switch";
     public static final String TPLINK_DISPLAY = "TP-Link Smart Plug";
 
@@ -23,7 +25,7 @@ public class Device {
     private String deviceId;
 
     @SerializedName("type")
-    private int deviceType;
+    private String deviceType;
 
     @SerializedName("owned")
     private int isOwned;
@@ -52,7 +54,12 @@ public class Device {
 
     public transient Drawable image;
 
-    public Device(int deviceType,String deviceName, String deviceIP, String devicePort, Drawable image) {
+    private transient List<Usage> deviceUsage;
+
+    public transient float totalKwh;
+    public transient float estimatedCost;
+
+    public Device(String deviceType,String deviceName, String deviceIP, String devicePort, Drawable image) {
         setDeviceName(deviceName);
         setType(deviceType);
         setOwned(1);
@@ -60,6 +67,7 @@ public class Device {
         setIpAddress(deviceIP);
         setPort(devicePort);
         setImage(image);
+        color = Color.BLUE;
     }
 
     public String getId() {
@@ -71,20 +79,29 @@ public class Device {
     }
 
     public String getTypeName(){
-        if(this.getType() == TYPE_WEMO){
+        if(this.getType().equals(TYPE_WEMO)){
             return WEMO_DISPLAY;
-        } else if (this.getType() == TYPE_TPLINK) {
+        } else if (this.getType().equals(TYPE_TPLINK)) {
+            return TPLINK_DISPLAY;
+        } else if(this.getType().equals("1")){
+            return WEMO_DISPLAY;
+        } else if (this.getType().equals("2")) {
             return TPLINK_DISPLAY;
         } else {
             return "Unknown Type";
         }
     }
 
-    public int getType() {
+    public String getType() {
         return this.deviceType;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
+
+        if(type == "1") {type = Device.TYPE_WEMO;}
+
+        if(type == "2") {type = Device.TYPE_TPLINK;}
+
         this.deviceType = type;
     }
 
@@ -140,5 +157,13 @@ public class Device {
 
     public int getColor() {
         return color;
+    }
+
+    public List<Usage> getDeviceUsage() {
+        return deviceUsage;
+    }
+
+    public void setDeviceUsage(List<Usage> deviceUsage) {
+        this.deviceUsage = deviceUsage;
     }
 }

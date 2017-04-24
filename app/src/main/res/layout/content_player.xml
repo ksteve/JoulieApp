@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="bottom"
     android:background="@color/cardview_dark_background"
-    tools:context="com.example.kyle.joulieapp.MainActivity"
+    tools:context="com.example.kyle.joulieapp.Views.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
     <TextView

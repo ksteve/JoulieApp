@@ -1,0 +1,35 @@
+package com.example.kyle.joulieapp.Contracts;
+
+import com.example.kyle.joulieapp.Base.BasePresenter;
+import com.example.kyle.joulieapp.Base.BaseView;
+import com.github.mikephil.charting.data.LineData;
+
+/**
+ * Created by Kyle on 2017-04-16.
+ */
+
+public interface DeviceDetailContract {
+
+    interface View extends BaseView<Presenter> {
+
+        void setLoadingIndicator(boolean active);
+
+        void showShareUI();
+
+        void showUsage(LineData data);
+
+        void showRequestFailed(String message);
+
+        void showRequestSuccess(String message);
+    }
+
+    interface Presenter extends BasePresenter {
+
+        void editDevice();
+
+        void shareDevice();
+
+        void loadUsages(boolean forceUpdate);
+
+    }
+}

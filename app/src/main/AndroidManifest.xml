@@ -62,7 +62,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SplashActivity"
+            android:name=".Views.SplashActivity"
             android:theme="@style/SplashTheme"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -72,33 +72,33 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".Views.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".Views.MainActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".LoginActivity"
+            android:parentActivityName=".Views.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".NewDeviceActivity"
-            android:parentActivityName=".MainActivity"
+            android:name=".Views.NewDeviceActivity"
+            android:parentActivityName=".Views.MainActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".NewRuleActivity"
-            android:parentActivityName=".MainActivity"
+            android:name=".Views.NewRuleActivity"
+            android:parentActivityName=".Views.MainActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".SettingsActivity"
+            android:name=".Views.SettingsActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".DeviceDetailActivity"
+            android:name=".Views.DeviceDetailActivity"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".ShareActivity"
+            android:name=".Views.ShareActivity"
             android:screenOrientation="portrait"/>
 
         <!-- [START firebase_service] -->

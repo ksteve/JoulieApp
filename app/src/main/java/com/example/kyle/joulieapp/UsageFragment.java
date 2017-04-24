@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.example.kyle.joulieapp.Models.Usage;
 import com.example.kyle.joulieapp.Models.DummyContent;
-import com.github.mikephil.charting.charts.LineChart;
+import com.example.kyle.joulieapp.Views.UsageRecyclerViewAdapter;
 
 
 /**
@@ -74,7 +74,7 @@ public class UsageFragment extends Fragment {
             recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
 
-        recyclerView.setAdapter(new MyUsageRecyclerViewAdapter(DummyContent.MY_USAGES, mListener));
+       // recyclerView.setAdapter(new UsageRecyclerViewAdapter(DummyContent.MY_USAGES, mListener));
 
 //        if (DummyContent.MY_USAGES.isEmpty()) {
 //            recyclerView.setVisibility(View.GONE);

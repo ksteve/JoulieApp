@@ -9,28 +9,38 @@ import com.google.gson.annotations.SerializedName;
 
 public class Rule {
 
-    public final String id;
+    public String id;
     public String ruleName;
     public boolean isActive = false;
     public Device device;
     public int turnOnOff;
-    public String time;
-    public String days;
+    public int time;
+    public int days;
 
-    @SerializedName("uuid")
+    //@SerializedName("uuid")
     private String ruleId;
 
-    public Rule(String id, String ruleName, Device device, int turnOnOff, String time, String days) {
-        this.id = id;
+    //int 1 or 0
+    @SerializedName("state")
+    private int state;
+
+    //0000 - 2359
+    @SerializedName("run_time")
+    private int runTime;
+
+    //int 000001
+    @SerializedName("repeat")
+    private int repeat;
+
+    @SerializedName("device_id")
+    private int deviceID;
+
+    public Rule(String ruleName, Device device, int turnOnOff, int time, int days) {
         this.ruleName = ruleName;
         this.device = device;
         this.turnOnOff = turnOnOff;
         this.time = time;
         this.days = days;
-    }
-
-    public Rule(String id){
-        this.id = id;
     }
 
     public String getId() {
@@ -40,8 +50,5 @@ public class Rule {
     public void setId(String id) {
         this.ruleId = id;
     }
-
-
-
 
 }

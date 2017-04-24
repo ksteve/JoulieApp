@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="450dp"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.kyle.joulieapp.UsageOverviewFragment"
+    tools:context="com.example.kyle.joulieapp.Views.UsageOverviewFragment"
     android:id="@+id/cardView"
     android:layout_margin="2dp"
     android:layout_alignParentTop="true"

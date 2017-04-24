@@ -2,42 +2,16 @@
 
     <!-- NOTE: EditTextPreference accepts EditText attributes. -->
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
-    <EditTextPreference
-        android:capitalize="none"
-        android:inputType="time"
-        android:key="peak_start_time"
-        android:maxLines="1"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:title="On Peak Start Time (24-hour clock)"/>
-
-    <EditTextPreference
-        android:capitalize="none"
-        android:inputType="time"
-        android:key="peak_end_time"
-        android:maxLines="1"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:title="On Peak End Time (24-hour clock)"/>
 
     <EditTextPreference
         android:capitalize="none"
         android:inputType="numberDecimal"
-        android:key="peak_cost"
+        android:key="mid_peak_cost"
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:title="On Peak Cost (cents/kWh)"/>
-
-    <EditTextPreference
-        android:capitalize="none"
-        android:inputType="numberDecimal"
-        android:key="off_peak_cost"
-        android:maxLines="1"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:title="Off Peak Cost (cents/kWh)"/>
-
+        android:title="Mid Peak Cost (cents/kWh)"
+        android:summary="This will allow Joulie to give you an estimated usage cost"/>
 
     <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
          dismiss it. -->
