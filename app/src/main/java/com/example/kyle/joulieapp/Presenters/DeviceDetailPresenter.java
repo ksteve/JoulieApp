@@ -46,6 +46,11 @@ public class DeviceDetailPresenter implements DeviceDetailContract.Presenter{
     }
 
     public void getDeviceUsage(boolean forceUpdate, final boolean showLoadingUI){
+
+        if(currentDevice.getDeviceUsage() == null){
+            return;
+        }
+
         if(currentDevice.getDeviceUsage().isEmpty()){
             // TODO: 2017-04-21 no usage data available for device, request more from server??
             return;

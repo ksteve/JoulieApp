@@ -44,5 +44,7 @@ public interface UsageContract {
 
         void setChartTimeSpan(int timeSpan);
 
+        void updateCost();
+
     }
 }

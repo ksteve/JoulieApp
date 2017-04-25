@@ -100,9 +100,8 @@ public class Device {
 
     public void setType(String type) {
 
-        if(type == "1") {type = Device.TYPE_WEMO;}
-
-        if(type == "2") {type = Device.TYPE_TPLINK;}
+        if(type.equals("1")) {type = Device.TYPE_WEMO;}
+        if(type.equals("2")) {type = Device.TYPE_TPLINK;}
 
         this.deviceType = type;
     }

@@ -10,7 +10,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,7 +43,6 @@ import com.example.kyle.joulieapp.Models.Usage;
 import com.example.kyle.joulieapp.Models.Rule;
 import com.example.kyle.joulieapp.Models.DummyContent;
 import com.example.kyle.joulieapp.R;
-import com.example.kyle.joulieapp.UsageFragment;
 import com.example.kyle.joulieapp.Api.ApiClient;
 import com.example.kyle.joulieapp.Presenters.MainPresenter;
 import com.example.kyle.joulieapp.Utils.CredentialsManager;
@@ -57,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         ViewPager.OnPageChangeListener,
         DeviceFragment.OnDeviceFragmentInteractionListener,
-        UsageFragment.OnListFragmentInteractionListener,
         UsageOverviewFragment.OnFragmentInteractionListener,
         RuleFragment.OnListFragmentInteractionListener,
         MainContract.View {
@@ -70,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements
     private TabLayout tabLayout;
     private FloatingActionButton fab;
     private View coordinator;
+    private BroadcastReceiver mConnectivityChangedReceiver;
 
     private static final int MYUSAGE_FRAGMENT = 0;
     private static final int MYRULES_FRAGMENT = 1;
@@ -182,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void registerNetworkChanges(){
         // TODO: 2017-04-08 maybe move this to presenter
-        BroadcastReceiver connectivityChangedReceiver = new BroadcastReceiver() {
+        mConnectivityChangedReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                // int status = NetworkUtil.getConnectivityStatusString(context);
@@ -192,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements
 
         //setup the main activity to be notified when network changes occur
         MainActivity.this.registerReceiver(
-                connectivityChangedReceiver,
+                mConnectivityChangedReceiver,
                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
@@ -435,12 +433,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onListFragmentInteraction(Usage item) {
-       //    UsageFragment myArtistsFragment  = (UsageFragment) getSupportFragmentManager().getFragments().get(MYARTISTS_FRAGMENT);
-            //myArtistsFragment.
-    }
-
-    @Override
     public void onListFragmentInteraction(Rule item) {
 
     }
@@ -563,4 +555,11 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MainActivity.this.registerReceiver(
+                mConnectivityChangedReceiver,
+                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
 }

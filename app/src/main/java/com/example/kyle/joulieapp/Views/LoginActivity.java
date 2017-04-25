@@ -106,7 +106,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     private LockCallback callback = new AuthenticationCallback() {
         @Override
         public void onAuthentication(Credentials credentials) {
-            Log.d("TOKEN: ", CredentialsManager.getCredentials(LoginActivity.this).getIdToken());
+            //Log.d("TOKEN: ", CredentialsManager.getCredentials(LoginActivity.this).getIdToken());
             mLoginPresenter.createNewUser(credentials);
         }
 

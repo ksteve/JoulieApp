@@ -90,7 +90,7 @@ public class UsagePresenter implements UsageContract.Presenter {
                     .enqueue(new Callback<List<UsageResponse>>() {
                         @Override
                         public void onResponse(Call<List<UsageResponse>> call, Response<List<UsageResponse>> response) {
-                            //mListener.UsagesReady(response.body());
+                            DummyContent.setMyUsages(response.body());
                             processUsages(response.body());
                         }
 
@@ -121,37 +121,21 @@ public class UsagePresenter implements UsageContract.Presenter {
 
             for(UsageResponse u: usageDataSet){
 
-                Date previousTime = null;
                 Device device = Tools.findDeviceByID(u.getDeviceID());
 
                 if(device != null) {
-
                     //set usage data for that device
                     device.setDeviceUsage(u.getUsages());
-
                     for (Usage ux : u.getUsages()) {
 
-                        //mSharedPreferences.get
-
-//                        Calendar calendar = Calendar.getInstance();
-//                        calendar.setTimeInMillis((long)ux.getTimestamp() * 1000);
-//                        Date usageTime = calendar.getTime();
-//
-//                        if(previousTime == null){
-//                            previousTime = usageTime;
-//                        } else {
-                            //long diff = previousTime.getTime() - usageTime.getTime();
-                            //long diffHours = diff / (60 * 60 * 1000);
                         totalUsage += ux.getValue(); // * diffHours;
-                      //  }
-
                         usageData.add(new Entry(ux.getTimestamp(), ux.getValue()));
                     }
 
                     totalKwh = totalUsage / u.getUsages().size();
                     totalKwh = totalKwh * numHours;
-
                     totalKwh = (float)(Math.round(totalKwh * 100d) / 100d);
+
                     estimatedCost = ((totalKwh * cost) / 100);
                     estimatedCost = (float)(Math.round(estimatedCost * 100d) / 100d);
 
@@ -159,7 +143,6 @@ public class UsagePresenter implements UsageContract.Presenter {
                     device.estimatedCost = estimatedCost;
 
                     mUsageView.showTotals(totalKwh, estimatedCost);
-
                     LineDataSet dataSetKilowatt = new LineDataSet(usageData, u.getDeviceID());
                     dataSetKilowatt.setLineWidth(4);
                     dataSetKilowatt.setDrawFilled(true);
@@ -236,6 +219,11 @@ public class UsagePresenter implements UsageContract.Presenter {
             case MAX_FORMAT:
                 break;
         }
+    }
+
+    @Override
+    public void updateCost() {
+        processUsages(DummyContent.MY_USAGES);
     }
 
 

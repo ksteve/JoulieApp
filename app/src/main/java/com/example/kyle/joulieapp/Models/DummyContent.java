@@ -51,6 +51,10 @@ public class DummyContent {
         MY_RULES = rules;
     }
 
+    public static void setMyUsages(List<UsageResponse> usages){
+        MY_USAGES = usages;
+    }
+
     public static void addDevice(Device item) {
 
         MY_DEVICES.add(item);
@@ -65,11 +69,11 @@ public class DummyContent {
             i = (i % colors.size()) - 1;
         }
 
-        if(item.getType() == "1") {
+        if(item.getType().equals("1") || item.getType().equals(Device.TYPE_WEMO) ) {
             item.setType(Device.TYPE_WEMO);
         }
 
-        if(item.getType() == "2") {
+        if(item.getType().equals("2")  || item.getType().equals(Device.TYPE_TPLINK)) {
             item.setType(Device.TYPE_TPLINK);
         }
 

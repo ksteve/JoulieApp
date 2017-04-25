@@ -54,10 +54,10 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mItem = mValues.get(position);
-        if(holder.mItem.getType() == Device.TYPE_WEMO){
+        if(holder.mItem.getType().equals(Device.TYPE_WEMO)){
             holder.mDeviceImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.wemo_device));
             holder.mDeviceType.setText(Device.WEMO_DISPLAY);
-        } else if(holder.mItem.getType() == Device.TYPE_TPLINK){
+        } else if(holder.mItem.getType().equals(Device.TYPE_TPLINK)){
             holder.mDeviceImage.setImageDrawable(mContext.getResources().getDrawable(R.drawable.tplink_device));
             holder.mDeviceType.setText(Device.TPLINK_DISPLAY);
         }

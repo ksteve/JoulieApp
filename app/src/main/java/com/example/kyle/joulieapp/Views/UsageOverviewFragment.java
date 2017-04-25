@@ -41,7 +41,9 @@ import java.util.List;
  * Use the {@link UsageOverviewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UsageOverviewFragment extends Fragment implements UsageContract.View {
+public class UsageOverviewFragment extends Fragment implements
+        UsageContract.View,
+        SharedPreferences.OnSharedPreferenceChangeListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -333,6 +335,14 @@ public class UsageOverviewFragment extends Fragment implements UsageContract.Vie
 
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        String newCost = sharedPreferences.getString(s, "");
+        mUsagePresenter.updateCost();
+
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -357,5 +367,22 @@ public class UsageOverviewFragment extends Fragment implements UsageContract.Vie
         super.onResume();
         setupChart();
         mUsagePresenter.start();
+        // Register the listener whenever a key changes
+        PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Unregister the listener whenever a key changes
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .unregisterOnSharedPreferenceChangeListener(this);
     }
 }

@@ -79,21 +79,31 @@
                 android:layout_gravity="center"
                 android:padding="5dp">
 
+                <ImageView
+                    android:id="@+id/trend_arrow"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_keyboard_arrow_green_24dp"/>
+
                 <TextView
                     android:id="@+id/avg_usage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:text="17.5 kWh"
-                    android:textSize="32sp"/>
+                    android:text="-- kWh"
+                    android:textSize="32sp"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/trend_arrow"/>
 
                 <TextView
                     android:id="@+id/avg_usage_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/avg_usage"
-                    android:layout_centerHorizontal="true"
-                    android:text="usage this month"/>
+                    android:text="Average Usage"
+                    android:textSize="12sp"
+                    android:layout_centerHorizontal="true"/>
+
 
                 <TextView
                     android:id="@+id/usage_trend"
@@ -101,8 +111,9 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/avg_usage_label"
                     android:layout_centerHorizontal="true"
-                    android:text="- 5.2 %"
+                    android:text="-- %"
                     android:textSize="32sp"/>
+
 
             </RelativeLayout>
         </android.support.v7.widget.CardView>
@@ -155,38 +166,38 @@
 
     </LinearLayout>
 
-    <RadioGroup
-        android:id="@+id/rgChartDisplayType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/linearLayout"
-        android:orientation="horizontal">
+    <!--<RadioGroup-->
+        <!--android:id="@+id/rgChartDisplayType"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_below="@+id/linearLayout"-->
+        <!--android:orientation="horizontal">-->
 
-        <RadioButton
-            android:id="@+id/rbKilowatt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/rbDollars"
-            android:layout_alignBottom="@+id/rbDollars"
-            android:layout_alignParentStart="true"
-            android:text="kWh" />
+        <!--<RadioButton-->
+            <!--android:id="@+id/rbKilowatt"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignBaseline="@+id/rbDollars"-->
+            <!--android:layout_alignBottom="@+id/rbDollars"-->
+            <!--android:layout_alignParentStart="true"-->
+            <!--android:text="kWh" />-->
 
-        <RadioButton
-            android:id="@+id/rbDollars"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/usage_container"
-            android:layout_toEndOf="@+id/rbKilowatt"
-            android:text="$" />
-    </RadioGroup>
+        <!--<RadioButton-->
+            <!--android:id="@+id/rbDollars"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/usage_container"-->
+            <!--android:layout_toEndOf="@+id/rbKilowatt"-->
+            <!--android:text="$" />-->
+    <!--</RadioGroup>-->
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="320dp"
         android:layout_above="@+id/graph_tabs"
-        android:layout_below="@+id/rgChartDisplayType" />
+        android:layout_below="@+id/linearLayout" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabShare"
@@ -207,7 +218,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="6dp"
-        android:background="#ffffff"
+        android:background="#d7d7d7"
         app:tabGravity="fill"
         app:tabMode="fixed"/>
 

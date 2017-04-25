@@ -38,7 +38,7 @@ public class NewDevicePresenter implements NewDeviceContract.Presenter {
                 deviceImage
                 );
 
-        ApiClient.getInstance(context.getApplicationContext()).getApiService()
+        ApiClient.getInstance(context.getApplicationContext()).getCloudApiService()
                 .createDevice(device)
                 .enqueue(new Callback<Device>() {
                     @Override

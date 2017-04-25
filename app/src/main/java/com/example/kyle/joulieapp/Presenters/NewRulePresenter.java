@@ -43,7 +43,7 @@ public class NewRulePresenter implements NewRuleContract.Presenter {
                 days
                 );
 
-        ApiClient.getInstance(context.getApplicationContext()).getApiService()
+        ApiClient.getInstance(context.getApplicationContext()).getCloudApiService()
                 .createRule(rule)
                 .enqueue(new Callback<Rule>() {
                     @Override
