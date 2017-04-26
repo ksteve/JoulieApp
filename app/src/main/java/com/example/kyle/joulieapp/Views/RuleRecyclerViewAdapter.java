@@ -61,7 +61,51 @@ public class RuleRecyclerViewAdapter extends RecyclerView.Adapter<RuleRecyclerVi
         boolean b = selectedRules.containsKey(mValues.get(position).getId());
         holder.checkBox.setChecked(b);
 
-        holder.mContentView.setText(mValues.get(position).ruleName + ":\n" + mValues.get(position).device.getDeviceName() + "\n" + onOff + "@" + mValues.get(position).time + "\n" + mValues.get(position).days);
+        holder.tvDeviceName.setText(mValues.get(position).ruleName + ":\n" + mValues.get(position).device.getDeviceName() + "\n" + onOff + "@" + mValues.get(position).time + "\n" + mValues.get(position).days);
+        holder.tvTime.setText(mValues.get(position).time);
+
+        int flag = 1;
+        String dayString = "";
+        for(int i = 0; i < 7; i++){
+
+            if(i > 0){
+                flag *= 2;
+
+            }
+
+            int day = flag & mValues.get(position).days;
+
+            if(day > 0){
+                switch(i){
+                    case 0:
+                        dayString += "Mon ";
+                        break;
+                    case 1:
+                        dayString += "Tues";
+                        break;
+                    case 2:
+                        dayString += "Wed";
+                        break;
+                    case 3:
+                        dayString += "Thurs";
+                        break;
+                    case 4:
+                        dayString += "Fri";
+                        break;
+                    case 5:
+                        dayString += "Sat";
+                        break;
+                    case 6:
+                        dayString += "Sun";
+                        break;
+                }
+            }
+
+        }
+
+        if(mValues.get(position).days > 0) {
+            holder.tvDays.setText(dayString);
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,14 +149,18 @@ public class RuleRecyclerViewAdapter extends RecyclerView.Adapter<RuleRecyclerVi
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final View mView;
-        public final TextView mContentView;
+        public final TextView tvDeviceName;
+        public final TextView tvTime;
+        public final TextView tvDays;
         public Rule mItem;
         public final CheckBox checkBox;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mContentView = (TextView) view.findViewById(R.id.content);
+            tvDeviceName = (TextView) view.findViewById(R.id.device_name);
+            tvTime = (TextView) view.findViewById(R.id.run_time);
+            tvDays = (TextView) view.findViewById(R.id.days);
             checkBox = (CheckBox) view.findViewById(R.id.checkBox);
         }
 
@@ -120,7 +168,7 @@ public class RuleRecyclerViewAdapter extends RecyclerView.Adapter<RuleRecyclerVi
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mItem.ruleName + "'";
         }
 
         @Override
