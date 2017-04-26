@@ -26,11 +26,15 @@ import com.example.kyle.joulieapp.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.UUID;
 
 public class NewRuleActivity extends AppCompatActivity implements NewRuleContract.View{
@@ -66,7 +70,9 @@ public class NewRuleActivity extends AppCompatActivity implements NewRuleContrac
         deviceDropdown = (Spinner) findViewById(R.id.device_dropdown);
         deviceList = new ArrayList<String>();
         for (int i = 0; i < DummyContent.MY_DEVICES.size(); i++){
-            deviceList.add(DummyContent.MY_DEVICES.get(i).getDeviceName());
+            if(DummyContent.MY_DEVICES.get(i).getOwned() == 1) {
+                deviceList.add(DummyContent.MY_DEVICES.get(i).getDeviceName());
+            }
         }
         ArrayAdapter<String> deviceDataAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, deviceList);
@@ -95,7 +101,7 @@ public class NewRuleActivity extends AppCompatActivity implements NewRuleContrac
                     turnOnOff = (ToggleButton) findViewById(R.id.toggleButton);
                     int nOnOff = 0;
                     Device dev = null;
-                    String time = timePicker.getCurrentHour().toString() + String.format(Locale.CANADA,"%02d",timePicker.getCurrentMinute());
+                    String time = localToGMT(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
                     String days = "";
                     tbtnSn = (ToggleButton) findViewById(R.id.tbtnSn);
                     tbtnM = (ToggleButton) findViewById(R.id.tbtnM);
@@ -106,13 +112,15 @@ public class NewRuleActivity extends AppCompatActivity implements NewRuleContrac
                     tbtnSt = (ToggleButton) findViewById(R.id.tbtnSt);
 
                     for (int i = 0; i < DummyContent.MY_DEVICES.size(); i++){
-                        if (deviceDropdown.getSelectedItem().toString() == DummyContent.MY_DEVICES.get(i).getDeviceName()){
+                        if (deviceDropdown.getSelectedItem().toString().equals(DummyContent.MY_DEVICES.get(i).getDeviceName())){
                             dev = DummyContent.MY_DEVICES.get(i);
                         }
                     }
 
                     if (turnOnOff.isChecked()){
                         nOnOff = 1;
+                    } else {
+                        nOnOff = 2;
                     }
 
                     days += tbtnSn.isChecked() ? "1" : "0";
@@ -126,12 +134,25 @@ public class NewRuleActivity extends AppCompatActivity implements NewRuleContrac
 
                     int daysbits = Integer.valueOf(days);
                     int timenum = Integer.valueOf(time);
-
+                    daysbits = Integer.parseInt(days, 2);
                     mNewRulePresenter.createRule(ruleName.getText().toString(), dev, nOnOff, timenum, daysbits);
                 }
             }
         });
 
+    }
+
+    private String localToGMT(int hour, int minute) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        Date date = cal.getTime();
+
+        SimpleDateFormat isoFormat = new SimpleDateFormat("HH:mm");
+        isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String utcTime = isoFormat.format(date);
+        utcTime = utcTime.replace(":", "");
+        return utcTime;
     }
 
 

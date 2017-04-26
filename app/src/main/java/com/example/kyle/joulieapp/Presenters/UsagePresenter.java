@@ -117,10 +117,9 @@ public class UsagePresenter implements UsageContract.Presenter {
         }
 
         if(usageDataSet != null && !usageDataSet.isEmpty()) {
-            List<Entry> usageData = new ArrayList<>();
 
             for(UsageResponse u: usageDataSet){
-
+                List<Entry> usageData = new ArrayList<>();
                 Device device = Tools.findDeviceByID(u.getDeviceID());
 
                 if(device != null) {
@@ -143,9 +142,9 @@ public class UsagePresenter implements UsageContract.Presenter {
                     device.estimatedCost = estimatedCost;
 
                     mUsageView.showTotals(totalKwh, estimatedCost);
-                    LineDataSet dataSetKilowatt = new LineDataSet(usageData, u.getDeviceID());
-                    dataSetKilowatt.setLineWidth(4);
-                    dataSetKilowatt.setDrawFilled(true);
+                    LineDataSet dataSetKilowatt = new LineDataSet(usageData, device.getDeviceName());
+                    dataSetKilowatt.setLineWidth(3);
+                  //  dataSetKilowatt.setDrawFilled(true);
                     dataSetKilowatt.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
                     dataSetKilowatt.setDrawCircles(false);
                     dataSetKilowatt.setDrawValues(false);

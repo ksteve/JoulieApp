@@ -52,7 +52,7 @@ public class RuleRecyclerViewAdapter extends RecyclerView.Adapter<RuleRecyclerVi
 
         String onOff = "off";
 
-        if (mValues.get(position).turnOnOff == 1){
+        if (mValues.get(position).state == 1){
             onOff = "on";
         }
 
@@ -61,7 +61,7 @@ public class RuleRecyclerViewAdapter extends RecyclerView.Adapter<RuleRecyclerVi
         boolean b = selectedRules.containsKey(mValues.get(position).getId());
         holder.checkBox.setChecked(b);
 
-        holder.mContentView.setText(mValues.get(position).ruleName + ":\n" + mValues.get(position).device.getDeviceName() + "\n" + onOff + "@" + mValues.get(position).time + "\n" + mValues.get(position).days);
+        //holder.mContentView.setText(mValues.get(position).ruleName + ":\n" + mValues.get(position).device.getDeviceName() + "\n" + onOff + "@" + mValues.get(position).runTime + "\n" + mValues.get(position).repeat);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

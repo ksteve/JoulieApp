@@ -9,46 +9,47 @@ import com.google.gson.annotations.SerializedName;
 
 public class Rule {
 
-    public String id;
     public String ruleName;
-    public boolean isActive = false;
-    public Device device;
-    public int turnOnOff;
-    public int time;
-    public int days;
+   // public boolean isActive = false;
+    public transient Device device;
+//    public int turnOnOff;
+//    public int time;
+//    public int days;
 
-    //@SerializedName("uuid")
-    private String ruleId;
+    @SerializedName("uuid")
+    public String id;
 
     //int 1 or 0
     @SerializedName("state")
-    private int state;
+    public int state;
 
     //0000 - 2359
     @SerializedName("run_time")
-    private int runTime;
+    public int runTime;
 
     //int 000001
     @SerializedName("repeat")
-    private int repeat;
+    public int repeat;
 
-    @SerializedName("device_id")
-    private int deviceID;
+    @SerializedName("device_guid")
+    public int deviceID;
+
+
 
     public Rule(String ruleName, Device device, int turnOnOff, int time, int days) {
         this.ruleName = ruleName;
         this.device = device;
-        this.turnOnOff = turnOnOff;
-        this.time = time;
-        this.days = days;
+        this.state = turnOnOff;
+        this.runTime = time;
+        this.repeat = days;
     }
 
     public String getId() {
-        return this.ruleId;
+        return this.id;
     }
 
     public void setId(String id) {
-        this.ruleId = id;
+        this.id = id;
     }
 
 }

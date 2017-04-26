@@ -34,14 +34,6 @@ public interface ApiService {
     @POST("user/{user_token}/devices/reset")
     Call<String> resetDevices(@Path("user_token") String userToken);
 
-    //Creating a new Robot
-    @POST("robot/{robot_name}")
-    Call createRobot(@Path("robot_name") String robotName);
-
-    //Delete a Robot
-    @DELETE("robot/{robot_name}")
-    Call deleteRobot(@Path("robot_name") String robotName);
-
     //Create a new device for the specified robot
     @POST("device")
     Call<Device> createDevice(@Body Device device);
@@ -51,8 +43,8 @@ public interface ApiService {
     Call<String> deleteDevice(@Path("device_id") String deviceID);
 
     //Create a new device for the specified robot
-    @POST("rule")
-    Call<Rule> createRule(@Body Rule rule);
+    @POST("device/{device_id}/rule")
+    Call<String> createRule(@Path("device_id") String deviceID, @Body Rule rule);
 
     //delete a device from the specified robot
     @DELETE("rule/{rule_id}")
@@ -82,6 +74,9 @@ public interface ApiService {
 
     @POST("device/{device_id}/share/{user_id}")
     Call<String> shareDevice(@Path("device_id") String deviceId, @Path("user_id") String userId);
+
+    @GET("users")
+    Call<String> findUser();
 
     // TODO: 2017-03-17 get usage data endpoint
     // TODO: 2017-03-17 create new rule endpoint

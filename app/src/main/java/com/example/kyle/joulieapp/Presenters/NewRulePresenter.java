@@ -44,18 +44,18 @@ public class NewRulePresenter implements NewRuleContract.Presenter {
                 );
 
         ApiClient.getInstance(context.getApplicationContext()).getCloudApiService()
-                .createRule(rule)
-                .enqueue(new Callback<Rule>() {
+                .createRule(device.getId(),rule)
+                .enqueue(new Callback<String>() {
                     @Override
-                    public void onResponse(Call<Rule> call, Response<Rule> response) {
+                    public void onResponse(Call<String> call, Response<String> response) {
                         if (response.body() != null){
-                            DummyContent.MY_RULES.add(response.body());
+                            DummyContent.MY_RULES.add(rule);
                         }
-                        mNewRuleView.ruleReady(response.body());
+                        mNewRuleView.ruleReady(rule);
                     }
 
                     @Override
-                    public void onFailure(Call<Rule> call, Throwable t) {
+                    public void onFailure(Call<String> call, Throwable t) {
                         //// TODO: 2017-04-05 throw error, display message to user
                         mNewRuleView.showRequestFailed(t.getMessage());
                     }

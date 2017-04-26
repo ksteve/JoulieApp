@@ -78,19 +78,19 @@ public class RulePresenter implements RuleContract.Presenter {
 
     @Override
     public void addNewRule(@NonNull Rule rule) {
-        ApiClient.getInstance(context.getApplicationContext()).getApiService()
-                .createRule(rule)
-                .enqueue(new Callback<Rule>() {
-                    @Override
-                    public void onResponse(Call<Rule> call, Response<Rule> response) {
-                //        mRuleView.ruleReady(response.body());
-                    }
-
-                    @Override
-                    public void onFailure(Call<Rule> call, Throwable t) {
-                        //// TODO: 2017-04-05 throw error, display message to user
-                    }
-                });
+//        ApiClient.getInstance(context.getApplicationContext()).getApiService()
+//                .createRule(rule)
+//                .enqueue(new Callback<Rule>() {
+//                    @Override
+//                    public void onResponse(Call<Rule> call, Response<Rule> response) {
+//                //        mRuleView.ruleReady(response.body());
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<Rule> call, Throwable t) {
+//                        //// TODO: 2017-04-05 throw error, display message to user
+//                    }
+//                });
     }
 
     @Override
