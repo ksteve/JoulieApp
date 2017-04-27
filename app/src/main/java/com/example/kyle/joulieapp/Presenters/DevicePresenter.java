@@ -41,7 +41,7 @@ public class DevicePresenter  implements DeviceContract.Presenter {
 
     @Override
     public void deleteDevice(@NonNull final Device device) {
-        ApiClient.getInstance(context.getApplicationContext()).getApiService()
+        ApiClient.getInstance(context.getApplicationContext()).getCloudApiService()
                 .deleteDevice(device.getId())
                 .enqueue(new Callback<String>() {
                     @Override

@@ -15,6 +15,7 @@ public class Rule {
 //    public int turnOnOff;
 //    public int time;
 //    public int days;
+    public transient String localTime;
 
     @SerializedName("uuid")
     public String id;
@@ -36,12 +37,13 @@ public class Rule {
 
 
 
-    public Rule(String ruleName, Device device, int turnOnOff, int time, int days) {
+    public Rule(String ruleName, Device device, int turnOnOff, int time, String localTime, int days) {
         this.ruleName = ruleName;
         this.device = device;
         this.state = turnOnOff;
         this.runTime = time;
         this.repeat = days;
+        this.localTime = localTime;
     }
 
     public String getId() {

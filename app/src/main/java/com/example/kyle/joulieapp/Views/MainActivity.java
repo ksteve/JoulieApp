@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements
                         break;
                     case MYDEVICES_FRAGMENT:
                         Intent newDeviceIntent = new Intent(MainActivity.this, NewDeviceActivity.class);
-                        startActivityForResult(newDeviceIntent, 1);
+                        startActivityForResult(newDeviceIntent, 2);
                         break;
                 }
             }
@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements
             Snackbar snackbar = Snackbar.make(coordinator, result, Snackbar.LENGTH_SHORT);
             snackbar.show();
         }
-      //  notifyFragment();
+      notifyFragments();
     }
 
     //Method Name: onBackPressed

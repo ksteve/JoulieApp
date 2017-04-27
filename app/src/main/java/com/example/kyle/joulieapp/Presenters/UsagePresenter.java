@@ -59,6 +59,7 @@ public class UsagePresenter implements UsageContract.Presenter {
     private float estimatedCost;
     private float totalUsage;
     private int numHours;
+    private int chartFormat;
 
     @Override
     public void start() {
@@ -100,6 +101,13 @@ public class UsagePresenter implements UsageContract.Presenter {
                             mUsageView.showRequestFailed(t.getMessage());
                         }
                     });
+        } else {
+            if(DummyContent.MY_USAGES != null){
+                if(!DummyContent.MY_USAGES.isEmpty()){
+                    processUsages(DummyContent.MY_USAGES);
+                }
+            }
+
         }
     }
 
@@ -107,6 +115,7 @@ public class UsagePresenter implements UsageContract.Presenter {
         List<ILineDataSet> chartDataSets = new ArrayList<>();
         float totalUsage = 0;
         float totalKwh = 0;
+        int dataCount = 0;
         float estimatedCost = 0;
         float cost = 0;
         String mid_peak_cost;
@@ -122,16 +131,19 @@ public class UsagePresenter implements UsageContract.Presenter {
                 List<Entry> usageData = new ArrayList<>();
                 Device device = Tools.findDeviceByID(u.getDeviceID());
 
+
                 if(device != null) {
                     //set usage data for that device
                     device.setDeviceUsage(u.getUsages());
                     for (Usage ux : u.getUsages()) {
-
-                        totalUsage += ux.getValue(); // * diffHours;
-                        usageData.add(new Entry(ux.getTimestamp(), ux.getValue()));
+                        if(isTimestampNeeded(ux.getTimestamp())) {
+                            dataCount++;
+                            totalUsage += ux.getValue(); // * diffHours;
+                            usageData.add(new Entry(ux.getTimestamp(), ux.getValue()));
+                        }
                     }
 
-                    totalKwh = totalUsage / u.getUsages().size();
+                    totalKwh = (totalUsage / dataCount);
                     totalKwh = totalKwh * numHours;
                     totalKwh = (float)(Math.round(totalKwh * 100d) / 100d);
 
@@ -160,6 +172,77 @@ public class UsagePresenter implements UsageContract.Presenter {
 
     private void updateUsageCost(){
 
+    }
+
+    private boolean isTimestampNeeded(float timestamp){
+
+        Calendar c = Calendar.getInstance();
+
+        switch (chartFormat){
+            case DAY_FORMAT:
+
+                c.set(Calendar.HOUR_OF_DAY, 0);
+                c.set(Calendar.MINUTE, 0);
+                c.set(Calendar.MINUTE, 0);
+                c.set(Calendar.SECOND, 0);
+                c.set(Calendar.MILLISECOND, 0);
+
+                long beginningOfDay = c.getTimeInMillis()/1000;
+
+                if(timestamp < beginningOfDay){
+                    return false;
+                }
+
+                break;
+            case WEEK_FORMAT:
+
+                c.set(Calendar.DAY_OF_WEEK, 1);
+                c.set(Calendar.HOUR_OF_DAY, 0);
+                c.set(Calendar.MINUTE, 0);
+                c.set(Calendar.SECOND, 0);
+                c.set(Calendar.MILLISECOND, 0);
+                long beginningOfWeek = c.getTimeInMillis()/1000;
+
+                if(timestamp < beginningOfWeek){
+                    return false;
+                }
+
+                break;
+            case MONTH_FORMAT:
+                c.set(Calendar.DAY_OF_MONTH, 1);
+                c.set(Calendar.HOUR_OF_DAY, 0);
+                c.set(Calendar.MINUTE, 0);
+                c.set(Calendar.SECOND, 0);
+                c.set(Calendar.MILLISECOND, 0);
+                long beginningOfMonth = c.getTimeInMillis()/1000;
+
+                if(timestamp < beginningOfMonth){
+                    return false;
+                }
+                break;
+            case YEAR_FORMAT:
+
+                c.set(Calendar.MONTH, Calendar.JANUARY);
+                c.set(Calendar.DAY_OF_MONTH, 1);
+                c.set(Calendar.HOUR_OF_DAY, 0);
+                c.set(Calendar.MINUTE, 0);
+                c.set(Calendar.SECOND, 0);
+                c.set(Calendar.MILLISECOND, 0);
+                long beginningOfYear = c.getTimeInMillis()/1000;
+                if(timestamp < beginningOfYear){
+                    return false;
+                }
+                break;
+            case MAX_FORMAT:
+
+//                if(timestamp < beginningOfMonth){
+//                    return false;
+//                }
+                break;
+        }
+
+
+        return true;
     }
 
     @Override
@@ -198,24 +281,36 @@ public class UsagePresenter implements UsageContract.Presenter {
 
     @Override
     public void setChartTimeSpan(int timeSpan) {
+        Calendar c = Calendar.getInstance();
         switch (timeSpan){
             case DAY_FORMAT:
-                numHours = HOURS_IN_DAY;
+                chartFormat = DAY_FORMAT;
+                numHours = 24;
+                getUsages(false, false);
                 mUsageView.setChartFormatter(DAY_FORMAT);
                 break;
             case WEEK_FORMAT:
-                numHours = HOURS_IN_WEEK;
+                chartFormat = WEEK_FORMAT;
+                numHours = 168;
+                getUsages(false, false);
                 mUsageView.setChartFormatter(WEEK_FORMAT);
                 break;
             case MONTH_FORMAT:
-                numHours = HOURS_IN_MONTHS;
+                chartFormat = MONTH_FORMAT;
+                int monthMaxDays = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+                numHours = (monthMaxDays * 24);
+                getUsages(false, false);
                 mUsageView.setChartFormatter(MONTH_FORMAT);
                 break;
             case YEAR_FORMAT:
-                numHours = HOURS_IN_YEAR;
+                chartFormat = YEAR_FORMAT;
+                int yearMaxDays = c.getActualMaximum(Calendar.DAY_OF_YEAR);
+                numHours = (yearMaxDays * 24);
+                getUsages(false, false);
                 mUsageView.setChartFormatter(YEAR_FORMAT);
                 break;
             case MAX_FORMAT:
+                chartFormat = MAX_FORMAT;
                 break;
         }
     }

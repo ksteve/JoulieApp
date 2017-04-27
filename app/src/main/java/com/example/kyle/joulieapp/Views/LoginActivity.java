@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
                 getResources().getString(R.string.auth0_domain));
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("scope", "openid offline_access");
+        parameters.put("scope", "openid offline_access read:users");
         aClient = new AuthenticationAPIClient(auth0);
         gProvider = new GoogleAuthProvider(getString(R.string.google_server_client_id), aClient);
         fbProvider = new FacebookAuthProvider(aClient);

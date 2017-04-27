@@ -83,8 +83,9 @@
                     android:id="@+id/trend_arrow"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_keyboard_arrow_green_24dp"/>
+                    android:src="@drawable/ic_keyboard_arrow_green_24dp"
+                    android:layout_below="@+id/avg_usage"
+                    android:layout_alignParentStart="true"/>
 
                 <TextView
                     android:id="@+id/avg_usage"
@@ -93,6 +94,7 @@
                     android:text="-- kWh"
                     android:textSize="32sp"
                     android:layout_alignParentTop="true"
+                    android:maxLines="1"
                     android:layout_toEndOf="@+id/trend_arrow"/>
 
                 <TextView
@@ -105,25 +107,15 @@
                     android:layout_centerHorizontal="true"/>
 
 
-                <TextView
-                    android:id="@+id/usage_trend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/avg_usage_label"
-                    android:layout_centerHorizontal="true"
-                    android:text="-- %"
-                    android:textSize="32sp"/>
-
-
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
             android:id="@+id/cost_card"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:layout_margin="5dp"
             android:layout_weight="1"
             app:cardElevation="1dp">
 
@@ -140,7 +132,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:text="$50"
+                    android:maxLines="1"
+                    android:text="$ --"
                     android:textSize="32sp"/>
 
                 <TextView
@@ -151,15 +144,6 @@
                     android:layout_centerHorizontal="true"
                     android:text="Average Cost/Month"
                     android:textSize="12sp"/>
-
-                <TextView
-                    android:id="@+id/cost_trend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/avg_cost_label"
-                    android:layout_centerHorizontal="true"
-                    android:text="$5.00"
-                    android:textSize="32sp"/>
 
             </RelativeLayout>
         </android.support.v7.widget.CardView>

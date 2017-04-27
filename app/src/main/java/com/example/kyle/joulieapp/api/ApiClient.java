@@ -31,6 +31,7 @@ public class ApiClient {
     private String localUrl;
     private int currentConnection;
     private OkHttpClient mOkHttpClient;
+    private ApiService mAuth0ApiService;
     private ApiService mCloudApiService;
     private ApiService mLocalApiService;
 
@@ -89,7 +90,7 @@ public class ApiClient {
                 .client(mOkHttpClient)
                 .build();
 
-      //  this.mCloudApiService = mRetrofit.create(ApiService.class);
+        this.mAuth0ApiService = mRetrofit.create(ApiService.class);
     }
 
     public void buildCloudRetroFit(){
@@ -148,5 +149,7 @@ public class ApiClient {
     public ApiService getLocalApiService(){
         return this.mLocalApiService;
     }
+
+    public ApiService getmAuth0ApiService() { return this.mAuth0ApiService;}
 
 }

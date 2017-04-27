@@ -101,6 +101,7 @@ public class NewRuleActivity extends AppCompatActivity implements NewRuleContrac
                     turnOnOff = (ToggleButton) findViewById(R.id.toggleButton);
                     int nOnOff = 0;
                     Device dev = null;
+                    String localTime = timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute();
                     String time = localToGMT(timePicker.getCurrentHour(), timePicker.getCurrentMinute());
                     String days = "";
                     tbtnSn = (ToggleButton) findViewById(R.id.tbtnSn);
@@ -135,7 +136,7 @@ public class NewRuleActivity extends AppCompatActivity implements NewRuleContrac
                     int daysbits = Integer.valueOf(days);
                     int timenum = Integer.valueOf(time);
                     daysbits = Integer.parseInt(days, 2);
-                    mNewRulePresenter.createRule(ruleName.getText().toString(), dev, nOnOff, timenum, daysbits);
+                    mNewRulePresenter.createRule(ruleName.getText().toString(), dev, nOnOff, timenum, localTime, daysbits);
                 }
             }
         });
@@ -147,7 +148,6 @@ public class NewRuleActivity extends AppCompatActivity implements NewRuleContrac
         cal.set(Calendar.HOUR_OF_DAY, hour);
         cal.set(Calendar.MINUTE, minute);
         Date date = cal.getTime();
-
         SimpleDateFormat isoFormat = new SimpleDateFormat("HH:mm");
         isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         String utcTime = isoFormat.format(date);

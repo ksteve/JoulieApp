@@ -61,8 +61,8 @@ public class RuleRecyclerViewAdapter extends RecyclerView.Adapter<RuleRecyclerVi
         boolean b = selectedRules.containsKey(mValues.get(position).getId());
         holder.checkBox.setChecked(b);
 
-        holder.tvDeviceName.setText(mValues.get(position).device.getDeviceName());
-        holder.tvTime.setText(mValues.get(position).runTime);
+        holder.tvDeviceName.setText("Device: " + mValues.get(position).device.getDeviceName());
+        holder.tvTime.setText("Time: " + holder.mItem.localTime);
 
         int flag = 1;
         String dayString = "";

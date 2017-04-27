@@ -44,9 +44,9 @@ public class NewDevicePresenter implements NewDeviceContract.Presenter {
                     @Override
                     public void onResponse(Call<Device> call, Response<Device> response) {
                         if (response.body() != null){
-                            DummyContent.addDevice(response.body());
+                            DummyContent.addDevice(device);
                         }
-                        mNewDeviceView.deviceReady(response.body());
+                        mNewDeviceView.deviceReady(device);
                     }
 
                     @Override

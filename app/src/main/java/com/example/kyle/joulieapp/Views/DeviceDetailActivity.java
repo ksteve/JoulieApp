@@ -84,7 +84,6 @@ public class DeviceDetailActivity extends AppCompatActivity implements DeviceDet
         tvTotalUsageView = (TextView) findViewById(R.id.avg_usage);
         tvUsageTrend = (TextView) findViewById(R.id.usage_trend);
         tvTotalCostView = (TextView) findViewById(R.id.avg_cost);
-        tvCostTrend = (TextView) findViewById(R.id.cost_trend);
         lblTotalUsage = (TextView) findViewById(R.id.avg_usage_label);
         lblTotalCost = (TextView) findViewById(R.id.avg_cost_label);
 
@@ -111,7 +110,8 @@ public class DeviceDetailActivity extends AppCompatActivity implements DeviceDet
             }
         });
 
-        new DeviceDetailPresenter(device_index,this, this);
+        SharedPreferences sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
+        new DeviceDetailPresenter(device_index,this, sharedPreferences, this);
 
     }
 
@@ -143,7 +143,8 @@ public class DeviceDetailActivity extends AppCompatActivity implements DeviceDet
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                setChartFormatter(tab.getPosition());
+                mDeviceDetailPresenter.setChartTimeSpan(tab.getPosition());
+               // setChartFormatter(tab.getPosition());
             }
 
             @Override
@@ -333,6 +334,12 @@ public class DeviceDetailActivity extends AppCompatActivity implements DeviceDet
         mLineChart.setData(data);
         mLineChart.animateXY(500, 500);
         mLineChart.invalidate(); // refresl
+    }
+
+    @Override
+    public void showTotals(float totalUsage, float totalCost) {
+        tvTotalUsageView.setText(String.valueOf(totalUsage) + " kWh");
+        tvTotalCostView.setText("$" + String.valueOf(totalCost));
     }
 
     @Override

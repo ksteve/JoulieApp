@@ -20,6 +20,8 @@ public interface DeviceDetailContract {
 
         void showUsage(LineData data);
 
+        void showTotals(float totalUsage, float totalCost);
+
         void showRequestFailed(String message);
 
         void showRequestSuccess(String message);
@@ -32,6 +34,8 @@ public interface DeviceDetailContract {
         void shareDevice();
 
         void loadUsages(boolean forceUpdate);
+
+        void setChartTimeSpan(int timeSpan);
 
     }
 }

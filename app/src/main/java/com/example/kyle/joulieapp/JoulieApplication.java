@@ -17,8 +17,8 @@ public class JoulieApplication extends Application {
     public void onCreate() {
         super.onCreate();
         DummyContent.init(getApplicationContext());
-        DummyContent.addDevice(new Device(Device.TYPE_TPLINK, "adsfa", "saddfa", "asdfasd", null ));
-        DummyContent.addRule(new Rule("hello", DummyContent.MY_DEVICES.get(0), 1, 1, 1));
+      //  DummyContent.addDevice(new Device(Device.TYPE_TPLINK, "adsfa", "saddfa", "asdfasd", null ));
+       // DummyContent.addRule(new Rule("hello", DummyContent.MY_DEVICES.get(0), 1, 1, "4:30", 1));
         ApiClient.getInstance(getApplicationContext());
 
     }

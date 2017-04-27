@@ -30,7 +30,7 @@ public interface NewRuleContract {
 
     interface Presenter extends BasePresenter {
 
-        void createRule(String ruleName, Device device, int turnOnOff, int time, int days);
+        void createRule(String ruleName, Device device, int turnOnOff, int time, String localTime, int days);
 
     }
 }

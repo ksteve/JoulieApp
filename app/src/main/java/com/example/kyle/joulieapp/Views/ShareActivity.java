@@ -82,8 +82,7 @@ public class ShareActivity extends AppCompatActivity implements ShareContract.Vi
 
         btnShare = (Button) findViewById(R.id.btnShare);
         btnShare.setEnabled(false);
-
-        btnSearch.setOnClickListener(new View.OnClickListener() {
+        btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mSharePresenter.shareDeviceWithUser(mCurrentDevice.getId(), "");

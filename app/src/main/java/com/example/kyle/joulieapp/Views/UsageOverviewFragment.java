@@ -111,7 +111,6 @@ public class UsageOverviewFragment extends Fragment implements
         tvTotalUsageView = (TextView) view.findViewById(R.id.avg_usage);
         tvUsageTrend = (TextView) view.findViewById(R.id.usage_trend);
         tvTotalCostView = (TextView) view.findViewById(R.id.avg_cost);
-        tvCostTrend = (TextView) view.findViewById(R.id.cost_trend);
         lblTotalUsage = (TextView) view.findViewById(R.id.avg_usage_label);
         lblTotalCost = (TextView) view.findViewById(R.id.avg_cost_label);
 

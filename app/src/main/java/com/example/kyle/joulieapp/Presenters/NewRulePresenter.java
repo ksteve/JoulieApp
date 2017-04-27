@@ -33,13 +33,15 @@ public class NewRulePresenter implements NewRuleContract.Presenter {
         this.context = context;
     }
 
-    public void createRule(String ruleName, Device device, int turnOnOff, int time, int days){
+    @Override
+    public void createRule(String ruleName, Device device, int turnOnOff, int time, String localTime, int days){
 
         final Rule rule = new Rule(
                 ruleName,
                 device,
                 turnOnOff,
                 time,
+                localTime,
                 days
                 );
 

@@ -4,6 +4,7 @@ import com.example.kyle.joulieapp.Models.Device;
 import com.example.kyle.joulieapp.Models.Rule;
 import com.example.kyle.joulieapp.Models.Usage;
 import com.example.kyle.joulieapp.Models.UsageResponse;
+import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,8 +13,10 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by Kyle on 2017-02-24.
@@ -75,8 +78,9 @@ public interface ApiService {
     @POST("device/{device_id}/share/{user_id}")
     Call<String> shareDevice(@Path("device_id") String deviceId, @Path("user_id") String userId);
 
+    @Headers("Authorization: Bearer " + Constants.AUTH_TOKEN )
     @GET("users")
-    Call<String> findUser();
+    Call<JsonObject> findUser(@Query("fields") String fields,@Query("q") String queryfield);
 
     // TODO: 2017-03-17 get usage data endpoint
     // TODO: 2017-03-17 create new rule endpoint
