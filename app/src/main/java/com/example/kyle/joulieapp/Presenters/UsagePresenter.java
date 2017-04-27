@@ -86,7 +86,7 @@ public class UsagePresenter implements UsageContract.Presenter {
     public void getUsages(boolean forceUpdate, final boolean showLoadingUI){
 
         if(forceUpdate) {
-            ApiClient.getInstance(context.getApplicationContext()).getApiService()
+            ApiClient.getInstance(context.getApplicationContext()).getCloudApiService()
                     .getUsages()
                     .enqueue(new Callback<List<UsageResponse>>() {
                         @Override

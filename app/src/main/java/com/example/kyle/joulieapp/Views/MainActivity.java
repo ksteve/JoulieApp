@@ -194,6 +194,9 @@ public class MainActivity extends AppCompatActivity implements
                 new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
+
+
+
     //Method Name: toggleFab
     //Parameters: boolean show
     //Return: void
@@ -228,7 +231,15 @@ public class MainActivity extends AppCompatActivity implements
             Snackbar snackbar = Snackbar.make(coordinator, result, Snackbar.LENGTH_SHORT);
             snackbar.show();
         }
-      notifyFragments();
+
+        if(requestCode == MYDEVICES_FRAGMENT){
+            notifyDevices();
+        }
+
+        if(requestCode == MYRULES_FRAGMENT){
+            notifyRules();
+        }
+      //notifyFragments();
     }
 
     //Method Name: onBackPressed
@@ -392,7 +403,12 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onPause() {
         super.onPause();
+        MainActivity.this.registerReceiver(
+                mConnectivityChangedReceiver,
+                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         //mainPresenter.onPause();
+
+
     }
 
     @Override
@@ -576,8 +592,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MainActivity.this.registerReceiver(
-                mConnectivityChangedReceiver,
-                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
     }
 }

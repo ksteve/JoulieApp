@@ -121,7 +121,7 @@ public class DevicePresenter  implements DeviceContract.Presenter {
         }
         if (forceUpdate) {
             //  mTasksRepository.refreshTasks();
-            ApiClient.getInstance(context.getApplicationContext()).getApiService()
+            ApiClient.getInstance(context.getApplicationContext()).getCloudApiService()
                     .getDevices()
                     .enqueue(new Callback<List<Device>>() {
                         @Override

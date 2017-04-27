@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kyle.joulieapp.Api.JoulieSocketIOAPI;
 import com.example.kyle.joulieapp.Base.BasePresenter;
 import com.example.kyle.joulieapp.Contracts.DeviceContract;
 import com.example.kyle.joulieapp.Models.DummyContent;
@@ -34,7 +35,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnDeviceFragmentInteractionListener}
  * interface.
  */
-public class DeviceFragment extends Fragment implements DeviceContract.View{
+public class DeviceFragment extends Fragment implements DeviceContract.View, JoulieSocketIOAPI.ResponseListener{
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -71,7 +72,12 @@ public class DeviceFragment extends Fragment implements DeviceContract.View{
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
 
+
         new DevicePresenter(this, getActivity());
+
+        JoulieSocketIOAPI socketClient = JoulieSocketIOAPI.getInstance();
+        socketClient.registerListener(this);
+        socketClient.connect();
     }
 
     @Override
@@ -165,7 +171,7 @@ public class DeviceFragment extends Fragment implements DeviceContract.View{
     }
 
     public void notifyAdapter(){
-        recyclerView.getAdapter().notifyDataSetChanged();
+       // ((DeviceRecyclerViewAdapter) recyclerView.getAdapter()).notifyDataSetChanged();
 
         if (DummyContent.MY_DEVICES.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
@@ -246,6 +252,21 @@ public class DeviceFragment extends Fragment implements DeviceContract.View{
             updateRemoveDevicesButton(checkState);
         }
     };
+
+    @Override
+    public void onStateUpdate(Device device, Boolean onOrOff) {
+        notifyAdapter();
+    }
+
+    @Override
+    public void onConnected(String message) {
+
+    }
+
+    @Override
+    public void onDisconnected(String message) {
+
+    }
 
     public interface OnDeviceFragmentInteractionListener {
         // TODO: Update argument type and name
