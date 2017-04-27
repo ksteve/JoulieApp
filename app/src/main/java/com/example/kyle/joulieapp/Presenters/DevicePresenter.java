@@ -84,8 +84,9 @@ public class DevicePresenter  implements DeviceContract.Presenter {
         String device_id = device.getId();
         final String command = "set_power_state";
 
-        Call<String> call = ApiClient.getInstance(context.getApplicationContext()).getApiService().sendCommand(device_id, command, body);
-        call.enqueue(new Callback<String>() {
+        ApiClient.getInstance(context.getApplicationContext()).getApiService()
+            .sendCommand(device_id, command, body)
+            .enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 mDeciceView.updateDevicePowerButton(state, response.message());

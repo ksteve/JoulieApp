@@ -60,11 +60,15 @@ public class DeviceDetailPresenter implements DeviceDetailContract.Presenter{
 
     public void getDeviceUsage(boolean forceUpdate, final boolean showLoadingUI){
 
+        LineData data = new LineData();
+
         if(currentDevice.getDeviceUsage() == null){
+            mDeviceDetailView.showUsage(data);
             return;
         }
 
         if(currentDevice.getDeviceUsage().isEmpty()){
+            mDeviceDetailView.showUsage(data);
             // TODO: 2017-04-21 no usage data available for device, request more from server??
             return;
         }
@@ -111,7 +115,7 @@ public class DeviceDetailPresenter implements DeviceDetailContract.Presenter{
         dataSetKilowatt.setColor(currentDevice.getColor());
         chartDataSets.add(dataSetKilowatt);
 
-        LineData data = new LineData(chartDataSets);
+        data = new LineData(chartDataSets);
         mDeviceDetailView.showUsage(data);
 
     }

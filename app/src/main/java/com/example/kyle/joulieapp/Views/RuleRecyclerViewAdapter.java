@@ -61,7 +61,14 @@ public class RuleRecyclerViewAdapter extends RecyclerView.Adapter<RuleRecyclerVi
         boolean b = selectedRules.containsKey(mValues.get(position).getId());
         holder.checkBox.setChecked(b);
 
-        holder.tvDeviceName.setText("Device: " + mValues.get(position).device.getDeviceName());
+      ///  holder.tvDeviceName.setText("Device: " + mValues.get(position).device.getDeviceName());
+        if(holder.mItem.state == 2){
+            holder.tvTurnOnOff.setText("Turn Off");
+        } else if(holder.mItem.state == 1){
+            holder.tvTurnOnOff.setText("Turn On");
+        }
+
+
         holder.tvTime.setText("Time: " + holder.mItem.localTime);
 
         int flag = 1;
@@ -152,6 +159,7 @@ public class RuleRecyclerViewAdapter extends RecyclerView.Adapter<RuleRecyclerVi
         public final TextView tvDeviceName;
         public final TextView tvTime;
         public final TextView tvDays;
+        public final TextView tvTurnOnOff;
         public Rule mItem;
         public final CheckBox checkBox;
 
@@ -161,6 +169,7 @@ public class RuleRecyclerViewAdapter extends RecyclerView.Adapter<RuleRecyclerVi
             tvDeviceName = (TextView) view.findViewById(R.id.device_name);
             tvTime = (TextView) view.findViewById(R.id.run_time);
             tvDays = (TextView) view.findViewById(R.id.days);
+            tvTurnOnOff = (TextView) view.findViewById(R.id.turnOnOff);
             checkBox = (CheckBox) view.findViewById(R.id.checkBox);
         }
 

@@ -113,6 +113,7 @@ public class UsagePresenter implements UsageContract.Presenter {
 
     private void processUsages(List<UsageResponse> usageDataSet){
         List<ILineDataSet> chartDataSets = new ArrayList<>();
+        LineData data = new LineData();
         float totalUsage = 0;
         float totalKwh = 0;
         int dataCount = 0;
@@ -165,9 +166,10 @@ public class UsagePresenter implements UsageContract.Presenter {
                 }
             }
 
-            LineData data = new LineData(chartDataSets);
-            mUsageView.showUsages(data);
+            data = new LineData(chartDataSets);
+
         }
+        mUsageView.showUsages(data);
     }
 
     private void updateUsageCost(){

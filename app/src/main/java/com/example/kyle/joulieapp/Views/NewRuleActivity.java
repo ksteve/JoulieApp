@@ -173,91 +173,6 @@ public class NewRuleActivity extends AppCompatActivity implements NewRuleContrac
     }
 
 
-//    public void onResSuccess(JSONObject response) {
-//        ruleName = (EditText) findViewById(R.id.ruleName_input);
-//        timePicker = (TimePicker) findViewById(R.id.timePicker);
-//        turnOnOff = (ToggleButton) findViewById(R.id.toggleButton);
-//        int nOnOff = 0;
-//        Device dev = null;
-//        String time = timePicker.getCurrentHour().toString() + ":" + timePicker.getCurrentMinute().toString();
-//        String days = "";
-//        tbtnSn = (ToggleButton) findViewById(R.id.tbtnSn);
-//        tbtnM = (ToggleButton) findViewById(R.id.tbtnM);
-//        tbtnT = (ToggleButton) findViewById(R.id.tbtnT);
-//        tbtnW = (ToggleButton) findViewById(R.id.tbtnW);
-//        tbtnTh = (ToggleButton) findViewById(R.id.tbtnTh);
-//        tbtnF = (ToggleButton) findViewById(R.id.tbtnF);
-//        tbtnSt = (ToggleButton) findViewById(R.id.tbtnSt);
-//
-//        for (int i = 0; i < DummyContent.MY_DEVICES.size(); i++){
-//            if (deviceDropdown.getSelectedItem().toString() == DummyContent.MY_DEVICES.get(i).getDeviceName()){
-//                dev = DummyContent.MY_DEVICES.get(i);
-//            }
-//        }
-//
-//        if (turnOnOff.isChecked()){
-//            nOnOff = 1;
-//        }
-//
-//        if (tbtnSn.isChecked()){
-//            days += "Sn ";
-//        }
-//
-//        if (tbtnM.isChecked()){
-//            days += "M ";
-//        }
-//
-//        if (tbtnT.isChecked()){
-//            days += "T ";
-//        }
-//
-//        if (tbtnW.isChecked()){
-//            days += "W ";
-//        }
-//
-//        if (tbtnTh.isChecked()){
-//            days += "Th ";
-//        }
-//
-//        if (tbtnF.isChecked()){
-//            days += "F ";
-//        }
-//
-//        if (tbtnSt.isChecked()){
-//            days += "St ";
-//        }
-//        days = days.trim();
-//
-//        try {
-//            String result;
-//            if(response.has("error")){
-//                result = response.getString("error");
-//            } else if (response.has("result")) {
-//                result = response.getString("result");
-//                DummyContent.addRule(new Rule(ruleName.getText().toString(), dev, nOnOff, time, days));
-//                Intent resultIntent = new Intent();
-//                resultIntent.putExtra("result", result);
-//                setResult(Activity.RESULT_OK, resultIntent);
-//            } else {
-//                DummyContent.addRule(new Rule(ruleName.getText().toString(), dev, nOnOff, time, days));
-//            }
-//
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        // Sorting rules by device name to keep rules for each device together
-//        Collections.sort(DummyContent.MY_RULES, new Comparator<Rule>() {
-//            @Override
-//            public int compare(Rule rule2, Rule rule1)
-//            {
-//                return  rule2.device.getDeviceName().compareTo(rule1.device.getDeviceName());
-//            }
-//        });
-//        finish();
-//    }
-
-
     @Override
     public void setLoadingIndicator(boolean active) {
 
@@ -270,7 +185,7 @@ public class NewRuleActivity extends AppCompatActivity implements NewRuleContrac
 
     @Override
     public void ruleReady(Rule rule) {
-        DummyContent.addRule(rule);
+      //  DummyContent.addRule(rule);
         finish();
     }
 

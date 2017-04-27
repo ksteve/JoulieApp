@@ -85,7 +85,7 @@ public class ShareActivity extends AppCompatActivity implements ShareContract.Vi
         btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mSharePresenter.shareDeviceWithUser(mCurrentDevice.getId(), "");
+                mSharePresenter.shareDeviceWithUser(mCurrentDevice.getId());
             }
         });
 

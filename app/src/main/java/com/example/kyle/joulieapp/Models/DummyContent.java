@@ -43,12 +43,16 @@ public class DummyContent {
     public static void setMyDevices(List<Device> devices) {
         MY_DEVICES.clear();
         for (Device x: devices) {
-            DummyContent.addDevice(x);
+            addDevice(x);
         }
     }
 
     public static void setMyRules(List<Rule> rules){
-        MY_RULES = rules;
+        MY_RULES.clear();
+        for(Rule x: rules){
+            addRule(x);
+        }
+
     }
 
     public static void setMyUsages(List<UsageResponse> usages){
@@ -88,6 +92,14 @@ public class DummyContent {
 
     public static void addRule(Rule item) {
         MY_RULES.add(item);
+        
+        String time = String.valueOf(item.runTime);
+        if(time.length() == 3){
+
+        }
+        item.localTime = time;
+     //   item.localTime = item.runTime
+
     }
 
     public static void removeDevice(Device item) {

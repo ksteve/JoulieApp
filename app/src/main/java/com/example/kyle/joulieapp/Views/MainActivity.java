@@ -109,11 +109,11 @@ public class MainActivity extends AppCompatActivity implements
                         break;
                     case MYRULES_FRAGMENT:
                         Intent newRuleIntent = new Intent(MainActivity.this, NewRuleActivity.class);
-                        startActivityForResult(newRuleIntent, 1);
+                        startActivityForResult(newRuleIntent, MYRULES_FRAGMENT);
                         break;
                     case MYDEVICES_FRAGMENT:
                         Intent newDeviceIntent = new Intent(MainActivity.this, NewDeviceActivity.class);
-                        startActivityForResult(newDeviceIntent, 2);
+                        startActivityForResult(newDeviceIntent, MYDEVICES_FRAGMENT);
                         break;
                 }
             }
@@ -339,7 +339,25 @@ public class MainActivity extends AppCompatActivity implements
             } else if (x instanceof RuleFragment) {
                 ((RuleFragment) x).notifyAdapter();
             } else if (x instanceof DeviceFragment){
-                ((DeviceFragment) x).refreshList();
+              //  ((DeviceFragment) x).refreshList();
+            }
+        }
+    }
+
+    public void notifyRules(){
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        for (Fragment x: fragments) {
+            if (x instanceof RuleFragment) {
+                ((RuleFragment) x).notifyAdapter();
+            }
+        }
+    }
+
+    public void notifyDevices(){
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        for (Fragment x: fragments) {
+            if (x instanceof DeviceFragment) {
+                ((DeviceFragment) x).notifyAdapter();
             }
         }
     }

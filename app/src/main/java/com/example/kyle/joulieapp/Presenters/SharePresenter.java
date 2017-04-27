@@ -22,6 +22,7 @@ public class SharePresenter implements ShareContract.Presenter {
 
     private final Context context;
     private final ShareContract.View mShareView;
+    private String user_id = "";
 
     public SharePresenter(ShareContract.View shareView, Context context){
         this.mShareView = shareView;
@@ -36,16 +37,20 @@ public class SharePresenter implements ShareContract.Presenter {
 
     @Override
     public void findUserByEmail(String email) {
-        ApiClient.getInstance(context.getApplicationContext()).getmAuth0ApiService()
-                .findUser("user_id","email:" + email)
-                .enqueue(new Callback<JsonObject>() {
+        ApiClient.getInstance(context.getApplicationContext()).getCloudApiService()
+                .userSearch(email)
+                .enqueue(new Callback<String>() {
                     @Override
-                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                        mShareView.showFoundUser();
+                    public void onResponse(Call<String> call, Response<String> response) {
+
+                        if(!response.body().equals("none")) {
+                            user_id = response.body();
+                            mShareView.showFoundUser();
+                        }
                     }
 
                     @Override
-                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                    public void onFailure(Call<String> call, Throwable t) {
                         //// TODO: 2017-04-05 throw error, display message to user
                         mShareView.showRequestFailed(t.getMessage());
                     }
@@ -53,9 +58,9 @@ public class SharePresenter implements ShareContract.Presenter {
     }
 
     @Override
-    public void shareDeviceWithUser(String deviceID, String userID) {
+    public void shareDeviceWithUser(String deviceID) {
         ApiClient.getInstance(context.getApplicationContext()).getCloudApiService()
-                .shareDevice(deviceID, userID)
+                .shareDevice(deviceID, user_id)
                 .enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {

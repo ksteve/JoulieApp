@@ -72,15 +72,11 @@ public interface ApiService {
     @GET("user/current/data")
     Call<List<UsageResponse>> getUsages();
 
-    @GET("search/user/{user_email}")
+    @GET("finduser/{user_email}")
     Call<String> userSearch(@Path("user_email") String userEmail);
 
     @POST("device/{device_id}/share/{user_id}")
     Call<String> shareDevice(@Path("device_id") String deviceId, @Path("user_id") String userId);
-
-    @Headers("Authorization: Bearer " + Constants.AUTH_TOKEN )
-    @GET("users")
-    Call<JsonObject> findUser(@Query("fields") String fields,@Query("q") String queryfield);
 
     // TODO: 2017-03-17 get usage data endpoint
     // TODO: 2017-03-17 create new rule endpoint

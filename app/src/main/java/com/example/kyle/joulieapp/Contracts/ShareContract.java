@@ -21,7 +21,7 @@ public interface ShareContract {
 
         void findUserByEmail(String email);
 
-        void shareDeviceWithUser(String deviceID, String userID);
+        void shareDeviceWithUser(String deviceID);
 
     }
 }

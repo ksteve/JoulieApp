@@ -31,7 +31,6 @@ public class ApiClient {
     private String localUrl;
     private int currentConnection;
     private OkHttpClient mOkHttpClient;
-    private ApiService mAuth0ApiService;
     private ApiService mCloudApiService;
     private ApiService mLocalApiService;
 
@@ -50,7 +49,6 @@ public class ApiClient {
         buildOkHttp();
         setCurrentConnection(CLOUD);
         buildCloudRetroFit();
-        buildAuth0RetroFit();
     }
 
     public void buildOkHttp(){
@@ -80,17 +78,6 @@ public class ApiClient {
             });
             mOkHttpClient = httpClient.build();
         }
-    }
-
-    public void buildAuth0RetroFit(){
-        Retrofit mRetrofit = new Retrofit.Builder()
-                .baseUrl("https://joulie.auth0.com/api/v2/")
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(mOkHttpClient)
-                .build();
-
-        this.mAuth0ApiService = mRetrofit.create(ApiService.class);
     }
 
     public void buildCloudRetroFit(){
@@ -149,7 +136,5 @@ public class ApiClient {
     public ApiService getLocalApiService(){
         return this.mLocalApiService;
     }
-
-    public ApiService getmAuth0ApiService() { return this.mAuth0ApiService;}
 
 }

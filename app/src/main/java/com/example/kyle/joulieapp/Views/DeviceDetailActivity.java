@@ -76,6 +76,9 @@ public class DeviceDetailActivity extends AppCompatActivity implements DeviceDet
         ab.setTitle(currentDevice.getDeviceName());
         ab.setDisplayHomeAsUpEnabled(true);
 
+        SharedPreferences sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
+        new DeviceDetailPresenter(device_index,this, sharedPreferences, this);
+
         deviceType = (TextView) findViewById(R.id.device_type);
         deviceType.setText(currentDevice.getTypeName());
         deviceName = (TextView) findViewById(R.id.device_name);
@@ -110,8 +113,8 @@ public class DeviceDetailActivity extends AppCompatActivity implements DeviceDet
             }
         });
 
-        SharedPreferences sharedPreferences =  PreferenceManager.getDefaultSharedPreferences(this);
-        new DeviceDetailPresenter(device_index,this, sharedPreferences, this);
+
+
 
     }
 
@@ -277,7 +280,8 @@ public class DeviceDetailActivity extends AppCompatActivity implements DeviceDet
         //setup x axis
         mLineChart.getXAxis().setDrawGridLines(false);
         mLineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        setChartFormatter(tabLayout.getSelectedTabPosition());
+       // setChartFormatter(tabLayout.getSelectedTabPosition());
+        mDeviceDetailPresenter.setChartTimeSpan(tabLayout.getSelectedTabPosition());
 
     }
 
